@@ -26,6 +26,7 @@ Widget::Widget(QWidget *parent)
 //    ProjectMainLayout->addWidget(customWidgetProject3);
 //    ProjectMainLayout->addSpacerItem(spacer);
 //    ProjectMainLayout->addWidget(customWidgetProject4);
+//        containerWidget->setStyleSheet("background-color: blue;");
 
     containerLayout->addWidget(customWidgetProject1); //  for loop use karna hain
     containerLayout->addSpacerItem(spacer);
