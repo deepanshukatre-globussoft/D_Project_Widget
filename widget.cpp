@@ -19,14 +19,9 @@ Widget::Widget(QWidget *parent)
 
     QSpacerItem *spacer = new QSpacerItem(10,5);
 
-//    ProjectMainLayout->addWidget(customWidgetProject1); //  for loop use karna hain
-//    ProjectMainLayout->addSpacerItem(spacer);
-//    ProjectMainLayout->addWidget(customWidgetProject2);
-//    ProjectMainLayout->addSpacerItem(spacer);
-//    ProjectMainLayout->addWidget(customWidgetProject3);
-//    ProjectMainLayout->addSpacerItem(spacer);
-//    ProjectMainLayout->addWidget(customWidgetProject4);
-//        containerWidget->setStyleSheet("background-color: blue;");
+    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
+    customWidgetProject2->setStyleSheet("background-color: #f0aaad;");
+    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
     containerLayout->addWidget(customWidgetProject1); //  for loop use karna hain
     containerLayout->addSpacerItem(spacer);

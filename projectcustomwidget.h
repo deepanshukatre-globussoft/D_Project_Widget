@@ -21,17 +21,28 @@ class ProjectCustomWidget : public QWidget
 public:
     explicit ProjectCustomWidget(QWidget *parent = nullptr);
 
-    QVBoxLayout * m_HMainLayout;
+
     QHBoxLayout * p_FirstLayout;
     QHBoxLayout * p_SecondLayout;
     QHBoxLayout * p_ThirdLayout;
     QHBoxLayout * p_ForthLayout;
 
+    QVBoxLayout * d_containerLayout;
+    QWidget * d_containerWidget;
+
+    QVBoxLayout * m_HMainLayout;
 private:
     QLabel *d_projectStatuslabel;
     QPushButton *d_startTaskButton;
     QPushButton *d_editTaskButton;
-    QTextEdit *textEdit;
+
+    QLabel *d_projectNameLabel;
+
+    QLabel *d_taskNameLabel;
+
+    QPushButton *d_setReminderbtn;
+    QLabel *d_taskActiveTimeLabel;
+
 
 
 signals:
