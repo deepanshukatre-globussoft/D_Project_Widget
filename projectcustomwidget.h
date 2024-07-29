@@ -21,7 +21,6 @@ class ProjectCustomWidget : public QWidget
 public:
     explicit ProjectCustomWidget(QWidget *parent = nullptr);
 
-
     QHBoxLayout * p_FirstLayout;
     QHBoxLayout * p_SecondLayout;
     QHBoxLayout * p_ThirdLayout;
@@ -44,8 +43,12 @@ private:
     QLabel *d_taskActiveTimeLabel;
 
 
-
 signals:
+    void sendData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
+
+public slots:
+    void receiveData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
+
 
 };
 

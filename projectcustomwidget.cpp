@@ -1,4 +1,5 @@
 #include "projectcustomwidget.h"
+#include "qdebug.h"
 
 ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     : QWidget{parent}
@@ -73,4 +74,13 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     setLayout(m_HMainLayout);
 
+}
+
+void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
+{
+    qDebug()<<"received data ";
+    d_projectStatuslabel->setText(projectStatus);
+    d_projectNameLabel->setText(projectName);
+    d_taskNameLabel->setText(taskName);
+    d_taskActiveTimeLabel->setText(taskActiveTime);
 }
