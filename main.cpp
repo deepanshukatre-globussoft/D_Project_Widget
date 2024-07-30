@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     Widget w;
     w.show();
-    CreateTask createTaskObj;
-    createTaskObj.show();
+    // CreateTask createTaskObj;
+    // createTaskObj.show();
     return a.exec();
 }
