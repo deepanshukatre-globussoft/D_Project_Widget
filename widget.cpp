@@ -28,6 +28,8 @@ Widget::Widget(QWidget *parent)
     headingLabel->setFont(boldFont);
     headingLabel->setContentsMargins(2, 2, 2, 2);
 
+    networkManager = new MyNetworkManager(this);
+
 
     ProjectCustomWidget *customWidgetProject1 = new ProjectCustomWidget();
     ProjectCustomWidget *customWidgetProject2 = new ProjectCustomWidget();
@@ -70,17 +72,21 @@ Widget::Widget(QWidget *parent)
     for (ProjectCustomWidget *widget : customWidgets) {
         // Check if the widget is selected
         QPushButton *pushbtn = widget->findChild<QPushButton *>();
-        qDebug()<<"pushbtn : "<<pushbtn->text();
+//        qDebug()<<"pushbtn : "<<pushbtn->text();
 //        if (checkBox && checkBox->isChecked()) {
 //            delete widget;
 //        }
     }
-
-
+    emit networkManager->mytestNetworksignal();
 
 //    ProjectMainLayout->addWidget(containerWidget);
     ProjectMainLayout->addWidget(scrollArea);
-
+    bool connectionStatus = connect(networkManager, &MyNetworkManager::projectDataFetched,[this](){
+        qDebug()<<"signal emmited";
+    });
+    bool connectionStatus1 = connect(networkManager, &MyNetworkManager::mytestNetworksignal, this,&Widget::onEmptySignal);
+    qDebug()<<connectionStatus1;
+    connect(networkManager, &MyNetworkManager::projectDataFetched, this, &Widget::onProjectDataFetched);
 
 
     setLayout(ProjectMainLayout);
@@ -90,5 +96,15 @@ Widget::Widget(QWidget *parent)
 
 Widget::~Widget()
 {
+}
+
+void Widget::onProjectDataFetched(const QJsonArray &dataArray)
+{
+    qDebug()<<"widet onprojectsdatafetched";
+}
+
+void Widget::onEmptySignal()
+{
+qDebug()<<" onEmptySignal";
 }
 

@@ -1,12 +1,14 @@
 #ifndef CREATETASK_H
 #define CREATETASK_H
 
+#include "mynetworkmanager.h"
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QPushButton>
+#include <QMessageBox>
 class CreateTask : public QWidget
 {
     Q_OBJECT
@@ -37,9 +39,14 @@ private:
     QComboBox *taskComboBox;
 
     QWidget *buttonWidget;
-    QVBoxLayout *buttonLayout;
+    QHBoxLayout *buttonLayout;
     QPushButton *createTaskButton;
-    QPushButton *submitButton;
+    QPushButton *cancelButton;
+
+    MyNetworkManager netMgrObj;
+private slots:
+    void onCancelClicked();
+    void onCreateTaskClicked();
 
 };
 
