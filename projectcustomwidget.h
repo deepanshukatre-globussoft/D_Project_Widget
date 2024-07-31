@@ -17,9 +17,10 @@
 #include <QTextEdit>
 #include <QTimer>
 #include <QTime>
-#include <QDialog>
 #include <QFrame>
 #include <QSignalMapper>
+
+#include "reminderwidget.h"
 
 class ProjectCustomWidget : public QWidget
 {
@@ -56,16 +57,11 @@ private:
 
     bool is_started = false;
     QTimer * m_startTimer;
-    QTimer * m_startReminderTimer;
     QTime countdownTime;
-    QTime remindercountdownTime;
-    QPushButton *buttons[6];
-    int lastClickedIndex = 10;
-    QStringList buttonsList;
-
-    void setReminderFunctionality();
 
     static bool isAnyTaskStarted;
+
+    ReminderWidget * rmd_wid;
 
 
 signals:
@@ -74,8 +70,6 @@ signals:
 public slots:
     void receiveData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
     void updateStartTimer();
-    void addbuttonbackground(int index);
-    void updateReminderTimer();
 
 
 
