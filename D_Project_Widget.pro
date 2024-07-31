@@ -12,13 +12,11 @@ SOURCES += \
     createtask.cpp \
     main.cpp \
     projectcustomwidget.cpp \
-    reminderwidget.cpp \
     widget.cpp
 
 HEADERS += \
     createtask.h \
     projectcustomwidget.h \
-    reminderwidget.h \
     widget.h
 
 # Default rules for deployment.
