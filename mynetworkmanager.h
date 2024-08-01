@@ -29,8 +29,8 @@ signals:
 //    void taskDataFetched(const QJsonArray &dataArray);
     void taskDataFetched(const QString &id, const QString &title, const QString &folderName, const QString &projectTitle);
 
-    void mytestNetworksignal();
-    void mytestNetworksignal2();
+    void deleteConfigurationsignal();
+    void initConfigurationsignal();
 
 public slots:
     void onProjectDataFetched(QNetworkReply *reply);

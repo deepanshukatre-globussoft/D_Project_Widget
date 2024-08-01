@@ -54,10 +54,10 @@ Widget::Widget(QWidget *parent)
 
     connect(networkManager, &MyNetworkManager::projectDataFetched, this, &Widget::onProjectDataFetched);
     connect(networkManager, &MyNetworkManager::taskDataFetched, this, &Widget::onTaskDataFetched);
-    connect(networkManager, &MyNetworkManager::mytestNetworksignal, this,[this](){
+    connect(networkManager, &MyNetworkManager::deleteConfigurationsignal, this,[this](){
         deleteConfiguration();
     });
-    connect(networkManager, &MyNetworkManager::mytestNetworksignal2, this,[this](){
+    connect(networkManager, &MyNetworkManager::initConfigurationsignal, this,[this](){
         initConfiguration();
     });
     connect(refreshbtn, &QPushButton::clicked, this,[this](){
@@ -72,7 +72,6 @@ Widget::Widget(QWidget *parent)
 
 //    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
-
 //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
     ProjectMainLayout->addWidget(headingLabel);

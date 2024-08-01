@@ -142,7 +142,7 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
 void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
 {
 
-    emit mytestNetworksignal();
+    emit deleteConfigurationsignal();
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
@@ -178,7 +178,7 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
     }
     //    reply->deleteLater();
 
-    emit mytestNetworksignal2();
+    emit initConfigurationsignal();
 }
 
 void MyNetworkManager::testslot()
