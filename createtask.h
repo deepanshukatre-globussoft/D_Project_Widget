@@ -15,6 +15,7 @@ class CreateTask : public QWidget
 public:
     explicit CreateTask(QWidget *parent = nullptr);
 
+    MyNetworkManager *netMgrObj;
 private:
     void setupUI();
     void populateComboBoxes();
@@ -43,7 +44,6 @@ private:
     QPushButton *createTaskButton;
     QPushButton *cancelButton;
 
-    MyNetworkManager netMgrObj;
 private slots:
     void onCancelClicked();
     void onCreateTaskClicked();
