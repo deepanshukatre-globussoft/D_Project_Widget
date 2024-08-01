@@ -41,7 +41,7 @@ Widget::Widget(QWidget *parent)
 //    CreateTask *createTaskObj =  new CreateTask();
 
     refreshbtn = new QPushButton("refresh",this);
-    updatebtn = new QPushButton("updatebtn",this);
+//    updatebtn = new QPushButton("updatebtn",this);
 
 //    QObject::connect(customWidgetProject1, &ProjectCustomWidget::sendData, customWidgetProject1, &ProjectCustomWidget::receiveData);
 //    QObject::connect(customWidgetProject2, &ProjectCustomWidget::sendData, customWidgetProject2, &ProjectCustomWidget::receiveData);
@@ -54,10 +54,10 @@ Widget::Widget(QWidget *parent)
 
     connect(networkManager, &MyNetworkManager::projectDataFetched, this, &Widget::onProjectDataFetched);
     connect(networkManager, &MyNetworkManager::taskDataFetched, this, &Widget::onTaskDataFetched);
-    connect(networkManager, &MyNetworkManager::mytestNetworksignal, this,[this](){
+    connect(networkManager, &MyNetworkManager::deleteConfigurationsignal, this,[this](){
         deleteConfiguration();
     });
-    connect(networkManager, &MyNetworkManager::mytestNetworksignal2, this,[this](){
+    connect(networkManager, &MyNetworkManager::initConfigurationsignal, this,[this](){
         initConfiguration();
     });
     connect(refreshbtn, &QPushButton::clicked, this,[this](){
