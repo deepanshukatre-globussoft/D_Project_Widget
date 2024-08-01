@@ -29,7 +29,7 @@ public:
     QPushButton *buttons[6];
     int lastClickedIndex = 10;
     QStringList buttonsList;
-    int input_time;
+    int input_time = 0;
     bool ok = true;
 
 public slots:

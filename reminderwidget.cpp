@@ -69,6 +69,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     QPushButton * custom_time_button = new QPushButton("Custom Time");
 
+    QWidget * custom_widget = new QWidget();
     QVBoxLayout * custom_time_layout = new QVBoxLayout();
     custom_time_layout->setContentsMargins(0,0,0,0);
     QLabel * custom_time_label = new QLabel("Enter custom time");
@@ -77,13 +78,10 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     QLineEdit * input_time_lineedit = new QLineEdit();
     QIntValidator *validator = new QIntValidator(this);
-
-    // Set the range for the integer input if needed
     validator->setRange(1, 1000); // Example range: 0 to 1000
-
     input_time_lineedit->setValidator(validator);
-    QComboBox * time_combo_box = new QComboBox();
 
+    QComboBox * time_combo_box = new QComboBox();
     time_combo_box->addItem("min");
     time_combo_box->addItem("hr");
 
@@ -111,6 +109,9 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     custom_time_layout->addLayout(time_imput_layout);
     custom_time_layout->addLayout(done_btn_layout);
 
+    custom_widget->setLayout(custom_time_layout);
+    custom_widget->setVisible(false);
+
     // m_reminderLayout->addWidget(set_reminder_label);
     // m_reminderLayout->addStretch();
     m_reminderLayout->addLayout(m_hor_worktitleLayout);
@@ -121,6 +122,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     m_reminderLayout->addLayout(m_hor_minbtnLayout);
     m_reminderLayout->addLayout(m_hor_hrbtnLayout);
     m_reminderLayout->addWidget(custom_time_button);
+    m_reminderLayout->addWidget(custom_widget);
     m_reminderLayout->addStretch();
     m_reminderLayout->addWidget(set_reminder_button);
 
@@ -132,6 +134,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     m_startReminderTimer->setInterval(1000);
     m_startReminderTimer->setTimerType(Qt::CoarseTimer);
 
+    remindercountdownTime = QTime(0,0,0);
+
     // signals and slots
     connect(m_startReminderTimer,&QTimer::timeout,this,[=]{
         updateReminderTimer();
@@ -139,7 +143,12 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     connect(custom_time_button,&QPushButton::clicked,this,[=]{
         qDebug() << "custom button clicked ";
-        m_reminderLayout->insertLayout(8,custom_time_layout);
+        if(custom_widget->isHidden()){
+            custom_widget->setVisible(true);
+        }
+        else{
+            custom_widget->setVisible(false);
+        }
     });
 
     connect(input_time_lineedit,&QLineEdit::editingFinished,this,[=]{
@@ -161,7 +170,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
             }
             qDebug() << "input time " << remindercountdownTime.toString("hh:mm:ss");
         }
-
+        custom_widget->setVisible(false);
     });
 
     connect(set_reminder_button,&QPushButton::clicked,this,[=]{
