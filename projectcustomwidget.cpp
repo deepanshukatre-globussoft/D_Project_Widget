@@ -131,9 +131,17 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
 }
 
+ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
+{
+    d_projectStatuslabel->setText(projectStatus);
+    d_projectNameLabel->setText(projectName);
+    d_taskNameLabel->setText(taskName);
+    d_taskActiveTimeLabel->setText(taskActiveTime);
+}
+
 void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
 {
-    qDebug()<<"received data ";
+    qDebug()<<"received data  "<<taskName;
     d_projectStatuslabel->setText(projectStatus);
     d_projectNameLabel->setText(projectName);
     d_taskNameLabel->setText(taskName);

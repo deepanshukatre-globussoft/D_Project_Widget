@@ -26,7 +26,8 @@ class ProjectCustomWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ProjectCustomWidget(QWidget *parent = nullptr);
+    ProjectCustomWidget(QWidget *parent = nullptr);
+    ProjectCustomWidget(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
 
     QHBoxLayout * p_FirstLayout;
     QHBoxLayout * p_SecondLayout;

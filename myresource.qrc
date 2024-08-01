@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>myqss.qss</file>
+        <file>imgs/red_circle.png</file>
+        <file>imgs/yellow_circle.png</file>
+        <file>imgs/green_circle.png</file>
+        <file>imgs/ORNG.png</file>
+        <file>imgs/blue_icon.png</file>
     </qresource>
 </RCC>

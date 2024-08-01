@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,12 +11,14 @@ CONFIG += c++17
 SOURCES += \
     createtask.cpp \
     main.cpp \
+    mynetworkmanager.cpp \
     projectcustomwidget.cpp \
     reminderwidget.cpp \
     widget.cpp
 
 HEADERS += \
     createtask.h \
+    mynetworkmanager.h \
     projectcustomwidget.h \
     reminderwidget.h \
     widget.h
