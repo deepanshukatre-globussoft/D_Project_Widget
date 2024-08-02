@@ -141,8 +141,8 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
 
 void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
 {
-
     emit deleteConfigurationsignal();
+
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
@@ -150,6 +150,8 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
 
         if (jsonObj.contains("data") && jsonObj["data"].isArray()) {
             dataArray = jsonObj["data"].toArray();
+
+            emit sendingTasksFromAPIdataSignal(dataArray);
 
             for (const QJsonValue &value : dataArray) {
                 if (value.isObject()) {

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "mynetworkmanager.h"
 #include "projectcustomwidget.h"
+#include "taskmodelclass.h"
 #include <QJsonArray>
 
 #include <QList>
@@ -13,8 +14,12 @@ class Widget : public QWidget
 
 public:
     Widget(QWidget *parent = nullptr);
+    static QList<TaskModelClass*> TaskModelClassContainerList;
     ~Widget();
+
+
 public:
+
     QVBoxLayout *ProjectMainLayout;
     QVBoxLayout *containerLayout;
     QWidget *containerWidget;
@@ -31,6 +36,7 @@ private:
     QPushButton *refreshbtn;
     QPushButton *updatebtn;
     void onProjectDataFetched(const QJsonArray &dataArray);
+    void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
     void onTaskDataFetched(const QString &id, const QString &title, const QString &folderName, const QString &projectTitle);
 private slots:
         void onEmptySignal(); // Test slot for empty signal

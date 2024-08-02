@@ -10,6 +10,9 @@ enum class TaskStatus {
     completed
 };
 
+QList<TaskModelClass*> Widget::TaskModelClassContainerList;
+//QList<TaskModelClass*> TaskModelClassContainerList;
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
@@ -30,13 +33,9 @@ Widget::Widget(QWidget *parent)
     headingLabel->setContentsMargins(2, 2, 2, 2);
 
     networkManager =  MyNetworkManager::instance();;
+
+
 //    networkManager->testslot();
-
-
-//    ProjectCustomWidget *customWidgetProject1 = new ProjectCustomWidget();
-//    ProjectCustomWidget *customWidgetProject2 = new ProjectCustomWidget();
-//    ProjectCustomWidget *customWidgetProject3 = new ProjectCustomWidget();
-//    ProjectCustomWidget *customWidgetProject4 = new ProjectCustomWidget();
 
 //    CreateTask *createTaskObj =  new CreateTask();
 
@@ -54,6 +53,7 @@ Widget::Widget(QWidget *parent)
 
     connect(networkManager, &MyNetworkManager::projectDataFetched, this, &Widget::onProjectDataFetched);
     connect(networkManager, &MyNetworkManager::taskDataFetched, this, &Widget::onTaskDataFetched);
+    connect(networkManager, &MyNetworkManager::sendingTasksFromAPIdataSignal, this, &Widget::onsendingTasksFromAPIdata);
     connect(networkManager, &MyNetworkManager::deleteConfigurationsignal, this,[this](){
         deleteConfiguration();
     });
@@ -64,27 +64,15 @@ Widget::Widget(QWidget *parent)
         networkManager->fetchTasksForMobileList(token,10);
     });
 
-
-//        emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
-//    emit customWidgetProject2->sendData("Status: Completed", "Project Beta", "Task 2", "00:45:30");
-
     QSpacerItem *spacer = new QSpacerItem(10,5);
 
 //    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
-
 //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
     ProjectMainLayout->addWidget(headingLabel);
     ProjectMainLayout->addWidget(refreshbtn);
-//    containerLayout->addWidget(customWidgetProject1); //  for loop use karna hain
-//    containerLayout->addSpacerItem(spacer);
-//    containerLayout->addWidget(customWidgetProject2);
-//    containerLayout->addSpacerItem(spacer);
-//    containerLayout->addWidget(customWidgetProject3);
-//    containerLayout->addSpacerItem(spacer);
-//    containerLayout->addWidget(customWidgetProject4);
-//    containerLayout->addWidget(createTaskObj);
+
 
 
     scrollArea = new QScrollArea(this);
@@ -133,7 +121,7 @@ void Widget::initConfiguration()
         qDebug() << "taskcontainerList is empty";
     }
     for(ProjectCustomWidget *widgetObject : TasksContainerList ){
-        qDebug() << "This ProjectCustomWidget  added :" << widgetObject;
+        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
         containerLayout->addWidget(widgetObject);
     }
 
@@ -148,7 +136,12 @@ void Widget::deleteConfiguration()
 {
         qDeleteAll(TasksContainerList);
         TasksContainerList.clear();
-        qDebug() << "delete all TasksContainerList data";
+        for (int i = 0; i < TaskModelClassContainerList.size(); ++i) {
+        delete TaskModelClassContainerList[i]; // Delete the object to avoid memory leaks
+        }
+        TaskModelClassContainerList.clear(); // Clear the list
+
+        qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data";
 }
 
 void Widget::onProjectDataFetched(const QJsonArray &dataArray)
@@ -157,16 +150,46 @@ void Widget::onProjectDataFetched(const QJsonArray &dataArray)
 
 }
 
+void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
+{
+    for (const QJsonValue &value : dataArray) {
+        if (value.isObject()) {
+            QJsonObject taskObject = value.toObject();
+            int status = taskObject["status"].toInt();
+            QString id = taskObject["_id"].toString();
+            QString title = taskObject["name"].toString();
+
+            QJsonObject folderObject = taskObject["folder_data"].toObject();
+            QString folderName = folderObject["name"].toString();
+            QString folderId = folderObject["_id"].toString();
+
+            QJsonObject project_data_Obj = taskObject["project_data"].toObject();
+            QString projectTitle = project_data_Obj["title"].toString();
+            QString projectId = project_data_Obj["_id"].toString();
+
+
+            TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
+                                                      folderName, projectId, projectTitle);
+
+            TaskModelClassContainerList.append(task);
+        }
+    }
+
+    for(int i=0; i< TaskModelClassContainerList.size();++i){
+//        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
+        qDebug()<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName;
+    }
+}
+
 void Widget::onTaskDataFetched(const QString &id, const QString &title, const QString &folderName, const QString &projectTitle)
 {
-    qDebug()<<"widget onTaskDataFetched method slot" << id<<" " <<title<<" "<<folderName<<" "<<projectTitle ;
+//    qDebug()<<"widget onTaskDataFetched method slot" << id<<" " <<title<<" "<<folderName<<" "<<projectTitle ;
 
     ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
     customWidgetTaskdata->receiveData(folderName,projectTitle,title,id);
 //    containerLayout->addWidget(customWidgetTaskdata);
 
     TasksContainerList.append(customWidgetTaskdata);
-
 }
 
 void Widget::onEmptySignal()

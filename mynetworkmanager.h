@@ -28,7 +28,7 @@ signals:
     void projectDataFetched(const QJsonArray &dataArray);
 //    void taskDataFetched(const QJsonArray &dataArray);
     void taskDataFetched(const QString &id, const QString &title, const QString &folderName, const QString &projectTitle);
-
+    void sendingTasksFromAPIdataSignal(QJsonArray dataArray);
     void deleteConfigurationsignal();
     void initConfigurationsignal();
 

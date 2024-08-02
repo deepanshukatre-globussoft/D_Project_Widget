@@ -13,12 +13,14 @@ SOURCES += \
     main.cpp \
     mynetworkmanager.cpp \
     projectcustomwidget.cpp \
+    taskmodelclass.cpp \
     widget.cpp
 
 HEADERS += \
     createtask.h \
     mynetworkmanager.h \
     projectcustomwidget.h \
+    taskmodelclass.h \
     widget.h
 
 # Default rules for deployment.
