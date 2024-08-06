@@ -151,34 +151,34 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
         if (jsonObj.contains("data") && jsonObj["data"].isArray()) {
             dataArray = jsonObj["data"].toArray();
 
-            emit sendingTasksFromAPIdataSignal(dataArray);
+            emit sendingTasksFromAPIdataSignal(dataArray); //  to set data in model class list
 
-            for (const QJsonValue &value : dataArray) {
-                if (value.isObject()) {
-                    QJsonObject taskObject = value.toObject();
-                    QString id = taskObject["_id"].toString();
-                    QString title = taskObject["name"].toString();
-                    QJsonObject folderObject = taskObject["folder_data"].toObject();
-                    QString folderName = folderObject["name"].toString();
-                    QJsonObject project_data_Obj = taskObject["project_data"].toObject();
-                    QString projectTitle = project_data_Obj["title"].toString();
+            emit taskDataFetched();// to set the widgetes with data
+//            for (const QJsonValue &value : dataArray) {
+//                if (value.isObject()) {
+//                    QJsonObject taskObject = value.toObject();
+//                    QString id = taskObject["_id"].toString();
+//                    QString title = taskObject["name"].toString();
+//                    QJsonObject folderObject = taskObject["folder_data"].toObject();
+//                    QString folderName = folderObject["name"].toString();
+//                    QJsonObject project_data_Obj = taskObject["project_data"].toObject();
+//                    QString projectTitle = project_data_Obj["title"].toString();
 
-                    //                    qDebug()<<projectObj;
-                    emit taskDataFetched(id,title,folderName,projectTitle);
-                    qDebug()<<"onTasksDataFetched emiting taskDataFetched signal";
+//                    //                    qDebug()<<projectObj;
+//                    qDebug()<<"onTasksDataFetched emiting taskDataFetched signal";
 
-                    //                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
-//                    qDebug()<<id;
+//                    //                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
+////                    qDebug()<<id;
 
-                }
-            }
+//                }
+//            }
         } else {
 
         }
     } else {
         qDebug() << "Error: " << reply->errorString();
     }
-    //    reply->deleteLater();
+        reply->deleteLater();
 
     emit initConfigurationsignal();
 }

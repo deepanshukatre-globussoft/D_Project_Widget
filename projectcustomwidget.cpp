@@ -87,6 +87,9 @@ ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QSt
 void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
 {
     qDebug()<<"received data  "<<taskName;
+//    if(projectStatus == "current task"){
+//        d_projectStatuslabel->s
+//    }
     d_projectStatuslabel->setText(projectStatus);
     d_projectNameLabel->setText(projectName);
     d_taskNameLabel->setText(taskName);
