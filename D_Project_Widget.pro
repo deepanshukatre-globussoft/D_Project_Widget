@@ -14,6 +14,7 @@ SOURCES += \
     mynetworkmanager.cpp \
     projectcustomwidget.cpp \
     taskmodelclass.cpp \
+    reminderwidget.cpp \
     widget.cpp
 
 HEADERS += \
@@ -21,6 +22,7 @@ HEADERS += \
     mynetworkmanager.h \
     projectcustomwidget.h \
     taskmodelclass.h \
+    reminderwidget.h \
     widget.h
 
 # Default rules for deployment.

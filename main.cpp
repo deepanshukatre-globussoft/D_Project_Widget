@@ -5,6 +5,8 @@
 #include<QDebug>
 #include <QApplication>
 
+#include "reminderwidget.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -19,7 +21,10 @@ int main(int argc, char *argv[])
 
     Widget w;
     w.show();
-//    CreateTask createTaskObj;
-//    createTaskObj.show();
+    // CreateTask createTaskObj;
+    // createTaskObj.show();
+
+    // ReminderWidget r;
+    // r.show();
     return a.exec();
 }

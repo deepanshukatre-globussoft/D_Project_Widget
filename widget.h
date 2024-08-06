@@ -6,6 +6,8 @@
 #include "projectcustomwidget.h"
 #include "taskmodelclass.h"
 #include <QJsonArray>
+#include <QPixmap>
+#include <QEvent>
 
 #include <QList>
 class Widget : public QWidget
@@ -30,14 +32,23 @@ public:
     QList<ProjectCustomWidget *> TasksContainerList ;
     void initConfiguration();
     void deleteConfiguration();
-    QString token = "dee2efec548e446ad8d772b50c086ce3:4eeec7e072808002bea3da14ecf93a279b476e2afd35db450764d84fe78da3d54140d27b292420aa832536041c2d002a5750c24b335bdaf29a003e06777ecedcc6dfe7444fb11afd05011e84806a1b71f71ebc60a6354b465b7b61a4379a366130c388e74958e2b838ccafcb2029707ce78b97faecd4eb1e929e58d081fa75b281f6b2fa711db6f5844d76a6f4801aabe37c3c868b0c4853bb1244a907c07e89a064698422a726b1f5f1702881c5b39d7e86b894af03c2c087aec41b4c56190c625b6f29b7d76dca268c21c512e62a6038cb4dd673d8a0c50aa33a73b27141b484cb96a0bf293543303e6ed3246b4a979b00695a2ef52df2ef33763fc1d2027eabe7b6a3fda76ecbcf31b085e1775768c8f6bdd80ea1b63903d084b112a18c1f";
+    QString token = "2346252ac9794f017f20664aad9a8a60:9c105694f52112bf40aa4ee280739b8ce8bb31e75fc74cac81d93885eb8758c15216f7db5caf88ef8543b8f383c6877cfd86009d607a488f7cc74cf6dfbc09d9efc8c4ace5e9938bfbb7978dc45ba3c411dbe273cb9c9e037403f5870fd9c57b6ac8a32aaf3bdca43fa0fe9500e62cc7edfde6ddac6ae0f8199d48597a01ce150ffd1175124e7ea15c6238546eff707485d12ff6547b13a58c5a2a98bfb87912c36fa4468290b83cab690a62a5e70ed6df5944a460a61dffd71583cc3b416769ccda67e6e163746e11ebb868adda9f66ff9d603cbf37288af822b4bc069b07ea5f13bd0792e2dd93945fd4f1b84034c59476e86678db1ac2426f60e619ba18576d68d8bc20eb9a63f52fbda6755ccc8332edab64a3d7f4791ff79b5776fcf752";
+
+    QWidget *overlayWidget;
+
+protected:
+    // void showEvent(QShowEvent  *event) override;
+    void hideEvent(QHideEvent *event) override;
+    void moveEvent(QMoveEvent * event) override;
+
 private:
     QPushButton *refreshbtn;
     QPushButton *updatebtn;
+    QPushButton * filter_btn;
     void onProjectDataFetched(const QJsonArray &dataArray);
     void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
     void onTaskDataFetched();
 private slots:
-        void onEmptySignal(); // Test slot for empty signal
+    void onEmptySignal(); // Test slot for empty signal
 };
 #endif // WIDGET_H
