@@ -13,6 +13,10 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QMessageBox>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QProcess>
 
 class ReminderWidget : public QWidget
 {
@@ -23,8 +27,10 @@ public:
     QVBoxLayout * m_reminderLayout;
     QLabel * d_taskActiveTimeInReminder;
     QLabel * d_taskReminderTimeLabel;
+    QPushButton * set_reminder_button;
 
-    QTimer * m_startReminderTimer;
+    QWidget * update_widget;
+
     QTime remindercountdownTime;
     QPushButton *buttons[6];
     int lastClickedIndex = 10;
@@ -34,9 +40,15 @@ public:
 
 public slots:
     void addbuttonbackground(int index);
-    void updateReminderTimer();
+    void SetUpdateReminder();
+
+private:
+    QSystemTrayIcon *trayIcon;
 
 signals:
+    void displayReminderTime(QTime reminder_time);
+    void resetReminderSignal();
+    void updateReminderSignal();
 };
 
 #endif // REMINDERWIDGET_H

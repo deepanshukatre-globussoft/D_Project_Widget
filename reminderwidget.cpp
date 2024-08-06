@@ -82,14 +82,19 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     input_time_lineedit->setValidator(validator);
 
     QComboBox * time_combo_box = new QComboBox();
-    time_combo_box->addItem("min");
-    time_combo_box->addItem("hr");
+    time_combo_box->addItem("mins");
+    time_combo_box->addItem("hrs");
 
     QHBoxLayout * done_btn_layout = new QHBoxLayout();
     QPushButton * done_button = new QPushButton("Done");
     done_btn_layout->addWidget(done_button,Qt::AlignRight);
 
-    QPushButton * set_reminder_button = new QPushButton("Set Reminder");
+    set_reminder_button = new QPushButton("Set Reminder");
+
+    update_widget = new QWidget();
+    QHBoxLayout * reset_update_btnLayout = new QHBoxLayout();
+    QPushButton * reset_reminder_btn = new QPushButton("Reset");
+    QPushButton * update_reminder_btn = new QPushButton("Update");
 
     work_tasktitle_hor_layout->addWidget(work_label);
     work_tasktitle_hor_layout->addWidget(task_title_label);
@@ -112,6 +117,12 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     custom_widget->setLayout(custom_time_layout);
     custom_widget->setVisible(false);
 
+    reset_update_btnLayout->addWidget(reset_reminder_btn);
+    reset_update_btnLayout->addWidget(update_reminder_btn);
+
+    update_widget->setLayout(reset_update_btnLayout);
+    update_widget->setVisible(false);
+
     // m_reminderLayout->addWidget(set_reminder_label);
     // m_reminderLayout->addStretch();
     m_reminderLayout->addLayout(m_hor_worktitleLayout);
@@ -125,22 +136,17 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     m_reminderLayout->addWidget(custom_widget);
     m_reminderLayout->addStretch();
     m_reminderLayout->addWidget(set_reminder_button);
+    m_reminderLayout->addWidget(update_widget);
+
 
     this->setLayout(m_reminderLayout);
 
     // this->show();
 
-    m_startReminderTimer = new QTimer();
-    m_startReminderTimer->setInterval(1000);
-    m_startReminderTimer->setTimerType(Qt::CoarseTimer);
 
     remindercountdownTime = QTime(0,0,0);
 
     // signals and slots
-    connect(m_startReminderTimer,&QTimer::timeout,this,[=]{
-        updateReminderTimer();
-    });
-
     connect(custom_time_button,&QPushButton::clicked,this,[=]{
         qDebug() << "custom button clicked ";
         if(custom_widget->isHidden()){
@@ -154,30 +160,68 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     connect(input_time_lineedit,&QLineEdit::editingFinished,this,[=]{
         input_time = input_time_lineedit->text().toInt(&ok);
         qDebug() << "lineedit editing finished " << input_time;
+        if(lastClickedIndex <=5){
+            buttons[lastClickedIndex]->setStyleSheet("");
+        }
     });
 
     connect(done_button,&QPushButton::clicked,this,[=]{
         qDebug() << "done_button clicked ";
         if(input_time != 0){
-            // m_reminderLayout->removeItem(custom_time_layout);
             custom_time_button->setText(QString::number(input_time) +time_combo_box->currentText());
 
-            if(time_combo_box->currentText() == "min"){
+            if(time_combo_box->currentText() == "mins"){
                 remindercountdownTime = QTime(0,input_time,0);
             }
             else{
                 remindercountdownTime = QTime(input_time,0,0);
             }
             qDebug() << "input time " << remindercountdownTime.toString("hh:mm:ss");
+            input_time_lineedit->clear();
+            input_time = 0;
         }
         custom_widget->setVisible(false);
     });
 
     connect(set_reminder_button,&QPushButton::clicked,this,[=]{
         qDebug() << "set_reminder_button clicked ";
-        // d_reminderWidget->hide();
+        custom_time_button->setText("Custom Time");
+        time_combo_box->setCurrentText("mins");
         d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
-        m_startReminderTimer->start();
+        this->hide();
+        set_reminder_button->setVisible(false);
+        if(lastClickedIndex <=5){
+            buttons[lastClickedIndex]->setStyleSheet("");
+        }
+        qDebug() << "after button clear";
+        emit displayReminderTime(remindercountdownTime);
+    });
+
+    connect(reset_reminder_btn,&QPushButton::clicked,this,[=]{
+        qDebug() << "reset reminder btn clicked ";
+        if(lastClickedIndex <=5){
+            buttons[lastClickedIndex]->setStyleSheet("");
+        }
+        this->hide();
+        emit resetReminderSignal();
+    });
+
+    connect(update_reminder_btn,&QPushButton::clicked,this,[=]{
+        qDebug() << "update_reminder_btn clicked ";
+        custom_time_button->setText("Custom Time");
+        time_combo_box->setCurrentText("mins");
+        if(remindercountdownTime != QTime(0,0,0)){
+            this->hide();
+            emit displayReminderTime(remindercountdownTime);
+        }else{
+            qDebug() << "in else of QTime";
+            if(lastClickedIndex <=5){
+                buttons[lastClickedIndex]->setStyleSheet("");
+            }
+            QMessageBox notify;
+            notify.setText("Set a vlaue for Timer");
+            notify.exec();
+        }
     });
 }
 
@@ -191,46 +235,30 @@ void ReminderWidget::addbuttonbackground(int index)
     buttons[index]->setStyleSheet("background-color: blue; color: white;"); // Set the new button's style
     lastClickedIndex = index;
 
+    bool ok = true;
     QString timetext = buttons[lastClickedIndex]->text();
+    qDebug() << "timetext " << timetext;
+    int button_time = 0;
     if(timetext.contains(" min")){
         timetext.remove(" min");
+        button_time = timetext.toInt(&ok);
+        remindercountdownTime = QTime(0,button_time,0);
     }
     else{
         timetext.remove(" hr");
+        button_time = timetext.toInt(&ok);
+        remindercountdownTime = QTime(button_time,0,0);
     }
-
-    qDebug() << "timetext " << timetext;
-
-    bool ok = true;
-    switch (timetext.toInt(&ok)) {
-    case 5 :
-        remindercountdownTime = QTime(0,5,0);
-        break;
-    case 15 :
-        remindercountdownTime = QTime(0,15,0);
-        break;
-    case 30 :
-        remindercountdownTime = QTime(0,30,0);
-        break;
-    case 1 :
-        remindercountdownTime = QTime(1,0,0);
-        break;
-    case 2 :
-        remindercountdownTime = QTime(2,0,0);
-        break;
-    case 3 :
-        remindercountdownTime = QTime(3,0,0);
-        break;
-    default:
-        qDebug() << "no reminder time button executed ";
-        break;
-    }
-
     qDebug() << remindercountdownTime.toString("hh:mm:ss");
+
 }
 
-void ReminderWidget::updateReminderTimer()
+void ReminderWidget::SetUpdateReminder()
 {
-    remindercountdownTime = remindercountdownTime.addSecs(-1); // Decrement by one second
-    d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
+    qDebug() << "in SetUpdateReminder slot of reminderwidget   ";
+    remindercountdownTime = QTime(0,0,0);
+    if(lastClickedIndex <=5){
+        buttons[lastClickedIndex]->setStyleSheet("");
+    }
 }
+
