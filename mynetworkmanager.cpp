@@ -151,9 +151,9 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
         if (jsonObj.contains("data") && jsonObj["data"].isArray()) {
             dataArray = jsonObj["data"].toArray();
 
-            emit sendingTasksFromAPIdataSignal(dataArray); //  to set data in model class list
+            emit sendingTasksFromAPIdataSignal(dataArray); //  to set data in model class list  indirectly for model
 
-            emit taskDataFetched();// to set the widgetes with data
+            emit taskDataFetched();// to set the widgetes with data indirectly for UI
 //            for (const QJsonValue &value : dataArray) {
 //                if (value.isObject()) {
 //                    QJsonObject taskObject = value.toObject();

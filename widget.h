@@ -17,6 +17,7 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     static QList<TaskModelClass*> TaskModelClassContainerList;
+    static QList<TaskModelClass*> TaskModelFliterContainerList;
     ~Widget();
 
 

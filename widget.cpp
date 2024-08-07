@@ -11,6 +11,7 @@ enum class TaskStatus {
 };
 
 QList<TaskModelClass*> Widget::TaskModelClassContainerList;
+QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
 //QList<TaskModelClass*> TaskModelClassContainerList;
 
 Widget::Widget(QWidget *parent)
@@ -370,6 +371,11 @@ void Widget::deleteConfiguration()
         }
         TaskModelClassContainerList.clear(); // Clear the list
 
+        for (int i = 0; i < TaskModelFliterContainerList.size(); ++i) {
+            delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
+        }
+        TaskModelFliterContainerList.clear(); // Clear the list
+
         qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data";
 
 }
@@ -420,9 +426,12 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
             TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
                                                       folderName, projectId, projectTitle);
 
-            TaskModelClassContainerList.append(task);
+            TaskModelClassContainerList.append(task);       // for whole data in unfiltered list
+            TaskModelFliterContainerList.append(task);    // setting data for the filtered list
         }
     }
+
+
 
     for(int i=0; i< TaskModelClassContainerList.size();++i){
 //        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
@@ -433,12 +442,22 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
 void Widget::onTaskDataFetched()
 {
 
-    for(int i=0; i< TaskModelClassContainerList.size();++i){
+//    for(int i=0; i< TaskModelClassContainerList.size();++i){
+//        ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+//        customWidgetTaskdata->receiveData(TaskModelClassContainerList[i]->m_taskFolderName,
+//                                          TaskModelClassContainerList[i]->m_taskProjectName,
+//                                          TaskModelClassContainerList[i]->m_taskName,
+//                                          TaskModelClassContainerList[i]->m_taskid);
+//        TasksContainerList.append(customWidgetTaskdata);
+//    }
+
+
+    for(int i=0; i< TaskModelFliterContainerList.size();++i){
         ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-        customWidgetTaskdata->receiveData(TaskModelClassContainerList[i]->m_taskFolderName,
-                                          TaskModelClassContainerList[i]->m_taskProjectName,
-                                          TaskModelClassContainerList[i]->m_taskName,
-                                          TaskModelClassContainerList[i]->m_taskid);
+        customWidgetTaskdata->receiveData(TaskModelFliterContainerList[i]->m_taskFolderName,
+                                          TaskModelFliterContainerList[i]->m_taskProjectName,
+                                          TaskModelFliterContainerList[i]->m_taskName,
+                                          TaskModelFliterContainerList[i]->m_taskid);
         TasksContainerList.append(customWidgetTaskdata);
     }
 
