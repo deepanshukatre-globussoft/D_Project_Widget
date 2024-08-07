@@ -201,14 +201,6 @@ Widget::Widget(QWidget *parent)
     refreshbtn = new QPushButton("Refresh",this);
 //    updatebtn = new QPushButton("updatebtn",this);
 
-    //    QObject::connect(customWidgetProject1, &ProjectCustomWidget::sendData, customWidgetProject1, &ProjectCustomWidget::receiveData);
-    //    QObject::connect(customWidgetProject2, &ProjectCustomWidget::sendData, customWidgetProject2, &ProjectCustomWidget::receiveData);
-
-    //    bool connectionStatus = connect(networkManager, &MyNetworkManager::projectDataFetched,[this](){
-    //        qDebug()<<"signal emmited";
-    //    });
-    //    qDebug() << "NetworkManager address:" << networkManager;
-    //    qDebug() << "This address:" << this;
 
     connect(networkManager, &MyNetworkManager::projectDataFetched, this, &Widget::onProjectDataFetched);
     connect(networkManager, &MyNetworkManager::taskDataFetched, this, &Widget::onTaskDataFetched);
@@ -223,7 +215,7 @@ Widget::Widget(QWidget *parent)
         networkManager->fetchTasksForMobileList(token,10);
     });
 
-    QSpacerItem *spacer = new QSpacerItem(10,5);
+//    QSpacerItem *spacer = new QSpacerItem(10,5);
 
 //    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
@@ -232,10 +224,11 @@ Widget::Widget(QWidget *parent)
     search_layout->addWidget(search_icon);
     search_layout->addWidget(search_lineedit);
     search_layout->addWidget(filter_btn);
+    search_layout->addWidget(refreshbtn);
 
     ProjectMainLayout->addLayout(search_layout);
     ProjectMainLayout->addWidget(headingLabel);
-    ProjectMainLayout->addWidget(refreshbtn);
+//    ProjectMainLayout->addWidget(refreshbtn);
 
 
     scrollArea = new QScrollArea(this);
@@ -415,8 +408,8 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
             QJsonObject folderObject = taskObject["folder_data"].toObject();
             QString folderName = folderObject["name"].toString();
             QString folderId = folderObject["_id"].toString();
-    ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-    customWidgetTaskdata->receiveData(folderName,projectTitle,title,id);
+//    ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+//    customWidgetTaskdata->receiveData(folderName,projectTitle,title,id);
     //    containerLayout->addWidget(customWidgetTaskdata);
 
             QJsonObject project_data_Obj = taskObject["project_data"].toObject();
@@ -439,7 +432,6 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
 
 void Widget::onTaskDataFetched()
 {
-//    qDebug()<<"widget onTaskDataFetched method slot" << id<<" " <<title<<" "<<folderName<<" "<<projectTitle ;
 
     for(int i=0; i< TaskModelClassContainerList.size();++i){
         ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
