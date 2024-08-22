@@ -26,7 +26,7 @@ public:
 
 signals:
     void projectDataFetched(const QJsonArray &dataArray);
-    void taskDataFetched();
+    void taskDataFetched(int count);
     void sendingTasksFromAPIdataSignal(QJsonArray dataArray);
     void deleteConfigurationsignal();
     void initConfigurationsignal();

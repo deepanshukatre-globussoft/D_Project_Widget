@@ -33,8 +33,7 @@ public:
     QList<ProjectCustomWidget *> TasksContainerList ;
     void initConfiguration();
     void deleteConfiguration();
-    QString token = "2346252ac9794f017f20664aad9a8a60:9c105694f52112bf40aa4ee280739b8ce8bb31e75fc74cac81d93885eb8758c15216f7db5caf88ef8543b8f383c6877cfd86009d607a488f7cc74cf6dfbc09d9efc8c4ace5e9938bfbb7978dc45ba3c411dbe273cb9c9e037403f5870fd9c57b6ac8a32aaf3bdca43fa0fe9500e62cc7edfde6ddac6ae0f8199d48597a01ce150ffd1175124e7ea15c6238546eff707485d12ff6547b13a58c5a2a98bfb87912c36fa4468290b83cab690a62a5e70ed6df5944a460a61dffd71583cc3b416769ccda67e6e163746e11ebb868adda9f66ff9d603cbf37288af822b4bc069b07ea5f13bd0792e2dd93945fd4f1b84034c59476e86678db1ac2426f60e619ba18576d68d8bc20eb9a63f52fbda6755ccc8332edab64a3d7f4791ff79b5776fcf752";
-
+    QString token = "45f9e4414332e8a0190601642b08bc15:1809c86ee5ea347d536cf7c6c180717b8cc0d177fa5c4993cabe2098fb538d5afe52cf3131894b77ccaaf162b21a64a54fb80769e04b6df8471a6ee07fa5833e2aed5c6409880f50b72df5290f90ed050b84c76cce7f2b58ae83e6686da051ab6bbc49aae3900ca34d15937deb3c2395ca621380c952d9986e9d79443196ad2a08b6324c07e9e00e9fae487cacf8423f7f27ea1c7ef8227ccb9ed6209a5942f9ce4fc8628d5f34a9eebbb5c2b0582b6a4fbb7ced97d4a40a782954cc0be5ba1ca6c8389718daebb47ef20dd2b6552909e18e2bef695bb115618e12eeb9d0e8e26d843764d9485186498e2fe2720b97aa81c572a681b4e69d47aabbbb19647965d0a9cfa892e1273827e81f7e9966ddaeac5e076dc7daa1725211e6d808b1549d";
     QWidget *overlayWidget;
 
 protected:
@@ -48,7 +47,7 @@ private:
     QPushButton * filter_btn;
     void onProjectDataFetched(const QJsonArray &dataArray);
     void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
-    void onTaskDataFetched();
+    void onTaskDataFetched(int count);
 private slots:
     void onEmptySignal(); // Test slot for empty signal
 };
