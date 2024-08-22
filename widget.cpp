@@ -32,24 +32,34 @@ Widget::Widget(QWidget *parent)
     containerWidget->setLayout(containerLayout);
 
     QHBoxLayout * search_layout = new QHBoxLayout();
-    QLabel * search_label = new QLabel(this);
-    QPixmap search_icon("://imgs/search.svg");
-    search_label->setPixmap(search_icon);
+
+//    QHBoxLayout * search_minilayout_icon = new QHBoxLayout();
+//    QLabel * search_label = new QLabel(this);
+//    QPixmap search_icon("://imgs/search.svg");
+//    search_label->setPixmap(search_icon);
+//    QLabel * serchtextlabel = new QLabel("search");
     QLineEdit * search_lineedit = new QLineEdit();
-    // search_lineedit->setFocusPolicy(Qt::NoFocus);
-    search_lineedit->setPlaceholderText("search");
+
+//    search_lineedit->setFixedHeight(35);
+//    search_lineedit->setFont(QFont("Arial", 13));
+    search_lineedit->setPlaceholderText("Search");
+
+    search_lineedit->setObjectName("search_lineeditObject");
 
     QHBoxLayout * create_layout = new QHBoxLayout();
 
-    QPushButton * createTaskBtn = new QPushButton(this);
+    QPushButton * createTaskBtn = new QPushButton(containerWidget);
     QIcon create_icon("://imgs/create.svg");
     createTaskBtn->setIcon(create_icon);
     createTaskBtn->setFlat(true);
     createTaskBtn->setFixedSize(30,30);
     createTaskBtn->setIconSize(QSize(30,30));
+//    createTaskBtn->setGeometry(100,100,30,30);
+//     createTaskBtn->raise();
 
-    create_layout->addWidget(createTaskBtn);
+//    create_layout->addWidget(createTaskBtn);
     create_layout->setAlignment(Qt::AlignHCenter);
+//    createTaskBtn->setGeometry(100,100,)
 
     filter_btn = new QPushButton(this);
     QHBoxLayout * filter_layout = new QHBoxLayout();
@@ -58,11 +68,15 @@ Widget::Widget(QWidget *parent)
     QLabel * filter_label = new QLabel("Filter",this);
 
     overlayWidget = new QWidget(this);
-    qDebug() << "overlayWidget  reference " << overlayWidget;
-    qDebug() << "overlayWidget parent object reference " << overlayWidget->parent();
-    qDebug() << "overlayWidget parent widget reference " << overlayWidget->parentWidget();
+    overlayCreatetaskWidget = new QWidget(this);
+//    qDebug() << "overlayWidget  reference " << overlayWidget;
+//    qDebug() << "overlayWidget parent object reference " << overlayWidget->parent();
+//    qDebug() << "overlayWidget parent widget reference " << overlayWidget->parentWidget();
 
     // mainLayout = new QVBoxLayout();
+    QVBoxLayout *createTaskOverlayLayout = new QVBoxLayout(overlayWidget);
+
+    createTaskOverlayLayout->setContentsMargins(0,0,0,0);
     QVBoxLayout *overlayLayout = new QVBoxLayout(overlayWidget);
     overlayLayout->setContentsMargins(0,0,0,0);
 
@@ -205,6 +219,7 @@ Widget::Widget(QWidget *parent)
     // overlayLayout->addStretch();
     overlayLayout->addWidget(folders_btn);
     overlayLayout->addWidget(folders_widget);
+    createTaskOverlayLayout->addWidget(createTaskBtn);
 
     // setting overlayWidget
     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -214,6 +229,12 @@ Widget::Widget(QWidget *parent)
     overlayWidget->setLayout(overlayLayout);
     overlayWidget->setStyleSheet("QWidget { background-color: #D2232A ; color: white; }");
     overlayWidget->setVisible(false);
+
+    overlayCreatetaskWidget->setFixedSize(30,30);
+    overlayCreatetaskWidget->move(300,330);
+    overlayCreatetaskWidget->setLayout(createTaskOverlayLayout);
+
+    overlayCreatetaskWidget->setVisible(true);
     // overlayWidget->setFixedSize(150,300);
 
     // QLabel *headingLabel = new QLabel("Task List",this);
@@ -295,7 +316,6 @@ Widget::Widget(QWidget *parent)
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
 //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
-    search_layout->addWidget(search_label);
     search_layout->addWidget(search_lineedit);
     // search_layout->addWidget(createTaskBtn);
     search_layout->addWidget(filter_btn);
@@ -323,6 +343,8 @@ Widget::Widget(QWidget *parent)
         //        }
     }
 
+    overlayCreatetaskWidget->show();
+    overlayCreatetaskWidget->raise();
     //    ProjectMainLayout->addWidget(containerWidget);
     ProjectMainLayout->addWidget(scrollArea);
     // ProjectMainLayout->addWidget(createTaskBtn);
@@ -330,6 +352,9 @@ Widget::Widget(QWidget *parent)
 
     setLayout(ProjectMainLayout);
     setFixedSize(650,400);
+
+    // First time calling the api so it should not come empty
+    networkManager->fetchTasksForMobileList(token,10);
 
     //signals and slots
     connect(createTaskBtn,&QPushButton::clicked,this,[=]{
@@ -467,6 +492,7 @@ void Widget::initConfiguration()
         containerLayout->addWidget(widgetObject);
     }
 
+    containerLayout->addStretch();
     containerLayout->addStretch();
 
 

@@ -30,7 +30,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QPushButton *deleteBtn = new QPushButton(this);
     // deleteBtn->setStyleSheet("background-color: #fa3c36  ; color: white;");
     // deleteBtn->setFixedSize(20,this->height());
-    QIcon deleteIcon("C:/Users/GLB-BLR-304/Documents/GitHub/images/Group1253.svg");
+    QIcon deleteIcon(":/imgs/delete.svg");
     deleteBtn->setIcon(deleteIcon);
     deleteBtn->setFlat(true);
     deleteBtn->setIconSize(QSize(29,29));
@@ -51,7 +51,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
 
     d_containerLayout = new QVBoxLayout();
-    d_containerLayout->setContentsMargins(5,5,5,5);
+    d_containerLayout->setContentsMargins(10,10,5,5);
 
     d_containerWidget->setObjectName("projectContainerObject");
 
@@ -120,6 +120,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QLabel * start_label = new QLabel("Start",this);
 
     start_label->setStyleSheet("color: #FFFFFF;");
+//    start_label->setFixedSize(24,12);
     start_icon->setPixmap(start_pic);
 
     startbtn_layout->addWidget(start_icon);

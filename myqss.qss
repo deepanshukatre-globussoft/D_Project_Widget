@@ -1,6 +1,6 @@
 
 #projectContainerObject {
-background-color: #e6acac;
+background-color: #e8dfdf;
 }
 QPushButton  {
 
@@ -8,3 +8,17 @@ QPushButton  {
     text-align: center;              /* Center f0dfdf  e89090 */
 
 }
+
+#search_lineeditObject {
+    background-image: url(:/imgs/search.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 15px 15px;
+    padding-left: 35px;
+
+    height: 35px;
+    font-family: Arial;
+    font-size: 15px;
+
+}
+
