@@ -488,10 +488,10 @@ void Widget::deleteConfiguration()
         }
         TaskModelClassContainerList.clear(); // Clear the list
 
-        for (int i = 0; i < TaskModelFliterContainerList.size(); ++i) {
-            // delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
-        }
-        TaskModelFliterContainerList.clear(); // Clear the list
+//        for (int i = 0; i < TaskModelFliterContainerList.size(); ++i) {
+//            delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
+//        }
+//        TaskModelFliterContainerList.clear(); // Clear the list
 
         qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data" << QDateTime::currentDateTime().toString(Qt::ISODate);
 
@@ -544,9 +544,7 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
                                                       folderName, projectId, projectTitle);
 
             TaskModelClassContainerList.append(task);       // for whole data in unfiltered list
-            TaskModelFliterContainerList.append(task);    // setting data for the filtered list
-            // qDebug() << "TaskModelClassContainerList" << TaskModelClassContainerList;
-            // qDebug() << "TaskModelFliterContainerList" << TaskModelFliterContainerList;
+//            TaskModelFliterContainerList.append(task);    // setting data for the filtered list
         }
     }
 
@@ -556,27 +554,27 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
     }
 }
 
-void Widget::onTaskDataFetched()
+void Widget::onTaskDataFetched(int count)
 {
 
-//    for(int i=0; i< TaskModelClassContainerList.size();++i){
-//        ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-//        customWidgetTaskdata->receiveData(TaskModelClassContainerList[i]->m_taskFolderName,
-//                                          TaskModelClassContainerList[i]->m_taskProjectName,
-//                                          TaskModelClassContainerList[i]->m_taskName,
-//                                          TaskModelClassContainerList[i]->m_taskid);
-//        TasksContainerList.append(customWidgetTaskdata);
-//    }
-
-
-    for(int i=0; i< TaskModelFliterContainerList.size();++i){
-        ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-
-        customWidgetTaskdata->receiveData(TaskModelFliterContainerList[i]->m_taskFolderName,
-                                          TaskModelFliterContainerList[i]->m_taskProjectName,
-                                          TaskModelFliterContainerList[i]->m_taskName,
-                                          TaskModelFliterContainerList[i]->m_taskid);
-        TasksContainerList.append(customWidgetTaskdata);
+    if(count == 1){
+        for(int i=0; i< TaskModelClassContainerList.size();++i){
+            ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+            customWidgetTaskdata->receiveData(TaskModelClassContainerList[i]->m_taskFolderName,
+                                              TaskModelClassContainerList[i]->m_taskProjectName,
+                                              TaskModelClassContainerList[i]->m_taskName,
+                                              TaskModelClassContainerList[i]->m_taskid);
+            TasksContainerList.append(customWidgetTaskdata);
+        }
+    }else if(count == 2){  //
+//        for(int i=0; i< TaskModelFliterContainerList.size();++i){
+//            ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+//            customWidgetTaskdata->receiveData(TaskModelFliterContainerList[i]->m_taskFolderName,
+//                                              TaskModelFliterContainerList[i]->m_taskProjectName,
+//                                              TaskModelFliterContainerList[i]->m_taskName,
+//                                              TaskModelFliterContainerList[i]->m_taskid);
+//            TasksContainerList.append(customWidgetTaskdata);
+//        }
     }
 
     //    containerLayout->addWidget(customWidgetTaskdata);

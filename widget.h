@@ -49,7 +49,7 @@ private:
     QPushButton * filter_btn;
     void onProjectDataFetched(const QJsonArray &dataArray);
     void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
-    void onTaskDataFetched();
+    void onTaskDataFetched(int count);
 private slots:
     void onEmptySignal(); // Test slot for empty signal
 
