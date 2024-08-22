@@ -6,6 +6,7 @@
 #include <QApplication>
 
 #include "reminderwidget.h"
+#include "projectcustomwidget.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,10 +22,15 @@ int main(int argc, char *argv[])
 
     Widget w;
     w.show();
+
     // CreateTask createTaskObj;
     // createTaskObj.show();
 
     // ReminderWidget r;
     // r.show();
+
+    // ProjectCustomWidget pro;
+    // pro.show();
+
     return a.exec();
 }

@@ -18,29 +18,56 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
 
+    qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
     ProjectMainLayout->setAlignment(Qt::AlignLeft);
 
     containerWidget = new QWidget(this);
+    qDebug() << "containerWidget  reference " << containerWidget;
+    qDebug() << "containerWidget parent object reference " << containerWidget->parent();
+    qDebug() << "containerWidget parent widget reference " << containerWidget->parentWidget();
     containerLayout = new QVBoxLayout(containerWidget);
-    containerLayout->setContentsMargins(0,0,0,0);
+    containerLayout->setContentsMargins(0,0,5,5);
     containerWidget->setLayout(containerLayout);
 
     QHBoxLayout * search_layout = new QHBoxLayout();
-    QLabel * search_icon = new QLabel("search");
+    QLabel * search_label = new QLabel(this);
+    QPixmap search_icon("://imgs/search.svg");
+    search_label->setPixmap(search_icon);
     QLineEdit * search_lineedit = new QLineEdit();
     // search_lineedit->setFocusPolicy(Qt::NoFocus);
-    filter_btn = new QPushButton("filter",this);
+    search_lineedit->setPlaceholderText("search");
 
-    overlayWidget = new QWidget();
+    QHBoxLayout * create_layout = new QHBoxLayout();
+
+    QPushButton * createTaskBtn = new QPushButton(this);
+    QIcon create_icon("://imgs/create.svg");
+    createTaskBtn->setIcon(create_icon);
+    createTaskBtn->setFlat(true);
+    createTaskBtn->setFixedSize(30,30);
+    createTaskBtn->setIconSize(QSize(30,30));
+
+    create_layout->addWidget(createTaskBtn);
+    create_layout->setAlignment(Qt::AlignHCenter);
+
+    filter_btn = new QPushButton(this);
+    QHBoxLayout * filter_layout = new QHBoxLayout();
+    QLabel * filter_icon = new QLabel();
+    QPixmap filter_pic("://imgs/filter.png");
+    QLabel * filter_label = new QLabel("Filter",this);
+
+    overlayWidget = new QWidget(this);
+    qDebug() << "overlayWidget  reference " << overlayWidget;
+    qDebug() << "overlayWidget parent object reference " << overlayWidget->parent();
+    qDebug() << "overlayWidget parent widget reference " << overlayWidget->parentWidget();
 
     // mainLayout = new QVBoxLayout();
     QVBoxLayout *overlayLayout = new QVBoxLayout(overlayWidget);
     overlayLayout->setContentsMargins(0,0,0,0);
 
     //projects btn
-    QPushButton * projects_btn = new QPushButton();
+    QPushButton * projects_btn = new QPushButton(overlayWidget);
     QHBoxLayout * projectsLayout = new QHBoxLayout();
     projectsLayout->setContentsMargins(0,0,0,0);
     QLabel * point_icon = new QLabel();
@@ -65,7 +92,7 @@ Widget::Widget(QWidget *parent)
     projects_widget->setVisible(false);
 
     //folders btn
-    QPushButton * folders_btn = new QPushButton();
+    QPushButton * folders_btn = new QPushButton(overlayWidget);
     QHBoxLayout * foldersLayout = new QHBoxLayout();
     foldersLayout->setContentsMargins(0,0,0,0);
     QLabel * point_icon2 = new QLabel();
@@ -85,7 +112,7 @@ Widget::Widget(QWidget *parent)
     QLabel * current_task_icon = new QLabel();
     current_task_icon->setFixedSize(24,24);
     QPixmap current_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-24.png");
-    current_task_icon->setPixmap(current_task_pic);
+    // current_task_icon->setPixmap(current_task_pic);
     QLabel * current_task_label = new QLabel("current task");
 
     // next task btn
@@ -94,7 +121,7 @@ Widget::Widget(QWidget *parent)
     QLabel * next_task_icon = new QLabel();
     next_task_icon->setFixedSize(24,24);
     QPixmap next_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-yellow.png");
-    next_task_icon->setPixmap(next_task_pic);
+    // next_task_icon->setPixmap(next_task_pic);
     QLabel * next_task_label = new QLabel("next task");
 
     // future task btn
@@ -103,7 +130,7 @@ Widget::Widget(QWidget *parent)
     QLabel * future_task_icon = new QLabel();
     future_task_icon->setFixedSize(24,24);
     QPixmap future_task_pic("");
-    future_task_icon->setPixmap(future_task_pic);
+    // future_task_icon->setPixmap(future_task_pic);
     QLabel * future_task_label = new QLabel("future task");
 
     // completed task btn
@@ -112,7 +139,7 @@ Widget::Widget(QWidget *parent)
     QLabel * completed_task_icon = new QLabel();
     completed_task_icon->setFixedSize(24,24);
     QPixmap completed_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-green.png");
-    completed_task_icon->setPixmap(completed_task_pic);
+    // completed_task_icon->setPixmap(completed_task_pic);
     QLabel * completed_task_label = new QLabel("completed task");
 
     // setting current task btn
@@ -175,22 +202,25 @@ Widget::Widget(QWidget *parent)
     // setting overlayLayout
     overlayLayout->addWidget(projects_btn);
     overlayLayout->addWidget(projects_widget);
+    // overlayLayout->addStretch();
     overlayLayout->addWidget(folders_btn);
     overlayLayout->addWidget(folders_widget);
-    // overlayLayout->addStretch();
 
+    // setting overlayWidget
     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    overlayWidget->setFixedWidth(140);
+    overlayWidget->setFixedSize(140,50);
+    overlayWidget->move(434,52);
     overlayWidget->setAutoFillBackground(true);
     overlayWidget->setLayout(overlayLayout);
-    overlayWidget->setStyleSheet("QWidget { background-color: #FE4F29 ; color: white; }");
+    overlayWidget->setStyleSheet("QWidget { background-color: #D2232A ; color: white; }");
     overlayWidget->setVisible(false);
+    // overlayWidget->setFixedSize(150,300);
 
-    QLabel *headingLabel = new QLabel("Task List",this);
-    QFont boldFont("Sans Serif",14) ;
-    headingLabel->setStyleSheet("color: #e6acac;");
-    headingLabel->setFont(boldFont);
-    headingLabel->setContentsMargins(2, 2, 2, 2);
+    // QLabel *headingLabel = new QLabel("Task List",this);
+    // QFont boldFont("Sans Serif",14) ;
+    // headingLabel->setStyleSheet("color: #e6acac;");
+    // headingLabel->setFont(boldFont);
+    // headingLabel->setContentsMargins(2, 2, 2, 2);
 
     networkManager =  MyNetworkManager::instance();;
 
@@ -199,8 +229,52 @@ Widget::Widget(QWidget *parent)
 
 //    CreateTask *createTaskObj =  new CreateTask();
 
-    refreshbtn = new QPushButton("Refresh",this);
-//    updatebtn = new QPushButton("updatebtn",this);
+    refreshbtn = new QPushButton(this);
+    QHBoxLayout * refresh_layout = new QHBoxLayout();
+    QLabel * refresh_icon = new QLabel();
+    QPixmap refresh_pic("://imgs/refresh.svg");
+    QLabel * refresh_label = new QLabel("Refresh",this);
+
+    filter_icon->setPixmap(filter_pic);
+    filter_icon->setFixedSize(24,24);
+
+    filter_layout->addWidget(filter_icon);
+    filter_layout->addWidget(filter_label);
+
+    filter_btn->setLayout(filter_layout);
+    // filter_btn->setFlat(true);
+
+
+    // filter_btn->setIcon(filter_pic);
+    filter_btn->setFixedSize(100,40);
+    // filter_btn->setIconSize(filter_btn->size());
+    filter_btn->setFlat(true);
+
+    refresh_icon->setPixmap(refresh_pic);
+    refresh_icon->setFixedSize(24,24);
+
+    refresh_layout->addWidget(refresh_icon);
+    refresh_layout->addWidget(refresh_label);
+
+    refreshbtn->setFixedSize(100,40);
+    refreshbtn->setLayout(refresh_layout);
+    // refreshbtn->setFlat(true);
+
+    filter_btn->setStyleSheet(
+        "QPushButton {"
+        "border: 1px solid #D2232A;"
+        "border-radius: 20px;"
+        "}"
+        // "QPushButton:hover {"
+        // "background-color: #2980b9;"  // Background color on hover
+        // "}"
+        );
+    refreshbtn->setStyleSheet(
+        "QPushButton {"
+        "border: 1px solid #D2232A;"
+        "border-radius: 20px;"
+        "}"
+        );
 
 
     connect(networkManager, &MyNetworkManager::projectDataFetched, this, &Widget::onProjectDataFetched);
@@ -216,19 +290,19 @@ Widget::Widget(QWidget *parent)
         networkManager->fetchTasksForMobileList(token,10);
     });
 
-//    QSpacerItem *spacer = new QSpacerItem(10,5);
 
 //    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
 //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
-    search_layout->addWidget(search_icon);
+    search_layout->addWidget(search_label);
     search_layout->addWidget(search_lineedit);
+    // search_layout->addWidget(createTaskBtn);
     search_layout->addWidget(filter_btn);
     search_layout->addWidget(refreshbtn);
 
     ProjectMainLayout->addLayout(search_layout);
-    ProjectMainLayout->addWidget(headingLabel);
+    // ProjectMainLayout->addWidget(headingLabel);
 //    ProjectMainLayout->addWidget(refreshbtn);
 
 
@@ -251,22 +325,45 @@ Widget::Widget(QWidget *parent)
 
     //    ProjectMainLayout->addWidget(containerWidget);
     ProjectMainLayout->addWidget(scrollArea);
-
+    // ProjectMainLayout->addWidget(createTaskBtn);
+    ProjectMainLayout->addLayout(create_layout);
 
     setLayout(ProjectMainLayout);
     setFixedSize(650,400);
 
     //signals and slots
+    connect(createTaskBtn,&QPushButton::clicked,this,[=]{
+        qDebug() << "clicked create task button ";
+        CreateTask * create_task = new CreateTask();
+        create_task->show();
+    });
+
     connect(filter_btn, &QPushButton::clicked, this, [=]{
+        qDebug() << "filter button clicked" << overlayWidget->size();
         if (overlayWidget->isHidden()) {
-            QPoint buttonPos = filter_btn->mapToGlobal(filter_btn->rect().bottomRight());
-            int overlayWidth = overlayWidget->width();
-            QPoint overlayPos(buttonPos.x() - overlayWidth, buttonPos.y()+2);
-            overlayWidget->move(overlayPos);
-            overlayWidget->setVisible(true);
-            qDebug() << "overlayWidget->size()" << overlayWidget->size();
+            filter_btn->setStyleSheet(
+                "QPushButton {"
+                "background-color:#D2232A;"
+                "border-radius: 20px;"
+                "}"
+                );
+            QPixmap filter_white("://imgs/filterwhite.png");
+            // filter_btn->setIcon(filter_white);
+            filter_icon->setPixmap(filter_white);
+            filter_label->setStyleSheet("color: #FFFFFF;");
+            overlayWidget->show();
+            overlayWidget->raise();
         }else{
-            overlayWidget->setVisible(false);
+            overlayWidget->hide();
+            filter_label->setStyleSheet("");
+            filter_icon->setPixmap(filter_pic);
+            // filter_btn->setIcon(filter_pic);
+            filter_btn->setStyleSheet(
+                "QPushButton {"
+                "border: 1px solid #D2232A;"
+                "border-radius: 20px;"
+                "}"
+                );
         }
     });
 
@@ -281,49 +378,68 @@ Widget::Widget(QWidget *parent)
         }
     });
 
+    qDebug() << " projects_widget->size()" <<  projects_widget->size();
+    projects_widget->setFixedHeight(30);
     connect(projects_btn,&QPushButton::clicked,this,[=]{
-        qDebug() << "projects_btn" << "clicked ";
-        qDebug() << "overlayWidget->size() in projects" << overlayWidget->size();
+        qDebug() << "overlayWidget->size() in projects" << overlayWidget->size() << projects_widget->size();
         if(projects_widget->isHidden()){
             qDebug() << "is projects visible true ";
             projects_widget->setVisible(true);
             // overlayWidget->setFixedHeight(81);
-            // overlayWidget->resize(overlayWidget->width(),250);
+            overlayWidget->setFixedHeight(overlayWidget->height() + projects_widget->height());
         }else{
             qDebug() << "is projects visible false";
             projects_widget->setVisible(false);
             // overlayWidget->setFixedHeight(52);
-            // overlayWidget->setFixedHeight(overlayWidget->height() - folders_widget->height());
+            overlayWidget->setFixedHeight(50);
         }
     });
-
+    folders_widget->setFixedHeight(150);
+    qDebug() << "folders height " << folders_widget->height();
     connect(folders_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "folders_btn" << "clicked ";
-        qDebug() << "overlayWidget->size() in folders" << overlayWidget->size();
+        qDebug() << "overlayWidget->size() in folders" << overlayWidget->size() << folders_widget->size();
         if(folders_widget->isHidden()){
             qDebug() << "is visible true ";
             folders_widget->setVisible(true);
+            overlayWidget->setFixedHeight(overlayWidget->height() + folders_widget->height());
             // overlayWidget->resize(overlayWidget->width(),250);
         }else{
             qDebug() << "is visible false";
             folders_widget->setVisible(false);
+            overlayWidget->setFixedHeight(50);
             // overlayWidget->setFixedHeight(overlayWidget->height() - folders_widget->height());
         }
     });
 
+    connect(defaultbtn,&QPushButton::clicked,this,[=]{
+        qDebug() << "default btn clicked ";
+        overlayWidget->setVisible(false);
+        projects_widget->setVisible(false);
+    });
+
     connect(current_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "current_task_btn clicked ";
+        overlayWidget->setVisible(false);
+        folders_widget->setVisible(false);
     });
     connect(next_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "next_task_btn clicked ";
+        overlayWidget->setVisible(false);
+        folders_widget->setVisible(false);
     });
     connect(future_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "future_task_btn clicked ";
+        overlayWidget->setVisible(false);
+        folders_widget->setVisible(false);
     });
     connect(completed_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "completed_task_btn clicked ";
+        overlayWidget->setVisible(false);
+        folders_widget->setVisible(false);
     });
 }
+
 
 Widget::~Widget()
 {
@@ -344,6 +460,7 @@ void Widget::initConfiguration()
     //    bool flag = networkManager->fetchTasksForMobileList(token,10);
     if(TasksContainerList.isEmpty()){
         qDebug() << "taskcontainerList is empty";
+        return;
     }
     for(ProjectCustomWidget *widgetObject : TasksContainerList ){
         qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
@@ -372,11 +489,11 @@ void Widget::deleteConfiguration()
         TaskModelClassContainerList.clear(); // Clear the list
 
         for (int i = 0; i < TaskModelFliterContainerList.size(); ++i) {
-            delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
+            // delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
         }
         TaskModelFliterContainerList.clear(); // Clear the list
 
-        qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data";
+        qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data" << QDateTime::currentDateTime().toString(Qt::ISODate);
 
 }
 
@@ -384,18 +501,18 @@ void Widget::deleteConfiguration()
 //     qDebug() << "in event show function";
 // }
 
-void Widget::hideEvent(QHideEvent *event) {
-    // qDebug() << "in event hide function";
-    overlayWidget->setVisible(false);
-}
+// void Widget::hideEvent(QHideEvent *event) {
+//     // qDebug() << "in event hide function";
+//     overlayWidget->setVisible(false);
+// }
 
-void Widget::moveEvent(QMoveEvent *event)
-{
-    QPoint buttonPos = filter_btn->mapToGlobal(filter_btn->rect().bottomRight());
-    int overlayWidth = overlayWidget->width();
-    QPoint overlayPos(buttonPos.x() - overlayWidth, buttonPos.y()+2);
-    overlayWidget->move(overlayPos);
-}
+// void Widget::moveEvent(QMoveEvent *event)
+// {
+//     QPoint buttonPos = filter_btn->mapToGlobal(filter_btn->rect().bottomRight());
+//     int overlayWidth = overlayWidget->width();
+//     QPoint overlayPos(buttonPos.x() - overlayWidth, buttonPos.y()+2);
+//     overlayWidget->move(overlayPos);
+// }
 
 void Widget::onProjectDataFetched(const QJsonArray &dataArray)
 {
@@ -428,14 +545,14 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
 
             TaskModelClassContainerList.append(task);       // for whole data in unfiltered list
             TaskModelFliterContainerList.append(task);    // setting data for the filtered list
+            // qDebug() << "TaskModelClassContainerList" << TaskModelClassContainerList;
+            // qDebug() << "TaskModelFliterContainerList" << TaskModelFliterContainerList;
         }
     }
 
-
-
     for(int i=0; i< TaskModelClassContainerList.size();++i){
 //        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
-        qDebug()<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName;
+        qDebug()<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
     }
 }
 
@@ -454,6 +571,7 @@ void Widget::onTaskDataFetched()
 
     for(int i=0; i< TaskModelFliterContainerList.size();++i){
         ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+
         customWidgetTaskdata->receiveData(TaskModelFliterContainerList[i]->m_taskFolderName,
                                           TaskModelFliterContainerList[i]->m_taskProjectName,
                                           TaskModelFliterContainerList[i]->m_taskName,

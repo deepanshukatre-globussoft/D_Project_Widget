@@ -6,5 +6,18 @@
         <file>imgs/green_circle.png</file>
         <file>imgs/ORNG.png</file>
         <file>imgs/blue_icon.png</file>
+        <file>imgs/completed.svg</file>
+        <file>imgs/create.svg</file>
+        <file>imgs/delete.svg</file>
+        <file>imgs/edit.svg</file>
+        <file>imgs/search.svg</file>
+        <file>imgs/filter.svg</file>
+        <file>imgs/filter.png</file>
+        <file>imgs/filterwhite.png</file>
+        <file>imgs/filterredbtn.png</file>
+        <file>imgs/filterwhitebtn.png</file>
+        <file>imgs/pause.png</file>
+        <file>imgs/refresh.svg</file>
+        <file>imgs/start.png</file>
     </qresource>
 </RCC>

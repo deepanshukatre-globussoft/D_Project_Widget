@@ -149,6 +149,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     // signals and slots
     connect(custom_time_button,&QPushButton::clicked,this,[=]{
         qDebug() << "custom button clicked ";
+        custom_time_button->setStyleSheet("background-color: blue; color: white;");
         if(custom_widget->isHidden()){
             custom_widget->setVisible(true);
         }

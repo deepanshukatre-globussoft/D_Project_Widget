@@ -9,6 +9,8 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QCheckBox>
+
 class CreateTask : public QWidget
 {
     Q_OBJECT
@@ -16,18 +18,19 @@ public:
     explicit CreateTask(QWidget *parent = nullptr);
 
     MyNetworkManager *netMgrObj;
+    QLabel *createTaskLabel;
+    QLineEdit *nameLineEdit;
+    QPushButton *createButton;
 private:
     void setupUI();
     void populateComboBoxes();
 
     QVBoxLayout *createTaskMainLayout;
 
-    QLabel *createTaskLabel;
 
     QWidget *nameWidget;
     QVBoxLayout *nameLayout;
     QLabel *nameLabel;
-    QLineEdit *nameLineEdit;
 
     QWidget *projectWidget;
     QVBoxLayout *projectLayout;
@@ -41,7 +44,6 @@ private:
 
     QWidget *buttonWidget;
     QHBoxLayout *buttonLayout;
-    QPushButton *createTaskButton;
     QPushButton *cancelButton;
 
 private slots:

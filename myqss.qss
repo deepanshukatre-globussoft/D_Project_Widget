@@ -4,7 +4,7 @@ background-color: #e6acac;
 }
 QPushButton  {
 
-   background-color: #f0dfdf;
+ /*  background-color: #f0dfdf; */
     text-align: center;              /* Center f0dfdf  e89090 */
 
 }
