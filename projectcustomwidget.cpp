@@ -12,6 +12,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
 
     this->setObjectName("customProjectItemWidget") ;
+    // this->setStyleSheet("background-color: rgba(35, 31, 32, 0.1);");
     d_containerWidget = new QWidget(this);
 
     // QHBoxLayout * hor_layout = new QHBoxLayout(d_containerWidget);
@@ -30,7 +31,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QPushButton *deleteBtn = new QPushButton(this);
     // deleteBtn->setStyleSheet("background-color: #fa3c36  ; color: white;");
     // deleteBtn->setFixedSize(20,this->height());
-    QIcon deleteIcon("C:/Users/GLB-BLR-304/Documents/GitHub/images/Group1253.svg");
+    QIcon deleteIcon("://imgs/delete.svg");
     deleteBtn->setIcon(deleteIcon);
     deleteBtn->setFlat(true);
     deleteBtn->setIconSize(QSize(29,29));
@@ -102,6 +103,18 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QLabel * active_task_time = new QLabel("Active Task Time");
     d_taskActiveTimeLabel = new QLabel("00:00:00",this);
     // d_taskActiveTimeLabel->setFixedHeight(23);
+    active_task_time->setStyleSheet(
+        "QLabel {"
+        "color : #0F5EA9;"
+        "font-size: 13px;"
+        "}"
+        );
+    d_taskActiveTimeLabel->setStyleSheet(
+        "QLabel {"
+        "color : #0F5EA9;"
+        // "font-size: 13px;"
+        "}"
+        );
 
     QFont active_time_font;
     active_time_font.setPointSize(11);
@@ -142,6 +155,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     // edit_label->setStyleSheet("color: #FFFFFF;");
     edit_icon->setPixmap(edit_pic);
+    edit_label->setStyleSheet("color : #D2232A;");
 
     editbtn_layout->addWidget(edit_icon);
     editbtn_layout->addWidget(edit_label);
@@ -191,17 +205,16 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     d_taskActiveTimeInReminder->setFont(active_time_font);
 
-    reminder_layout->addStretch();
+    reminder_layout->setContentsMargins(0,0,0,0);
     reminder_layout->addWidget(reminder_label);
     reminder_layout->addWidget(d_taskActiveTimeInReminder);
-    reminder_layout->setContentsMargins(0,0,0,0);
 
-    reminder_layout_button->setFixedSize(100,42);
+    reminder_layout_button->setFixedSize(100,37);
     reminder_layout_button->setFlat(true);
     reminder_layout_button->setLayout(reminder_layout);
 
-    reminder_widget_layout->addWidget(reminder_layout_button);
     reminder_widget_layout->setContentsMargins(0,0,0,0);
+    reminder_widget_layout->addWidget(reminder_layout_button);
 
     // reminder_layout_button->setLayout(reminder_layout);
     // reminder_layout_button->setFlat(true);
@@ -209,6 +222,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     reminder_widget->setLayout(reminder_widget_layout);
     reminder_widget->setVisible(false);
+    reminder_widget->setStyleSheet("color : #D2232A;");
 
     p_ForthLayout->addWidget(reminder_widget);
     p_ForthLayout->addWidget(d_setReminderbtn);
@@ -274,7 +288,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
             is_started = true;
             qDebug() << "setting is_started" <<  is_started;
             m_startTimer->start();
-            start_label->setText("pause");
+            start_label->setText("Pause");
             QPixmap pause_icon("://imgs/pause.png");
             start_icon->setPixmap(pause_icon);
             d_setReminderbtn->setVisible(true);
@@ -285,7 +299,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
             m_startTimer->stop();
             m_startReminderTimer->stop();
             remindercountdownTime = QTime(0,0,0);
-            start_label->setText("start");
+            start_label->setText("Start");
             start_icon->setPixmap(start_pic);
             d_setReminderbtn->setVisible(false);
             reminder_widget->setVisible(false);

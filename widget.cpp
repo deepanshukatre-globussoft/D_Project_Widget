@@ -17,7 +17,8 @@ QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-
+    // this->setStyleSheet("QWidget { background-color: white;  }");
+    // this->setFont(QFont("Ubuntu"));
     qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
@@ -30,6 +31,12 @@ Widget::Widget(QWidget *parent)
     containerLayout = new QVBoxLayout(containerWidget);
     containerLayout->setContentsMargins(0,0,5,5);
     containerWidget->setLayout(containerLayout);
+    // containerWidget->setStyleSheet("QWidget { background-color: white;  }");
+
+    searchbar_widget = new QWidget(this);
+
+    QHBoxLayout * searchbar_layout = new QHBoxLayout();
+
 
     QHBoxLayout * search_layout = new QHBoxLayout();
     QLabel * search_label = new QLabel(this);
@@ -37,7 +44,18 @@ Widget::Widget(QWidget *parent)
     search_label->setPixmap(search_icon);
     QLineEdit * search_lineedit = new QLineEdit();
     // search_lineedit->setFocusPolicy(Qt::NoFocus);
-    search_lineedit->setPlaceholderText("search");
+    search_lineedit->setPlaceholderText("Search");
+    // search_lineedit->setStyleSheet("");
+    // search_lineedit->setStyleSheet("QLineEdit { border: none;  }");
+    search_lineedit->setFixedHeight(35);
+    search_lineedit->setFont(QFont("Ubuntu",13));
+
+    searchbar_layout->addWidget(search_label);
+    searchbar_layout->addWidget(search_lineedit);
+
+    searchbar_widget->setLayout(searchbar_layout);
+    searchbar_widget->setStyleSheet("QWidget { background-color: rgba(35, 31, 32, 0.2); border-radius: 10px; }");
+    // searchbar_widget->setStyleSheet(" QWidget { background-color: rgba(35, 31, 32, 0.1); border-radius: 20px; }");
 
     QHBoxLayout * create_layout = new QHBoxLayout();
 
@@ -208,8 +226,8 @@ Widget::Widget(QWidget *parent)
 
     // setting overlayWidget
     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    overlayWidget->setFixedSize(140,50);
-    overlayWidget->move(434,52);
+    overlayWidget->setFixedSize(155,50);
+    overlayWidget->move(435,60);
     overlayWidget->setAutoFillBackground(true);
     overlayWidget->setLayout(overlayLayout);
     overlayWidget->setStyleSheet("QWidget { background-color: #D2232A ; color: white; }");
@@ -238,6 +256,9 @@ Widget::Widget(QWidget *parent)
     filter_icon->setPixmap(filter_pic);
     filter_icon->setFixedSize(24,24);
 
+    filter_label->setStyleSheet("color : #D2232A;");
+    filter_label->setFont(QFont("Ubuntu",-1,400));
+
     filter_layout->addWidget(filter_icon);
     filter_layout->addWidget(filter_label);
 
@@ -252,6 +273,9 @@ Widget::Widget(QWidget *parent)
 
     refresh_icon->setPixmap(refresh_pic);
     refresh_icon->setFixedSize(24,24);
+
+    refresh_label->setStyleSheet("color : #D2232A;");
+    refresh_label->setFont(QFont("Ubuntu",-1,400));
 
     refresh_layout->addWidget(refresh_icon);
     refresh_layout->addWidget(refresh_label);
@@ -295,12 +319,15 @@ Widget::Widget(QWidget *parent)
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
 //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
-    search_layout->addWidget(search_label);
-    search_layout->addWidget(search_lineedit);
-    // search_layout->addWidget(createTaskBtn);
+    searchbar_widget->setStyleSheet("QWidget { border-radius: 10px; }");
+
+    // search_layout->addWidget(search_label);
+    // search_layout->addWidget(search_lineedit);
+    search_layout->addWidget(searchbar_widget);
     search_layout->addWidget(filter_btn);
     search_layout->addWidget(refreshbtn);
 
+    // searchbar_widget->setLayout(search_layout);
     ProjectMainLayout->addLayout(search_layout);
     // ProjectMainLayout->addWidget(headingLabel);
 //    ProjectMainLayout->addWidget(refreshbtn);
@@ -355,8 +382,8 @@ Widget::Widget(QWidget *parent)
             overlayWidget->raise();
         }else{
             overlayWidget->hide();
-            filter_label->setStyleSheet("");
             filter_icon->setPixmap(filter_pic);
+            filter_label->setStyleSheet("color : #D2232A;");
             // filter_btn->setIcon(filter_pic);
             filter_btn->setStyleSheet(
                 "QPushButton {"

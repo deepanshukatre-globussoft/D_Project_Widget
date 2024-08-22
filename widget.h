@@ -47,6 +47,7 @@ private:
     QPushButton *refreshbtn;
     QPushButton *updatebtn;
     QPushButton * filter_btn;
+    QWidget * searchbar_widget;
     void onProjectDataFetched(const QJsonArray &dataArray);
     void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
     void onTaskDataFetched(int count);
