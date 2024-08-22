@@ -17,7 +17,8 @@ QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-
+    // this->setStyleSheet("QWidget { background-color: white;  }");
+    // this->setFont(QFont("Ubuntu"));
     qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
@@ -30,6 +31,12 @@ Widget::Widget(QWidget *parent)
     containerLayout = new QVBoxLayout(containerWidget);
     containerLayout->setContentsMargins(0,0,5,5);
     containerWidget->setLayout(containerLayout);
+    // containerWidget->setStyleSheet("QWidget { background-color: white;  }");
+
+    searchbar_widget = new QWidget(this);
+
+    QHBoxLayout * searchbar_layout = new QHBoxLayout();
+
 
     QHBoxLayout * search_layout = new QHBoxLayout();
 
@@ -223,8 +230,8 @@ Widget::Widget(QWidget *parent)
 
     // setting overlayWidget
     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    overlayWidget->setFixedSize(140,50);
-    overlayWidget->move(434,52);
+    overlayWidget->setFixedSize(155,50);
+    overlayWidget->move(435,60);
     overlayWidget->setAutoFillBackground(true);
     overlayWidget->setLayout(overlayLayout);
     overlayWidget->setStyleSheet("QWidget { background-color: #D2232A ; color: white; }");
@@ -259,6 +266,9 @@ Widget::Widget(QWidget *parent)
     filter_icon->setPixmap(filter_pic);
     filter_icon->setFixedSize(24,24);
 
+    filter_label->setStyleSheet("color : #D2232A;");
+    filter_label->setFont(QFont("Ubuntu",-1,400));
+
     filter_layout->addWidget(filter_icon);
     filter_layout->addWidget(filter_label);
 
@@ -273,6 +283,9 @@ Widget::Widget(QWidget *parent)
 
     refresh_icon->setPixmap(refresh_pic);
     refresh_icon->setFixedSize(24,24);
+
+    refresh_label->setStyleSheet("color : #D2232A;");
+    refresh_label->setFont(QFont("Ubuntu",-1,400));
 
     refresh_layout->addWidget(refresh_icon);
     refresh_layout->addWidget(refresh_label);
@@ -321,6 +334,7 @@ Widget::Widget(QWidget *parent)
     search_layout->addWidget(filter_btn);
     search_layout->addWidget(refreshbtn);
 
+    // searchbar_widget->setLayout(search_layout);
     ProjectMainLayout->addLayout(search_layout);
     // ProjectMainLayout->addWidget(headingLabel);
 //    ProjectMainLayout->addWidget(refreshbtn);
@@ -380,8 +394,8 @@ Widget::Widget(QWidget *parent)
             overlayWidget->raise();
         }else{
             overlayWidget->hide();
-            filter_label->setStyleSheet("");
             filter_icon->setPixmap(filter_pic);
+            filter_label->setStyleSheet("color : #D2232A;");
             // filter_btn->setIcon(filter_pic);
             filter_btn->setStyleSheet(
                 "QPushButton {"
