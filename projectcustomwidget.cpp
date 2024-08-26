@@ -10,7 +10,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     m_HMainLayout->setContentsMargins(5,5,0,0);
     m_HMainLayout->setAlignment(Qt::AlignLeft);
 
-
+    QFont labelFont("Ubuntu",11,400);
     this->setObjectName("customProjectItemWidget") ;
     // this->setStyleSheet("background-color: rgba(35, 31, 32, 0.1);");
     d_containerWidget = new QWidget(this);
@@ -26,7 +26,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     completeBtn->setIcon(complete_icon);
     completeBtn->setFixedSize(29,29);
     completeBtn->setIconSize(QSize(29,29));
-
+    completeBtn->setStyleSheet("border-radius: 2px;");
 
     QPushButton *deleteBtn = new QPushButton(this);
     // deleteBtn->setStyleSheet("background-color: #fa3c36  ; color: white;");
@@ -36,7 +36,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     deleteBtn->setFlat(true);
     deleteBtn->setIconSize(QSize(29,29));
     deleteBtn->setFixedSize(29,29);
-    // deleteBtn->setStyleSheet("border-radius: 1px;");
+    deleteBtn->setStyleSheet("border-radius: 2px;");
     // deleteBtn->setStyleSheet(
     //     "QPushButton {"
     //     // "background-color: #3498db;"  // Example background color
@@ -106,13 +106,12 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     active_task_time->setStyleSheet(
         "QLabel {"
         "color : #0F5EA9;"
-        "font-size: 13px;"
+        "font-size: 12px;"
         "}"
         );
     d_taskActiveTimeLabel->setStyleSheet(
         "QLabel {"
         "color : #0F5EA9;"
-        // "font-size: 13px;"
         "}"
         );
 
@@ -123,7 +122,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     // active_time_layout->setAlignment(Qt::AlignCenter);
     active_time_layout->setContentsMargins(0,0,0,0);
-    active_time_layout->addStretch();
+    // active_time_layout->addStretch();
     active_time_layout->addWidget(active_task_time);
     active_time_layout->addWidget(d_taskActiveTimeLabel);
 
@@ -133,17 +132,16 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QLabel * start_label = new QLabel("Start",this);
 
     start_label->setStyleSheet("color: #FFFFFF;");
-//    start_label->setFixedSize(24,12);
     start_icon->setPixmap(start_pic);
 
+    startbtn_layout->setContentsMargins(9,0,13,0);
     startbtn_layout->addWidget(start_icon);
     startbtn_layout->addWidget(start_label);
 
-    d_startTaskButton->setFixedSize(83,30);
+    d_startTaskButton->setFixedSize(68,29);
     d_startTaskButton->setLayout(startbtn_layout);
     d_startTaskButton->setStyleSheet(
         "QPushButton {"
-        // "border: 1px solid #D2232A;"
         "background-color: #D2232A;"
         "border-radius: 10px;"
         "}"
@@ -158,10 +156,11 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     edit_icon->setPixmap(edit_pic);
     edit_label->setStyleSheet("color : #D2232A;");
 
+    editbtn_layout->setContentsMargins(9,0,13,0);
     editbtn_layout->addWidget(edit_icon);
     editbtn_layout->addWidget(edit_label);
 
-    d_editTaskButton->setFixedSize(83,30);
+    d_editTaskButton->setFixedSize(68,29);
     d_editTaskButton->setLayout(editbtn_layout);
     d_editTaskButton->setStyleSheet(
         "QPushButton {"
@@ -205,12 +204,16 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     d_taskActiveTimeInReminder = new QLabel("00:00:00");
 
     d_taskActiveTimeInReminder->setFont(active_time_font);
-
+    reminder_label->setStyleSheet(
+        "QLabel {"
+        "font-size: 12px;"
+        "}"
+        );
     reminder_layout->setContentsMargins(0,0,0,0);
     reminder_layout->addWidget(reminder_label);
     reminder_layout->addWidget(d_taskActiveTimeInReminder);
 
-    reminder_layout_button->setFixedSize(100,37);
+    reminder_layout_button->setFixedSize(100,32);
     reminder_layout_button->setFlat(true);
     reminder_layout_button->setLayout(reminder_layout);
 
@@ -272,7 +275,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     rmd_wid = new ReminderWidget();
 
-    create = new CreateTask();
+    edit_task = new CreateTask();
+    edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
 
     // signals and slots
     connect(m_startTimer,&QTimer::timeout,this,[=]{
@@ -290,9 +294,11 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
             qDebug() << "setting is_started" <<  is_started;
             m_startTimer->start();
             start_label->setText("Pause");
+            startbtn_layout->setContentsMargins(5,0,8,0);
             QPixmap pause_icon("://imgs/pause.png");
             start_icon->setPixmap(pause_icon);
             d_setReminderbtn->setVisible(true);
+            qDebug() << "startbtn_layout if " << startbtn_layout->contentsMargins();
         }
         else{
             is_started = false;
@@ -302,19 +308,32 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
             remindercountdownTime = QTime(0,0,0);
             start_label->setText("Start");
             start_icon->setPixmap(start_pic);
+            // rmd_wid->deleteLater();
+            // rmd_wid = new ReminderWidget();
             d_setReminderbtn->setVisible(false);
             reminder_widget->setVisible(false);
             rmd_wid->update_widget->setVisible(false);
+            rmd_wid->custom_widget->setVisible(false);
+            rmd_wid->custom_time_button->setStyleSheet(
+                "QPushButton {"
+                "background-color:  rgba(35, 31, 32, 0.1);"
+                "border-radius: 10px;"
+                "}"
+                );
             rmd_wid->set_reminder_button->setVisible(true);
             d_taskActiveTimeInReminder->setText("00:00:00");
             rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
+            startbtn_layout->setContentsMargins(9,0,13,0);
+            qDebug() << "startbtn_layout else" << startbtn_layout->contentsMargins();
             emit sendUpdateReminder();
         }
     });
 
     connect(d_editTaskButton,&QPushButton::clicked,this,[=]{
-        create->nameLineEdit->setText(d_taskNameLabel->text());
-        create->show();
+        edit_task->nameLineEdit->setText(d_taskNameLabel->text());
+        edit_task->show();
+        edit_task->createBtn->setText("Update");
+        edit_task->setWindowTitle("Edit Task");
     });
 
     connect(d_setReminderbtn,&QPushButton::clicked,this,[=]{

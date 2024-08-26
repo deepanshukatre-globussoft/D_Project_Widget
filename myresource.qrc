@@ -19,5 +19,9 @@
         <file>imgs/pause.png</file>
         <file>imgs/refresh.svg</file>
         <file>imgs/start.png</file>
+        <file>imgs/downarrow.png</file>
+        <file>imgs/ep_arrow.svg</file>
+        <file>imgs/bluedot.svg</file>
+        <file>imgs/whitedot.svg</file>
     </qresource>
 </RCC>

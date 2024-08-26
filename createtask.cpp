@@ -16,60 +16,123 @@ CreateTask::CreateTask(QWidget *parent)
 
 void CreateTask::setupUI()
 {
-    setFixedSize(250,300);
+    setFixedSize(438,410);
+    this->setWindowTitle("Create Task");
+    this->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
 
     createTaskMainLayout = new QVBoxLayout(this);
+    createTaskMainLayout->setContentsMargins(32,32,32,32);
 
-    createTaskLabel = new QLabel("Create Task", this);
-    createTaskMainLayout->addWidget(createTaskLabel);
+    QFont font("Ubuntu",11,400);
+    QString styleSheet = QString(
+        "QComboBox {"
+        "border-radius: 5px;"
+        "border: 0.5px solid #231F2033;"
+        "padding-left :10px;"
+        "}"
+        "QComboBox::drop-down {"
+        "border: none;"
+        "width: 0px;"
+        "}"
+        "QComboBox::down-arrow {"
+        "image: url(://imgs/ep_arrow.svg);"
+        "padding-right : 55px;"
+        "}");
 
     nameWidget = new QWidget(this);
     nameLayout = new QVBoxLayout(nameWidget);
     nameLabel = new QLabel("Title", nameWidget);
     nameLineEdit = new QLineEdit(nameWidget);
     // nameLineEdit->setFocusPolicy(Qt::NoFocus);
+
+    nameLabel->setFont(font);
+    nameLineEdit->setPlaceholderText("Enter Title");
+    nameLineEdit->setFixedSize(374,42);
+    nameLineEdit->setFont(font);
+    nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px;");
+
+    nameLayout->setContentsMargins(0,0,0,0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(nameLineEdit);
+
+    nameWidget->setFixedSize(374,66);
     createTaskMainLayout->addWidget(nameWidget);
 
     projectWidget = new QWidget(this);
     projectLayout = new QVBoxLayout(projectWidget);
     projectLabel = new QLabel("Project", projectWidget);
     projectComboBox = new QComboBox(projectWidget);
+
+    projectLabel->setFont(font);
+
+    projectComboBox->setFixedSize(374,42);
+    projectComboBox->setFont(font);
+    projectComboBox->setStyleSheet(styleSheet);
+
+    projectLayout->setContentsMargins(0,0,0,0);
     projectLayout->addWidget(projectLabel);
     projectLayout->addWidget(projectComboBox);
+    projectWidget->setLayout(projectLayout);
+    projectWidget->setFixedSize(374,66);
+    createTaskMainLayout->addStretch();
     createTaskMainLayout->addWidget(projectWidget);
 
     taskWidget = new QWidget(this);
     taskLayout = new QVBoxLayout(taskWidget);
     taskLabel = new QLabel("Folder", taskWidget);
     taskComboBox = new QComboBox(taskWidget);
+
+    taskLabel->setFont(font);
+
+    taskComboBox->setFixedSize(374,42);
+    taskComboBox->setFont(font);
+    taskComboBox->setStyleSheet(styleSheet);
+
+    taskWidget->setFixedSize(374,66);
+    taskLayout->setContentsMargins(0,0,0,0);
     taskLayout->addWidget(taskLabel);
     taskLayout->addWidget(taskComboBox);
+    createTaskMainLayout->addStretch();
     createTaskMainLayout->addWidget(taskWidget);
 
     QWidget * checkbox_widget = new QWidget(this);
     QVBoxLayout *checkbox_layout = new QVBoxLayout(checkbox_widget);
     QCheckBox * check_box = new QCheckBox(this);
-    check_box->setText("Start task now");
+    check_box->setText("Start Task Now");
+    check_box->setFont(font);
 
+    checkbox_layout->setContentsMargins(0,0,0,0);
     checkbox_layout->addWidget(check_box);
     checkbox_widget->setLayout(checkbox_layout);
-
+    createTaskMainLayout->addStretch();
     createTaskMainLayout->addWidget(checkbox_widget);
+    createTaskMainLayout->addStretch();
 
     buttonWidget = new QWidget(this);
     buttonLayout = new QHBoxLayout(buttonWidget);
-    cancelButton = new QPushButton("Cancel", buttonWidget);
-    createButton = new QPushButton("Create", buttonWidget);
-    buttonLayout->addWidget(cancelButton);
-    buttonLayout->addWidget(createButton);
+    cancelBtn = new QPushButton("Cancel", buttonWidget);
+    createBtn = new QPushButton("Create Task", buttonWidget);
+
+    cancelBtn->setFixedSize(170,42);
+    cancelBtn->setFlat(true);
+    cancelBtn->setFont(font);
+    cancelBtn->setStyleSheet("color :#D2232A; border: 1px solid #D2232A; border-radius : 5px;");
+    createBtn->setFixedSize(170,42);
+    createBtn->setFlat(true);
+    createBtn->setFont(font);
+    createBtn->setStyleSheet("color :white; border-radius : 5px; background-color: #D2232A;");
+
+    buttonLayout->setContentsMargins(0,0,0,0);
+    buttonLayout->addWidget(cancelBtn);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(createBtn);
+    // buttonWidget->setFixedSize(374,42);
     createTaskMainLayout->addWidget(buttonWidget);
 
     setLayout(createTaskMainLayout);
 
-    connect(cancelButton, &QPushButton::clicked, this, &CreateTask::onCancelClicked);
-    connect(createButton, &QPushButton::clicked, this, &CreateTask::onCreateTaskClicked);
+    connect(cancelBtn, &QPushButton::clicked, this, &CreateTask::onCancelClicked);
+    connect(createBtn, &QPushButton::clicked, this, &CreateTask::onCreateTaskClicked);
 
 
 
@@ -77,7 +140,7 @@ void CreateTask::setupUI()
 
 void CreateTask::populateComboBoxes()
 {
-    QList<QString> projectNames = {"Project A", "Project B", "Project C", "Project D"};
+    QList<QString> projectNames = {"Select Project", "Project A", "Project B", "Project C", "Project D"};
 
     // Populate project combo box using a for loop
     for (int i = 0; i < projectNames.size(); ++i) {
@@ -86,6 +149,7 @@ void CreateTask::populateComboBoxes()
 
     // Populate task combo box with explicit values
 //    taskComboBox->addItem("Current", static_cast<int>(TaskStatus::Current));
+    taskComboBox->addItem("Select Folder");
     taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"current", static_cast<int>(TaskStatus::Current));
     taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future", static_cast<int>(TaskStatus::Future));
     taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next", static_cast<int>(TaskStatus::Next));
