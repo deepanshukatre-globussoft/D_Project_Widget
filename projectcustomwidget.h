@@ -51,7 +51,7 @@ public:
     // QLabel * d_taskReminderTimeLabel;
 
     QLabel *d_taskNameLabel;
-    CreateTask * create;
+    CreateTask * edit_task;
 private:
     QLabel *d_projectStatuslabel;
     QPushButton *d_startTaskButton;

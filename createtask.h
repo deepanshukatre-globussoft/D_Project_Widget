@@ -18,9 +18,8 @@ public:
     explicit CreateTask(QWidget *parent = nullptr);
 
     MyNetworkManager *netMgrObj;
-    QLabel *createTaskLabel;
     QLineEdit *nameLineEdit;
-    QPushButton *createButton;
+    QPushButton *createBtn;
 private:
     void setupUI();
     void populateComboBoxes();
@@ -44,7 +43,7 @@ private:
 
     QWidget *buttonWidget;
     QHBoxLayout *buttonLayout;
-    QPushButton *cancelButton;
+    QPushButton *cancelBtn;
 
 private slots:
     void onCancelClicked();

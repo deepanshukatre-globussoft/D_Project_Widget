@@ -21,5 +21,9 @@
         <file>imgs/start.png</file>
         <file>fonts/Ubuntu-Regular.ttf</file>
         <file>translations/ar.qm</file>
+        <file>imgs/downarrow.png</file>
+        <file>imgs/ep_arrow.svg</file>
+        <file>imgs/bluedot.svg</file>
+        <file>imgs/whitedot.svg</file>
     </qresource>
 </RCC>

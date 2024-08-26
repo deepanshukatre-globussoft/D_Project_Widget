@@ -17,6 +17,7 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QProcess>
+#include <QPainter>
 
 class ReminderWidget : public QWidget
 {
@@ -30,6 +31,8 @@ public:
     QPushButton * set_reminder_button;
 
     QWidget * update_widget;
+    QPushButton * custom_time_button;
+    QWidget * custom_widget;
 
     QTime remindercountdownTime;
     QPushButton *buttons[6];
