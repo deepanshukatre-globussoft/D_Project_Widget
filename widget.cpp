@@ -18,8 +18,8 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     // this->setStyleSheet("QWidget { background-color: white;  }");
-    // this->setFont(QFont("Ubuntu"));
-    qDebug() << "widget constructor reference " << this;
+    this->setWindowTitle(tr("Deepanshu"));
+//    qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
     ProjectMainLayout->setAlignment(Qt::AlignLeft);
@@ -49,7 +49,7 @@ Widget::Widget(QWidget *parent)
 
 //    search_lineedit->setFixedHeight(35);
 //    search_lineedit->setFont(QFont("Arial", 13));
-    search_lineedit->setPlaceholderText("Search");
+    search_lineedit->setPlaceholderText(tr("Search"));
 
     search_lineedit->setObjectName("search_lineeditObject");
 
@@ -72,7 +72,7 @@ Widget::Widget(QWidget *parent)
     QHBoxLayout * filter_layout = new QHBoxLayout();
     QLabel * filter_icon = new QLabel();
     QPixmap filter_pic("://imgs/filter.png");
-    QLabel * filter_label = new QLabel("Filter",this);
+    QLabel * filter_label = new QLabel(tr("Filter"),this);
 
     overlayWidget = new QWidget(this);
     overlayCreatetaskWidget = new QWidget(this);
@@ -95,7 +95,7 @@ Widget::Widget(QWidget *parent)
     QPixmap point("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-20.png");
     point_icon->setPixmap(point);
     point_icon->setFixedSize(20,20);
-    QLabel * projects_label = new QLabel("Projects");
+    QLabel * projects_label = new QLabel(tr("Projects"));
     QLabel * down_arrow_icon = new QLabel();
     QPixmap down_arrow("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-expand-arrow-18.png");
     down_arrow_icon->setFixedSize(20,20);
@@ -134,7 +134,7 @@ Widget::Widget(QWidget *parent)
     current_task_icon->setFixedSize(24,24);
     QPixmap current_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-24.png");
     // current_task_icon->setPixmap(current_task_pic);
-    QLabel * current_task_label = new QLabel("current task");
+    QLabel * current_task_label = new QLabel(tr("current task"));
 
     // next task btn
     QPushButton * next_task_btn = new QPushButton();
@@ -143,7 +143,7 @@ Widget::Widget(QWidget *parent)
     next_task_icon->setFixedSize(24,24);
     QPixmap next_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-yellow.png");
     // next_task_icon->setPixmap(next_task_pic);
-    QLabel * next_task_label = new QLabel("next task");
+    QLabel * next_task_label = new QLabel(tr("next task"));
 
     // future task btn
     QPushButton * future_task_btn = new QPushButton();
@@ -152,7 +152,7 @@ Widget::Widget(QWidget *parent)
     future_task_icon->setFixedSize(24,24);
     QPixmap future_task_pic("");
     // future_task_icon->setPixmap(future_task_pic);
-    QLabel * future_task_label = new QLabel("future task");
+    QLabel * future_task_label = new QLabel(tr("future task"));
 
     // completed task btn
     QPushButton * completed_task_btn = new QPushButton();
@@ -161,7 +161,7 @@ Widget::Widget(QWidget *parent)
     completed_task_icon->setFixedSize(24,24);
     QPixmap completed_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-green.png");
     // completed_task_icon->setPixmap(completed_task_pic);
-    QLabel * completed_task_label = new QLabel("completed task");
+    QLabel * completed_task_label = new QLabel(tr("completed task"));
 
     // setting current task btn
     current_task_layout->addWidget(current_task_icon);
@@ -345,6 +345,15 @@ Widget::Widget(QWidget *parent)
     scrollArea->setWidget(containerWidget);
     scrollArea->setWidgetResizable(true); //    scrollArea->setFixedSize(630,400); // Adjust size dk
 
+    scrollArea->setStyleSheet(
+        "QScrollBar:vertical {"
+//        "    background: #f0f0f0;"  // Background color of the scrollbar track
+        "    width: 11px;"
+        "    margin: 0px 0px 0px 0px;"
+        "}"
+
+        );
+
 
 
     QList<ProjectCustomWidget *> customWidgets = containerWidget->findChildren<ProjectCustomWidget *>();
@@ -366,6 +375,7 @@ Widget::Widget(QWidget *parent)
 
     setLayout(ProjectMainLayout);
     setFixedSize(650,400);
+//    setFixedSize(700,450);
 
     // First time calling the api so it should not come empty
     networkManager->fetchTasksForMobileList(token,10);

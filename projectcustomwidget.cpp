@@ -36,29 +36,15 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     deleteBtn->setFlat(true);
     deleteBtn->setIconSize(QSize(29,29));
     deleteBtn->setFixedSize(29,29);
-    // deleteBtn->setStyleSheet("border-radius: 1px;");
-    // deleteBtn->setStyleSheet(
-    //     "QPushButton {"
-    //     // "background-color: #3498db;"  // Example background color
-    //     // "border: 2px solid #2c3e50;"  // Example border color
-    //     "border-radius: 1px;"        // Rounded corners
-    //     // "padding: 10px;"              // Padding inside the button
-    //     // "color: white;"               // Text color
-    //     "}"
-    //     // "QPushButton:hover {"
-    //     // "background-color: #2980b9;"  // Background color on hover
-    //     // "}"
-    //     );
 
 
     d_containerLayout = new QVBoxLayout();
     d_containerLayout->setContentsMargins(10,10,5,5);
-
     d_containerWidget->setObjectName("projectContainerObject");
 
     // QSpacerItem *spacer = new QSpacerItem(5,3);
 
-    d_projectStatuslabel = new QLabel("Project Status ", this);  // shyad public karke access dena hoga
+    d_projectStatuslabel = new QLabel(tr(""), this);  // shyad public karke access dena hoga
     d_startTaskButton = new QPushButton(this);
     d_editTaskButton = new QPushButton(this);
     QFont font;
@@ -82,6 +68,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     d_editTaskButton->setObjectName("myPushBtn");  // Set object name
     //==================================================
     d_projectNameLabel =  new QLabel("Project Name",this);
+    d_projectNameLabel->setObjectName("d_projectNameLabel");
+
     //==================================================
     d_taskNameLabel = new QLabel("Task Title",this);
     //==================================================
@@ -101,20 +89,10 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     QVBoxLayout * active_time_layout = new QVBoxLayout();
     QLabel * active_task_time = new QLabel("Active Task Time");
+    active_task_time->setObjectName("active_task_time");
+
     d_taskActiveTimeLabel = new QLabel("00:00:00",this);
-    // d_taskActiveTimeLabel->setFixedHeight(23);
-    active_task_time->setStyleSheet(
-        "QLabel {"
-        "color : #0F5EA9;"
-        "font-size: 13px;"
-        "}"
-        );
-    d_taskActiveTimeLabel->setStyleSheet(
-        "QLabel {"
-        "color : #0F5EA9;"
-        // "font-size: 13px;"
-        "}"
-        );
+    d_taskActiveTimeLabel->setObjectName("d_taskActiveTimeLabel");
 
     QFont active_time_font;
     active_time_font.setPointSize(11);
@@ -130,7 +108,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QHBoxLayout * startbtn_layout = new QHBoxLayout();
     QLabel * start_icon = new QLabel();
     QPixmap start_pic("://imgs/start.png");
-    QLabel * start_label = new QLabel("Start",this);
+    QLabel * start_label = new QLabel(tr("Start"),this);
 
     start_label->setStyleSheet("color: #FFFFFF;");
 //    start_label->setFixedSize(24,12);
@@ -377,7 +355,30 @@ void ProjectCustomWidget::receiveData(const QString &projectStatus, const QStrin
 //    if(projectStatus == "current task"){
 //        d_projectStatuslabel->s
 //    }
-    d_projectStatuslabel->setText(projectStatus);
+    QLabel *textLabel = new QLabel("");
+    QLabel *iconLabel = new QLabel;
+    QHBoxLayout *statusLayout = new QHBoxLayout;
+
+    if(projectStatus.contains("Current")){
+        QIcon icon("://imgs/blue_icon.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Current Task");
+    }
+    else if(projectStatus.contains("Future")){
+        QIcon icon(":/imgs/red_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Future Task");
+    }else{
+        d_projectStatuslabel->setText(projectStatus);
+    }
+    d_projectStatuslabel->setLayout(statusLayout);
+    d_projectStatuslabel->setAlignment(Qt::AlignLeft);
+    statusLayout->addWidget(iconLabel);
+    statusLayout->addWidget(textLabel);
+    statusLayout->addStretch();
+    statusLayout->setMargin(0);
+
+
     d_projectNameLabel->setText(projectName);
     d_taskNameLabel->setText(taskName);
     // d_taskActiveTimeLabel->setText(taskActiveTime);

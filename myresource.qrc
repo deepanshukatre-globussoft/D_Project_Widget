@@ -19,5 +19,7 @@
         <file>imgs/pause.png</file>
         <file>imgs/refresh.svg</file>
         <file>imgs/start.png</file>
+        <file>fonts/Ubuntu-Regular.ttf</file>
+        <file>translations/ar.qm</file>
     </qresource>
 </RCC>

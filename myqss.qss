@@ -8,6 +8,19 @@ QPushButton  {
     text-align: center;              /* Center f0dfdf  e89090 */
 
 }
+/*=======   Fonts start ========*/
+@font-face {
+    font-family: 'Ubuntu';
+    src: url(:/fonts/Ubuntu-Regular.ttf);
+}
+
+QLabel, QPushButton {
+    font-family: 'Ubuntu';
+    font-size: 12px;
+}
+
+/*=======   Fonts end ========*/
+
 
 #search_lineeditObject {
     background-image: url(:/imgs/search.svg);
@@ -19,6 +32,34 @@ QPushButton  {
     height: 35px;
     font-family: Arial;
     font-size: 15px;
+    border-radius : 17px;
 
 }
 
+#TaskReminderLabel{
+    border :1px solid #D2232A;
+    border-radius: 6px;
+    color : #D2232A;
+    font-size: 17px;
+}
+
+
+
+/* ++++++++++ Project custom widget qss start +++++++++++++ */
+
+#customProjectItemWidget{
+}
+
+#d_projectNameLabel{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#active_task_time {
+        color : #0F5EA9;
+        font-family: 'Ubuntu';
+        font-size: 11px;
+}
+#d_taskActiveTimeLabel {
+        color : #0F5EA9;
+}

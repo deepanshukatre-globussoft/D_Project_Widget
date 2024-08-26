@@ -25,6 +25,10 @@ HEADERS += \
     reminderwidget.h \
     widget.h
 
+TRANSLATIONS += \
+    translations/ar.ts
+
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

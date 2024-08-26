@@ -4,6 +4,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     : QWidget{parent}
 {
     this->setFixedSize(407,400);
+    this->setWindowTitle("Set Reminder");
 
     m_reminderLayout = new QVBoxLayout();
     m_reminderLayout->setContentsMargins(30,30,30,30);
@@ -47,14 +48,15 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QLabel * d_taskRemindLabel = new QLabel("Remind me that I'm timing in:");
     d_taskReminderTimeLabel = new QLabel("00:00:00");
     d_taskReminderTimeLabel->setFixedSize(87,21);
-    d_taskReminderTimeLabel->setStyleSheet(
-        "QLabel {"
-        "border :1px solid #D2232A;"
-        "border-radius: 6px;"
-        "color : #D2232A;"
-        "font-size: 17px;"
-        "}"
-        );
+    d_taskReminderTimeLabel->setObjectName("TaskReminderLabel");
+//    d_taskReminderTimeLabel->setStyleSheet(
+//        "QLabel {"
+//        "border :1px solid #D2232A;"
+//        "border-radius: 6px;"
+//        "color : #D2232A;"
+//        "font-size: 17px;"
+//        "}"
+//        );
 
     QFrame* h_line2 =new QFrame(this);
     h_line2->setFrameShape(QFrame::HLine);
@@ -108,8 +110,15 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QVBoxLayout * custom_time_layout = new QVBoxLayout();
     custom_time_layout->setContentsMargins(5,5,5,5);
     QLabel * custom_time_label = new QLabel("Enter custom time");
+//    custom_time_label->setAutoFillBackground(true);
+    custom_widget->setStyleSheet(     //15, 94, 169
+        " QWidget {"
+        "background-color: #dfe9f0;"
+        "}"
+        );
 
     QHBoxLayout * time_imput_layout = new QHBoxLayout();
+
 
     QLineEdit * input_time_lineedit = new QLineEdit();
     input_time_lineedit->setFixedSize(188,28);
@@ -146,6 +155,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QHBoxLayout * done_btn_layout = new QHBoxLayout();
     done_btn_layout->setAlignment(Qt::AlignRight);
     QPushButton * done_button = new QPushButton("Done");
+
     done_button->setFixedSize(100,25);
     done_btn_layout->addWidget(done_button);
 
@@ -187,13 +197,11 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     custom_widget->setLayout(custom_time_layout);
     custom_widget->setVisible(false);
     custom_widget->setAutoFillBackground(true);
-    // custom_widget->setStyleSheet(     //15, 94, 169
-    //     "QWidget > QWidget {"
-    //     "background-color: rgba(15, 94, 169, 0.1);"
-    //     // "border-radius: 6px;"
-    //     // "color: white;"
-    //     "}"
-    //     );
+//     custom_widget->setStyleSheet(     //15, 94, 169
+//         "QWidget > QWidget {"
+//         "background-color: rgba(15, 94, 169, 0.1);"
+//         "}"
+//         );
 
     reset_update_btnLayout->addWidget(reset_reminder_btn);
     reset_update_btnLayout->addWidget(update_reminder_btn);

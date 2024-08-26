@@ -20,7 +20,7 @@ void CreateTask::setupUI()
 
     createTaskMainLayout = new QVBoxLayout(this);
 
-    createTaskLabel = new QLabel("Create Task", this);
+    createTaskLabel = new QLabel(tr("Create Task"), this);
     createTaskMainLayout->addWidget(createTaskLabel);
 
     nameWidget = new QWidget(this);
@@ -42,7 +42,7 @@ void CreateTask::setupUI()
 
     taskWidget = new QWidget(this);
     taskLayout = new QVBoxLayout(taskWidget);
-    taskLabel = new QLabel("Folder", taskWidget);
+    taskLabel = new QLabel(tr("Folder"), taskWidget);
     taskComboBox = new QComboBox(taskWidget);
     taskLayout->addWidget(taskLabel);
     taskLayout->addWidget(taskComboBox);
@@ -51,7 +51,7 @@ void CreateTask::setupUI()
     QWidget * checkbox_widget = new QWidget(this);
     QVBoxLayout *checkbox_layout = new QVBoxLayout(checkbox_widget);
     QCheckBox * check_box = new QCheckBox(this);
-    check_box->setText("Start task now");
+    check_box->setText(tr("Start task now"));
 
     checkbox_layout->addWidget(check_box);
     checkbox_widget->setLayout(checkbox_layout);
@@ -60,8 +60,8 @@ void CreateTask::setupUI()
 
     buttonWidget = new QWidget(this);
     buttonLayout = new QHBoxLayout(buttonWidget);
-    cancelButton = new QPushButton("Cancel", buttonWidget);
-    createButton = new QPushButton("Create", buttonWidget);
+    cancelButton = new QPushButton(tr("Cancel"), buttonWidget);
+    createButton = new QPushButton(tr("Create"), buttonWidget);
     buttonLayout->addWidget(cancelButton);
     buttonLayout->addWidget(createButton);
     createTaskMainLayout->addWidget(buttonWidget);
