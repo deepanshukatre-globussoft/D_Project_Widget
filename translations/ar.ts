@@ -4,38 +4,36 @@
 <context>
     <name>CreateTask</name>
     <message>
-        <location filename="../createtask.cpp" line="20"/>
+        <location filename="../createtask.cpp" line="23"/>
         <source>Create Task</source>
         <translatorcomment>createTask</translatorcomment>
         <translation>إنشاء مهمة</translation>
     </message>
     <message>
-        <location filename="../createtask.cpp" line="83"/>
+        <location filename="../createtask.cpp" line="45"/>
         <source>Folder</source>
         <translation>فولدي</translation>
     </message>
     <message>
-        <location filename="../createtask.cpp" line="102"/>
-        <source>Start Task Now</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
+        <location filename="../createtask.cpp" line="54"/>
         <source>Start task now</source>
-        <translation type="vanished">ابدأ المهمة الآن</translation>
+        <translation>ابدأ المهمة الآن</translation>
     </message>
     <message>
+        <location filename="../createtask.cpp" line="63"/>
         <source>Cancel</source>
-        <translation type="vanished">يلغي</translation>
+        <translation>يلغي</translation>
     </message>
     <message>
+        <location filename="../createtask.cpp" line="64"/>
         <source>Create</source>
-        <translation type="vanished">يخلق</translation>
+        <translation>يخلق</translation>
     </message>
 </context>
 <context>
     <name>ProjectCustomWidget</name>
     <message>
-        <location filename="../projectcustomwidget.cpp" line="125"/>
+        <location filename="../projectcustomwidget.cpp" line="111"/>
         <source>Start</source>
         <translation></translation>
     </message>
@@ -43,44 +41,42 @@
 <context>
     <name>Widget</name>
     <message>
+        <location filename="../widget.cpp" line="21"/>
         <source>Deepanshu</source>
-        <translation type="vanished">سيلا</translation>
+        <translation>سيلا</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="48"/>
+        <location filename="../widget.cpp" line="52"/>
         <source>Search</source>
         <translation>يبحث</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="71"/>
+        <location filename="../widget.cpp" line="75"/>
         <source>Filter</source>
         <translation>فلتر</translation>
     </message>
     <message>
+        <location filename="../widget.cpp" line="98"/>
         <source>Projects</source>
-        <translation type="vanished">المشاريع</translation>
+        <translation>المشاريع</translation>
     </message>
     <message>
+        <location filename="../widget.cpp" line="137"/>
         <source>current task</source>
-        <translation type="vanished">المهمة الحالية</translation>
+        <translation>المهمة الحالية</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="21"/>
-        <source>Silah TTS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widget.cpp" line="138"/>
+        <location filename="../widget.cpp" line="146"/>
         <source>next task</source>
         <translation>المهمة التالية</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="147"/>
+        <location filename="../widget.cpp" line="155"/>
         <source>future task</source>
         <translation>المهمة المستقبلية</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="156"/>
+        <location filename="../widget.cpp" line="164"/>
         <source>completed task</source>
         <translation>المهمة المكتملة</translation>
     </message>
