@@ -1,5 +1,7 @@
 
-
+#projectContainerObject {
+background-color: #e8dfdf;
+}
 QPushButton  {
 
  /*  background-color: #f0dfdf; */
@@ -26,6 +28,7 @@ QLabel, QPushButton {
     background-position: left center;
     background-size: 15px 15px;
     padding-left: 35px;
+    background-image-size :10px 10px;
 
     height: 35px;
     font-family: Arial;
@@ -45,9 +48,7 @@ QLabel, QPushButton {
 
 /* ++++++++++ Project custom widget qss start +++++++++++++ */
 
-#projectContainerObject {
-    background-color: #fff7f7;
-    border-radius : 5px;
+#customProjectItemWidget{
 }
 
 #d_projectNameLabel{
@@ -58,7 +59,7 @@ QLabel, QPushButton {
 #active_task_time {
         color : #0F5EA9;
         font-family: 'Ubuntu';
-        font-size: 13px;
+        font-size: 11px;
 }
 #d_taskActiveTimeLabel {
         color : #0F5EA9;
