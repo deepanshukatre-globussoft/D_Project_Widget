@@ -57,6 +57,7 @@ Widget::Widget(QWidget *parent)
     createTaskBtn->setFlat(true);
     createTaskBtn->setFixedSize(45,45);
     createTaskBtn->setIconSize(QSize(45,45));
+    // createTaskBtn->move(328,360);
 //    createTaskBtn->setGeometry(100,100,30,30);
 //     createTaskBtn->raise();
 
@@ -77,123 +78,160 @@ Widget::Widget(QWidget *parent)
 
     createTaskOverlayLayout->setContentsMargins(0,0,0,0);
     QVBoxLayout *overlayLayout = new QVBoxLayout(overlayWidget);
-    overlayLayout->setContentsMargins(0,0,0,0);
+    // overlayLayout->setContentsMargins(0,0,0,0);
 
     //projects btn
     QPushButton * projects_btn = new QPushButton(overlayWidget);
-    QHBoxLayout * projectsLayout = new QHBoxLayout();
-    projectsLayout->setContentsMargins(10,0,10,0);
+    // projects_btn->setStyleSheet("padding-left:0px;");
+    QHBoxLayout * projectsLayout = new QHBoxLayout(overlayWidget);
+    projectsLayout->setContentsMargins(0,0,0,0);
+    projectsLayout->setAlignment(Qt::AlignLeft);
+    projectsLayout->setSpacing(0);
     QLabel * point_icon = new QLabel();
     QPixmap point("://imgs/whitedot.svg");
     point_icon->setPixmap(point);
-    // point_icon->setFixedSize(20,20);
-    QLabel * projects_label = new QLabel("Projects");
+    point_icon->setFixedSize(20,30);
+    QLabel * projects_label = new QLabel(tr("Projects"));
+    projects_label->setFixedSize(110,28);
+    qDebug() << "label pos " << projects_label->pos();
     QLabel * down_arrow_icon = new QLabel();
-    QPixmap down_arrow("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-expand-arrow-18.png");
-    // down_arrow_icon->setFixedSize(20,20);
+    QPixmap down_arrow("://imgs/arrow_down.svg");
+    down_arrow.scaled(QSize(30,30));
+    down_arrow_icon->setFixedSize(30,30);
     down_arrow_icon->setPixmap(down_arrow);
 
     QWidget * projects_widget = new QWidget();
     QVBoxLayout * projects_display_layout = new QVBoxLayout();
-    QPushButton * defaultbtn = new QPushButton("Default");
-    defaultbtn->setFlat(true);
+    // QPushButton * defaultbtn = new QPushButton("Default");
+    // defaultbtn->setFlat(true);
+    QComboBox * projectsComboBox = new QComboBox();
+    projectsComboBox->addItem("Select Project");
+    // Add many items to the comboBox
+    for (int i = 0; i < 50; ++i) {
+        projectsComboBox->addItem(QString("Item %1").arg(i + 1));
+    }
 
+    // Set a QListView as the view for the QComboBox to enhance scrolling behavior
+    QListView *listView = new QListView(projectsComboBox);
+    projectsComboBox->setView(listView);
     projects_display_layout->setContentsMargins(0,0,0,0);
-    projects_display_layout->addWidget(defaultbtn);
+    projects_display_layout->addWidget(projectsComboBox);
 
     projects_widget->setLayout(projects_display_layout);
     projects_widget->setVisible(false);
 
+
+    QFrame* h_line = new QFrame(this);
+    h_line->setFrameShape(QFrame::HLine);
+    h_line->setFrameShadow(QFrame::Sunken);
+    h_line->setStyleSheet("color: white;");
+
     //folders btn
     QPushButton * folders_btn = new QPushButton(overlayWidget);
-    QHBoxLayout * foldersLayout = new QHBoxLayout();
+    // folders_btn->setStyleSheet("border:1px solid black");
+    QHBoxLayout * foldersLayout = new QHBoxLayout(overlayWidget);
     foldersLayout->setContentsMargins(0,0,0,0);
+    foldersLayout->setAlignment(Qt::AlignLeft);
+    foldersLayout->setSpacing(0);
     QLabel * point_icon2 = new QLabel();
     point_icon2->setPixmap(point);
-    // point_icon2->setFixedSize(20,20);
+    point_icon2->setFixedSize(20,30);
     QLabel * folders_label = new QLabel("Folder");
+    folders_label->setFixedSize(110,28);
     QLabel * down_arrow_icon2 = new QLabel();
-    // down_arrow_icon2->setFixedSize(20,20);
+    down_arrow_icon2->setFixedSize(30,30);
     down_arrow_icon2->setPixmap(down_arrow);
 
     QWidget * folders_widget = new QWidget();
+    folders_widget->setStyleSheet("padding-left:0px;");
     QVBoxLayout * folders_display_layout = new QVBoxLayout();
+    folders_display_layout->setContentsMargins(23,0,10,0);
 
     // current task btn
     QPushButton * current_task_btn = new QPushButton();
+    // current_task_btn->setStyleSheet("border:1px solid white;");
     QHBoxLayout * current_task_layout = new QHBoxLayout();
     QLabel * current_task_icon = new QLabel();
-    current_task_icon->setFixedSize(24,24);
     QPixmap current_task_pic("://imgs/bluedot.svg");
     current_task_icon->setPixmap(current_task_pic);
-    QLabel * current_task_label = new QLabel("current task");
+    // current_task_icon->setFixedSize(12,18);
+    QLabel * current_task_label = new QLabel("Current Tasks");
 
     // next task btn
     QPushButton * next_task_btn = new QPushButton();
     QHBoxLayout * next_task_layout = new QHBoxLayout();
     QLabel * next_task_icon = new QLabel();
-    next_task_icon->setFixedSize(24,24);
-    QPixmap next_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-yellow.png");
-    // next_task_icon->setPixmap(next_task_pic);
-    QLabel * next_task_label = new QLabel(tr("next task"));
+    // next_task_icon->setFixedSize(24,24);
+    QPixmap next_task_pic("://imgs/yellowdot.svg");
+    next_task_icon->setPixmap(next_task_pic);
+    QLabel * next_task_label = new QLabel(tr("Next Tasks"));
 
     // future task btn
     QPushButton * future_task_btn = new QPushButton();
     QHBoxLayout * future_task_layout = new QHBoxLayout();
     QLabel * future_task_icon = new QLabel();
-    future_task_icon->setFixedSize(24,24);
-    QPixmap future_task_pic("");
-    // future_task_icon->setPixmap(future_task_pic);
-    QLabel * future_task_label = new QLabel(tr("future task"));
+    // future_task_icon->setFixedSize(24,24);
+    QPixmap future_task_pic("://imgs/reddot.svg");
+    future_task_icon->setPixmap(future_task_pic);
+    QLabel * future_task_label = new QLabel(tr("Future Tasks"));
 
     // completed task btn
     QPushButton * completed_task_btn = new QPushButton();
+    // completed_task_btn->setStyleSheet("border:1px solid white;");
     QHBoxLayout * completed_task_layout = new QHBoxLayout();
     QLabel * completed_task_icon = new QLabel();
-    completed_task_icon->setFixedSize(24,24);
-    QPixmap completed_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-green.png");
-    // completed_task_icon->setPixmap(completed_task_pic);
-    QLabel * completed_task_label = new QLabel(tr("completed task"));
+    // completed_task_icon->setFixedSize(24,24);
+    QPixmap completed_task_pic("://imgs/greendot.svg");
+    completed_task_icon->setPixmap(completed_task_pic);
+    QLabel * completed_task_label = new QLabel(tr("Completed Tasks"));
+    completed_task_label->setScaledContents(true);
 
     // setting current task btn
+    current_task_layout->setAlignment(Qt::AlignLeft);
+    current_task_layout->setContentsMargins(0,0,0,0);
+    current_task_layout->setSpacing(0);
     current_task_layout->addWidget(current_task_icon);
     current_task_layout->addWidget(current_task_label);
 
     current_task_btn->setLayout(current_task_layout);
     current_task_btn->setFlat(true);
 
-    folders_display_layout->addWidget(current_task_btn);
-
     // setting next task btn
+    next_task_layout->setAlignment(Qt::AlignLeft);
+    next_task_layout->setContentsMargins(0,0,0,0);
+    next_task_layout->setSpacing(0);
     next_task_layout->addWidget(next_task_icon);
     next_task_layout->addWidget(next_task_label);
 
     next_task_btn->setLayout(next_task_layout);
     next_task_btn->setFlat(true);
 
-    folders_display_layout->addWidget(next_task_btn);
-
-
     // setting future task btn
+    future_task_layout->setAlignment(Qt::AlignLeft);
+    future_task_layout->setContentsMargins(0,0,0,0);
+    future_task_layout->setSpacing(0);
     future_task_layout->addWidget(future_task_icon);
     future_task_layout->addWidget(future_task_label);
 
     future_task_btn->setLayout(future_task_layout);
     future_task_btn->setFlat(true);
 
-    folders_display_layout->addWidget(future_task_btn);
-
-
     // setting completed task btn
+    completed_task_layout->setAlignment(Qt::AlignLeft);
+    completed_task_layout->setContentsMargins(0,0,0,0);
+    completed_task_layout->setSpacing(0);
     completed_task_layout->addWidget(completed_task_icon);
     completed_task_layout->addWidget(completed_task_label);
 
     completed_task_btn->setLayout(completed_task_layout);
     completed_task_btn->setFlat(true);
 
+    folders_display_layout->addWidget(current_task_btn);
+    folders_display_layout->addWidget(next_task_btn);
+    folders_display_layout->addWidget(future_task_btn);
     folders_display_layout->addWidget(completed_task_btn);
+    folders_display_layout->setSpacing(0);
 
-    folders_display_layout->setContentsMargins(0,0,0,0);
     folders_widget->setLayout(folders_display_layout);
     folders_widget->setVisible(false);
 
@@ -201,11 +239,13 @@ Widget::Widget(QWidget *parent)
     projectsLayout->addWidget(point_icon);
     projectsLayout->addWidget(projects_label);
     projectsLayout->addWidget(down_arrow_icon);
+    // projectsLayout->addStretch();
 
     // setting folders layout
     foldersLayout->addWidget(point_icon2);
     foldersLayout->addWidget(folders_label);
     foldersLayout->addWidget(down_arrow_icon2);
+    // foldersLayout->addStretch();
 
     projects_btn->setLayout(projectsLayout);
     projects_btn->setFlat(true);
@@ -215,6 +255,7 @@ Widget::Widget(QWidget *parent)
     // setting overlayLayout
     overlayLayout->addWidget(projects_btn);
     overlayLayout->addWidget(projects_widget);
+    // overlayLayout->addWidget(h_line);
     // overlayLayout->addStretch();
     overlayLayout->addWidget(folders_btn);
     overlayLayout->addWidget(folders_widget);
@@ -222,15 +263,15 @@ Widget::Widget(QWidget *parent)
 
     // setting overlayWidget
     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    overlayWidget->setFixedSize(175,50);
-    overlayWidget->move(435,52);
+    overlayWidget->setFixedSize(170,70);
+    overlayWidget->move(483,52);
     overlayWidget->setAutoFillBackground(true);
     overlayWidget->setLayout(overlayLayout);
-    overlayWidget->setStyleSheet(" background-color: #D2232A ; border-radius:5px; color: white; ");
+    overlayWidget->setStyleSheet(" background-color: rgba(210, 35, 42, 1); padding :5px; border-radius:5px; color: white; ");
     overlayWidget->setVisible(false);
 
     overlayCreatetaskWidget->setFixedSize(45,45);
-    overlayCreatetaskWidget->move(300,330);
+    overlayCreatetaskWidget->move(325,370);
     overlayCreatetaskWidget->setLayout(createTaskOverlayLayout);
 
     overlayCreatetaskWidget->setVisible(true);
@@ -371,7 +412,10 @@ Widget::Widget(QWidget *parent)
     setFixedSize(700,450);
 
     // First time calling the api so it should not come empty
-    networkManager->fetchTasksForMobileList(token,10);
+    // networkManager->fetchTasksForMobileList(token,10);
+
+    overlayWidget->show();
+    overlayWidget->raise();
 
     //signals and slots
     connect(createTaskBtn,&QPushButton::clicked,this,[=]{
@@ -425,30 +469,35 @@ Widget::Widget(QWidget *parent)
         qDebug() << "projects_btn clicked ";
         if(projects_widget->isHidden()){
             qDebug() << "is projects visible true ";
-            // projects_widget->setVisible(true);
-            // overlayWidget->setFixedHeight(81);
+            projects_widget->setVisible(true);
+            overlayWidget->setFixedHeight(100);
             // overlayWidget->setFixedHeight(overlayWidget->height() + projects_widget->height());
         }else{
             qDebug() << "is projects visible false";
-            // projects_widget->setVisible(false);
-            // overlayWidget->setFixedHeight(52);
+            projects_widget->setVisible(false);
+            overlayWidget->setFixedHeight(70);
             // overlayWidget->setFixedHeight(50);
         }
     });
     connect(folders_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "folders_btn clicked ";
         if(folders_widget->isHidden()){
-            // folders_widget->setVisible(true);
+            folders_widget->setVisible(true);
+            overlayWidget->setFixedHeight(200);
+            //qDebug() << "folder widget in if" << folders_widget->pos()
+            // << overlayWidget->pos() << folders_widget->size() << overlayWidget->size() ;
         }else{
-            // folders_widget->setVisible(false);
+            folders_widget->setVisible(false);
+            overlayWidget->setFixedHeight(70);
+            qDebug() << "folder widget in else" << folders_widget->pos() << overlayWidget->pos() << folders_widget->size() << overlayWidget->size() ;
         }
     });
 
-    connect(defaultbtn,&QPushButton::clicked,this,[=]{
-        qDebug() << "default btn clicked ";
-        overlayWidget->setVisible(false);
-        projects_widget->setVisible(false);
-    });
+    // connect(defaultbtn,&QPushButton::clicked,this,[=]{
+    //     qDebug() << "default btn clicked ";
+    //     overlayWidget->setVisible(false);
+    //     projects_widget->setVisible(false);
+    // });
 
     connect(current_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "current_task_btn clicked ";

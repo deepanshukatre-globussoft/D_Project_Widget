@@ -16,12 +16,12 @@ CreateTask::CreateTask(QWidget *parent)
 
 void CreateTask::setupUI()
 {
-    setFixedSize(438,410);
+    setFixedSize(338,310);
     this->setWindowTitle(tr("Create Task"));
     this->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
 
     createTaskMainLayout = new QVBoxLayout(this);
-    createTaskMainLayout->setContentsMargins(32,32,32,32);
+    createTaskMainLayout->setContentsMargins(22,22,22,22);
 
 //    createTaskLabel = new QLabel(tr("Create Task"), this);
 //    createTaskMainLayout->addWidget(createTaskLabel);
@@ -48,15 +48,14 @@ void CreateTask::setupUI()
 
 //    nameLabel->setFont(font);
     nameLineEdit->setPlaceholderText("Enter Title");
-    nameLineEdit->setFixedSize(374,42);
-//    nameLineEdit->setFont(font);
+    nameLineEdit->setFixedSize(290,37);
+   // nameLineEdit->setFont(font);
     nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px;");
 
     nameLayout->setContentsMargins(0,0,0,0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(nameLineEdit);
 
-    nameWidget->setFixedSize(374,66);
     createTaskMainLayout->addWidget(nameWidget);
 
     projectWidget = new QWidget(this);
@@ -66,7 +65,7 @@ void CreateTask::setupUI()
 
 //    projectLabel->setFont(font);
 
-    projectComboBox->setFixedSize(374,42);
+    projectComboBox->setFixedSize(290,37);
 //    projectComboBox->setFont(font);
     projectComboBox->setStyleSheet(styleSheet);
 
@@ -74,7 +73,6 @@ void CreateTask::setupUI()
     projectLayout->addWidget(projectLabel);
     projectLayout->addWidget(projectComboBox);
     projectWidget->setLayout(projectLayout);
-    projectWidget->setFixedSize(374,66);
     createTaskMainLayout->addStretch();
     createTaskMainLayout->addWidget(projectWidget);
 
@@ -85,11 +83,10 @@ void CreateTask::setupUI()
 
 //    taskLabel->setFont(font);
 
-    taskComboBox->setFixedSize(374,42);
+    taskComboBox->setFixedSize(290,37);
 //    taskComboBox->setFont(font);
     taskComboBox->setStyleSheet(styleSheet);
 
-    taskWidget->setFixedSize(374,66);
     taskLayout->setContentsMargins(0,0,0,0);
     taskLayout->addWidget(taskLabel);
     taskLayout->addWidget(taskComboBox);
@@ -100,6 +97,17 @@ void CreateTask::setupUI()
     QVBoxLayout *checkbox_layout = new QVBoxLayout(checkbox_widget);
     QCheckBox * check_box = new QCheckBox(this);
     check_box->setText(tr("Start Task Now"));
+    // check_box->setStyleSheet("color: 1px solid rgba(35, 31, 32, 0.2)");
+    // check_box->setStyleSheet("QCheckBox::indicator {"
+    //                         "width: 16px;"
+    //                         "height: 16px;"
+    //                         "border: 1px solid rgba(35, 31, 32, 0.2);"
+    //                         "color: red;"
+    //                         "}"
+    //                         "QCheckBox::indicator:checked {"
+    //                         "    border: 0.5px solid red;"  // Optional: set background color when checked"
+    //                         "color: red;"
+    //                         "}");
 
     checkbox_layout->setContentsMargins(0,0,0,0);
     checkbox_layout->addWidget(check_box);
@@ -113,11 +121,11 @@ void CreateTask::setupUI()
     cancelBtn = new QPushButton("Cancel", buttonWidget);
     createBtn = new QPushButton("Create Task", buttonWidget);
 
-    cancelBtn->setFixedSize(170,42);
+    cancelBtn->setFixedSize(135,37);
     cancelBtn->setFlat(true);
 //    cancelBtn->setFont(font);
     cancelBtn->setStyleSheet("color :#D2232A; border: 1px solid #D2232A; border-radius : 5px;");
-    createBtn->setFixedSize(170,42);
+    createBtn->setFixedSize(135,37);
     createBtn->setFlat(true);
 //    createBtn->setFont(font);
     createBtn->setStyleSheet("color :white; border-radius : 5px; background-color: #D2232A;");
@@ -126,7 +134,7 @@ void CreateTask::setupUI()
     buttonLayout->addWidget(cancelBtn);
     buttonLayout->addStretch();
     buttonLayout->addWidget(createBtn);
-    // buttonWidget->setFixedSize(374,42);
+    buttonWidget->setFixedSize(290,42);
     createTaskMainLayout->addWidget(buttonWidget);
 
     setLayout(createTaskMainLayout);

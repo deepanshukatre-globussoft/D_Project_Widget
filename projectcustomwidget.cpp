@@ -391,7 +391,9 @@ ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QSt
 
 void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 {
+     // border: 2px solid rgba(76, 156, 229, 1)
     this->setStyleSheet("background-color: #f0dfe0;");
+    this->setStyleSheet("QWidget {  border: 2px solid rgba(76, 156, 229, 1) }");
     completeBtn->show();
     deleteBtn->show();
     QWidget::focusInEvent(event);
