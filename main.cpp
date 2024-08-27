@@ -13,11 +13,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QTranslator translator;
-       // translator.load(":/translations/ar.qm");
-   // qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
+//    QTranslator translator;
+//    qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
 
-   // qApp->installTranslator(&translator);
+//    qApp->installTranslator(&translator);
 
 
     QFile file("://myqss.qss");
@@ -46,6 +45,10 @@ int main(int argc, char *argv[])
 ////        font.setPointSize(12); // Set the default font size
 //        QApplication::setFont(font); // Apply font globally
 //    }
+
+
+
+
 
     Widget w;
     w.show();

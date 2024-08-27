@@ -17,12 +17,14 @@ CreateTask::CreateTask(QWidget *parent)
 void CreateTask::setupUI()
 {
     setFixedSize(438,410);
-    this->setWindowTitle("Create Task");
+    this->setWindowTitle(tr("Create Task"));
     this->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
 
     createTaskMainLayout = new QVBoxLayout(this);
     createTaskMainLayout->setContentsMargins(32,32,32,32);
 
+//    createTaskLabel = new QLabel(tr("Create Task"), this);
+//    createTaskMainLayout->addWidget(createTaskLabel);
     QString styleSheet = QString(
         "QComboBox {"
         "border-radius: 5px;"
@@ -44,8 +46,10 @@ void CreateTask::setupUI()
     nameLineEdit = new QLineEdit(nameWidget);
     // nameLineEdit->setFocusPolicy(Qt::NoFocus);
 
+//    nameLabel->setFont(font);
     nameLineEdit->setPlaceholderText("Enter Title");
     nameLineEdit->setFixedSize(374,42);
+//    nameLineEdit->setFont(font);
     nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px;");
 
     nameLayout->setContentsMargins(0,0,0,0);
@@ -60,8 +64,10 @@ void CreateTask::setupUI()
     projectLabel = new QLabel("Project", projectWidget);
     projectComboBox = new QComboBox(projectWidget);
 
+//    projectLabel->setFont(font);
 
     projectComboBox->setFixedSize(374,42);
+//    projectComboBox->setFont(font);
     projectComboBox->setStyleSheet(styleSheet);
 
     projectLayout->setContentsMargins(0,0,0,0);
@@ -77,7 +83,10 @@ void CreateTask::setupUI()
     taskLabel = new QLabel(tr("Folder"), taskWidget);
     taskComboBox = new QComboBox(taskWidget);
 
+//    taskLabel->setFont(font);
+
     taskComboBox->setFixedSize(374,42);
+//    taskComboBox->setFont(font);
     taskComboBox->setStyleSheet(styleSheet);
 
     taskWidget->setFixedSize(374,66);
@@ -106,9 +115,11 @@ void CreateTask::setupUI()
 
     cancelBtn->setFixedSize(170,42);
     cancelBtn->setFlat(true);
+//    cancelBtn->setFont(font);
     cancelBtn->setStyleSheet("color :#D2232A; border: 1px solid #D2232A; border-radius : 5px;");
     createBtn->setFixedSize(170,42);
     createBtn->setFlat(true);
+//    createBtn->setFont(font);
     createBtn->setStyleSheet("color :white; border-radius : 5px; background-color: #D2232A;");
 
     buttonLayout->setContentsMargins(0,0,0,0);
