@@ -59,7 +59,8 @@ private:
 
     QLabel *d_projectNameLabel;
 
-
+    QPushButton *completeBtn ;
+    QPushButton *deleteBtn;
     QPushButton *d_setReminderbtn;
     QLabel *d_taskActiveTimeLabel;
     QWidget * reminder_widget;
@@ -77,6 +78,11 @@ private:
     // MyNetworkManager * networkManager;
 
     QString task_id;
+
+protected:
+    void focusInEvent(QFocusEvent *event) override;
+
+    void focusOutEvent(QFocusEvent *event) override;
 
 signals:
     void sendData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
