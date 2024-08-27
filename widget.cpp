@@ -18,7 +18,7 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     // this->setStyleSheet("QWidget { background-color: white;  }");
-    this->setWindowTitle(tr("Deepanshu"));
+    this->setWindowTitle(tr("Silah TTS"));
 //    qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
@@ -390,8 +390,8 @@ Widget::Widget(QWidget *parent)
     ProjectMainLayout->addLayout(create_layout);
 
     setLayout(ProjectMainLayout);
-    setFixedSize(650,400);
-//    setFixedSize(700,450);
+//    setFixedSize(650,400);
+    setFixedSize(700,450);
 
     // First time calling the api so it should not come empty
     // networkManager->fetchTasksForMobileList(token,10);

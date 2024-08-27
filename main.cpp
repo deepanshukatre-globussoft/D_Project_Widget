@@ -13,9 +13,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QTranslator translator;
-       // translator.load(":/translations/ar.qm");
-   // qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
+
+//    QTranslator translator;
+//    qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
+
 
    // qApp->installTranslator(&translator);
 

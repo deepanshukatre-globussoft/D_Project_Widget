@@ -11,13 +11,14 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     m_HMainLayout->setAlignment(Qt::AlignLeft);
 
     QFont labelFont("Ubuntu",11,400);
+    this->setFocusPolicy(Qt::ClickFocus);  // focus adding
     this->setObjectName("customProjectItemWidget") ;
     // this->setStyleSheet("background-color: rgba(35, 31, 32, 0.1);");
     d_containerWidget = new QWidget(this);
 
     // QHBoxLayout * hor_layout = new QHBoxLayout(d_containerWidget);
     // hor_layout->setContentsMargins(0,0,0,0);
-    QPushButton *completeBtn = new QPushButton(this);
+    completeBtn = new QPushButton(this);
     // completeBtn->setFixedSize(20,this->height());
     // completeBtn->setStyleSheet("background-color: #8be51e; color: white;");
 
@@ -28,7 +29,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     completeBtn->setIconSize(QSize(29,29));
     completeBtn->setStyleSheet("border-radius: 2px;");
 
-    QPushButton *deleteBtn = new QPushButton(this);
+    deleteBtn = new QPushButton(this);
     // deleteBtn->setStyleSheet("background-color: #fa3c36  ; color: white;");
     // deleteBtn->setFixedSize(20,this->height());
     QIcon deleteIcon(":/imgs/delete.svg");
@@ -99,7 +100,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     active_task_time->setStyleSheet(
         "QLabel {"
         "color : #0F5EA9;"
-        "font-size: 12px;"
+        "font-size: 13px;"
         "}"
         );
     d_taskActiveTimeLabel->setStyleSheet(
@@ -109,7 +110,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
         );
 
     QFont active_time_font;
-    active_time_font.setPointSize(11);
+    active_time_font.setPointSize(13);
 
     d_taskActiveTimeLabel->setFont(active_time_font);
 
@@ -121,10 +122,13 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     QHBoxLayout * startbtn_layout = new QHBoxLayout();
     QLabel * start_icon = new QLabel();
+    start_icon->setStyleSheet("background-color: #D2232A; color:#FFFFFF");
     QPixmap start_pic("://imgs/start.png");
     QLabel * start_label = new QLabel(tr("Start"),this);
+    start_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF");
+//    start_label->setStyleSheet("background-color: #8be51e");
 
-    start_label->setStyleSheet("color: #FFFFFF;");
+//    start_label->setStyleSheet("color: #FFFFFF;");
     start_icon->setPixmap(start_pic);
 
     startbtn_layout->setContentsMargins(9,0,13,0);
@@ -145,15 +149,15 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QPixmap edit_pic("://imgs/edit.svg");
     QLabel * edit_label = new QLabel("Edit",this);
 
-    // edit_label->setStyleSheet("color: #FFFFFF;");
+     edit_icon->setStyleSheet("border-top:1px solid #D2232A;border-bottom:1px solid #D2232A; ");
     edit_icon->setPixmap(edit_pic);
-    edit_label->setStyleSheet("color : #D2232A;");
+    edit_label->setStyleSheet("color : #D2232A; border-top:1px solid #D2232A;border-bottom:1px solid #D2232A; ");
 
     editbtn_layout->setContentsMargins(9,0,13,0);
     editbtn_layout->addWidget(edit_icon);
     editbtn_layout->addWidget(edit_label);
 
-    d_editTaskButton->setFixedSize(68,29);
+    d_editTaskButton->setFixedSize(72,29);
     d_editTaskButton->setLayout(editbtn_layout);
     d_editTaskButton->setStyleSheet(
         "QPushButton {"
@@ -172,6 +176,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     p_FirstLayout->addWidget(d_editTaskButton);
     p_FirstLayout->addWidget(completeBtn);
     p_FirstLayout->addWidget(deleteBtn);
+    completeBtn->hide();
+    deleteBtn->hide();
 
 
     p_SecondLayout = new QHBoxLayout;
@@ -241,7 +247,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     d_containerWidget->setLayout(d_containerLayout);
 
-    setFixedSize(600,125);
+    setFixedSize(650,150);
     m_HMainLayout->addWidget(d_containerWidget);
 
     //    m_HMainLayout->addSpacerItem(spacer);
@@ -381,6 +387,22 @@ ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QSt
     d_projectNameLabel->setText(projectName);
     d_taskNameLabel->setText(taskName);
     d_taskActiveTimeLabel->setText(taskActiveTime);
+}
+
+void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
+{
+    this->setStyleSheet("background-color: #f0dfe0;");
+    completeBtn->show();
+    deleteBtn->show();
+    QWidget::focusInEvent(event);
+}
+
+void ProjectCustomWidget::focusOutEvent(QFocusEvent *event)
+{
+    this->setStyleSheet("background-color: #fff7f7;");
+    completeBtn->hide();
+    deleteBtn->hide();
+    QWidget::focusOutEvent(event);
 }
 
 void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
