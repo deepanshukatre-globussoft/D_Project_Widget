@@ -28,6 +28,7 @@ QLabel, QPushButton {
     background-position: left center;
     background-size: 15px 15px;
     padding-left: 35px;
+    background-image-size :10px 10px;
 
     height: 35px;
     font-family: Arial;
