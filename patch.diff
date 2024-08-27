@@ -1,0 +1,399 @@
+From 56740f72772fa12b03399608eed9fc063ee07f76 Mon Sep 17 00:00:00 2001
+From: basha_gbs <mdbashashaik@globussoft.in>
+Date: Tue, 27 Aug 2024 12:47:32 +0530
+Subject: [PATCH] ++ filter update commit
+
+---
+ createtask.cpp      |  11 -----
+ imgs/arrow_down.svg |   3 ++
+ imgs/downarrow.png  | Bin 201 -> 0 bytes
+ imgs/greendot.svg   |   3 ++
+ imgs/reddot.svg     |   3 ++
+ imgs/yellowdot.svg  |   3 ++
+ main.cpp            |  10 ++---
+ myqss.qss           |   1 +
+ myresource.qrc      |   5 ++-
+ widget.cpp          |  99 +++++++++++++++++++++++++++-----------------
+ 10 files changed, 82 insertions(+), 56 deletions(-)
+ create mode 100644 imgs/arrow_down.svg
+ delete mode 100644 imgs/downarrow.png
+ create mode 100644 imgs/greendot.svg
+ create mode 100644 imgs/reddot.svg
+ create mode 100644 imgs/yellowdot.svg
+
+diff --git a/createtask.cpp b/createtask.cpp
+index 170522f..6b4c221 100644
+--- a/createtask.cpp
++++ b/createtask.cpp
+@@ -23,8 +23,6 @@ void CreateTask::setupUI()
+     createTaskMainLayout = new QVBoxLayout(this);
+     createTaskMainLayout->setContentsMargins(32,32,32,32);
+ 
+-    createTaskLabel = new QLabel(tr("Create Task"), this);
+-    createTaskMainLayout->addWidget(createTaskLabel);
+     QString styleSheet = QString(
+         "QComboBox {"
+         "border-radius: 5px;"
+@@ -46,10 +44,8 @@ void CreateTask::setupUI()
+     nameLineEdit = new QLineEdit(nameWidget);
+     // nameLineEdit->setFocusPolicy(Qt::NoFocus);
+ 
+-    nameLabel->setFont(font);
+     nameLineEdit->setPlaceholderText("Enter Title");
+     nameLineEdit->setFixedSize(374,42);
+-    nameLineEdit->setFont(font);
+     nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px;");
+ 
+     nameLayout->setContentsMargins(0,0,0,0);
+@@ -64,10 +60,8 @@ void CreateTask::setupUI()
+     projectLabel = new QLabel("Project", projectWidget);
+     projectComboBox = new QComboBox(projectWidget);
+ 
+-    projectLabel->setFont(font);
+ 
+     projectComboBox->setFixedSize(374,42);
+-    projectComboBox->setFont(font);
+     projectComboBox->setStyleSheet(styleSheet);
+ 
+     projectLayout->setContentsMargins(0,0,0,0);
+@@ -83,10 +77,7 @@ void CreateTask::setupUI()
+     taskLabel = new QLabel(tr("Folder"), taskWidget);
+     taskComboBox = new QComboBox(taskWidget);
+ 
+-    taskLabel->setFont(font);
+-
+     taskComboBox->setFixedSize(374,42);
+-    taskComboBox->setFont(font);
+     taskComboBox->setStyleSheet(styleSheet);
+ 
+     taskWidget->setFixedSize(374,66);
+@@ -115,11 +106,9 @@ void CreateTask::setupUI()
+ 
+     cancelBtn->setFixedSize(170,42);
+     cancelBtn->setFlat(true);
+-    cancelBtn->setFont(font);
+     cancelBtn->setStyleSheet("color :#D2232A; border: 1px solid #D2232A; border-radius : 5px;");
+     createBtn->setFixedSize(170,42);
+     createBtn->setFlat(true);
+-    createBtn->setFont(font);
+     createBtn->setStyleSheet("color :white; border-radius : 5px; background-color: #D2232A;");
+ 
+     buttonLayout->setContentsMargins(0,0,0,0);
+diff --git a/imgs/arrow_down.svg b/imgs/arrow_down.svg
+new file mode 100644
+index 0000000..b2621a4
+--- /dev/null
++++ b/imgs/arrow_down.svg
+@@ -0,0 +1,3 @@
++<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
++<path d="M11.1673 14.4472L18.2589 7.00427C18.3773 6.88008 18.4434 6.71509 18.4434 6.54351C18.4434 6.37194 18.3773 6.20695 18.2589 6.08276L18.2509 6.07474C18.1935 6.01433 18.1244 5.96623 18.0479 5.93335C17.9713 5.90048 17.8888 5.88353 17.8055 5.88353C17.7222 5.88353 17.6397 5.90048 17.5632 5.93335C17.4866 5.96623 17.4175 6.01433 17.3601 6.07474L10.6825 13.0836L4.00753 6.07474C3.95014 6.01433 3.88105 5.96622 3.80448 5.93335C3.72791 5.90048 3.64546 5.88353 3.56213 5.88353C3.4788 5.88353 3.39634 5.90048 3.31978 5.93335C3.24321 5.96622 3.17412 6.01433 3.11673 6.07474L3.10872 6.08276C2.99033 6.20694 2.92429 6.37194 2.92429 6.54351C2.92429 6.71509 2.99033 6.88008 3.10872 7.00427L10.2004 14.4472C10.2627 14.5126 10.3377 14.5647 10.4208 14.6003C10.5039 14.6359 10.5934 14.6543 10.6838 14.6543C10.7742 14.6543 10.8637 14.6359 10.9468 14.6003C11.0299 14.5647 11.1049 14.5126 11.1673 14.4472Z" fill="white"/>
++</svg>
+diff --git a/imgs/downarrow.png b/imgs/downarrow.png
+deleted file mode 100644
+index bdad10ced40da988cc94a04ef70490add9f24e6d..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 201
+zcmeAS@N?(olHy`uVBq!ia0vp^LLkh+1|-AI^@Rf|&H|6fVg?3oVGw3ym^DWNC|K?3
+z;uumf=j}yDu0sX_tQYPq*xkf^K7sq*f1zy^9IbK>Jrz7ST-8c%^D`$NvQbl6YP|44
+z+rtBQ8dm15i7+TrNS+z_`dN$lyd5kP+0E|UJ}vM}T<ECF1h(p}Gvt>1JgWbUBPg-B
+w@>!79{O5Wp>6_P9PnLZ%>$Uz9pHn{>O2uyoXuf~C0q6_{Pgg&ebxsLQ02nVxv;Y7A
+
+diff --git a/imgs/greendot.svg b/imgs/greendot.svg
+new file mode 100644
+index 0000000..214df64
+--- /dev/null
++++ b/imgs/greendot.svg
+@@ -0,0 +1,3 @@
++<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
++<circle opacity="0.9" cx="4" cy="4" r="3.5" fill="#4DBF25" stroke="white"/>
++</svg>
+diff --git a/imgs/reddot.svg b/imgs/reddot.svg
+new file mode 100644
+index 0000000..04f88e4
+--- /dev/null
++++ b/imgs/reddot.svg
+@@ -0,0 +1,3 @@
++<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
++<circle opacity="0.9" cx="4" cy="4" r="3.5" fill="#D2232A" stroke="white"/>
++</svg>
+diff --git a/imgs/yellowdot.svg b/imgs/yellowdot.svg
+new file mode 100644
+index 0000000..0ec124c
+--- /dev/null
++++ b/imgs/yellowdot.svg
+@@ -0,0 +1,3 @@
++<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
++<circle opacity="0.9" cx="4" cy="4" r="3.5" fill="#F9A528" stroke="white"/>
++</svg>
+diff --git a/main.cpp b/main.cpp
+index 61abfb2..786857e 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -14,10 +14,10 @@ int main(int argc, char *argv[])
+     QApplication a(argc, argv);
+ 
+     QTranslator translator;
+-    //    translator.load(":/translations/ar.qm");
+-//    qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
++       // translator.load(":/translations/ar.qm");
++   // qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
+ 
+-//    qApp->installTranslator(&translator);
++   // qApp->installTranslator(&translator);
+ 
+ 
+     QFile file("://myqss.qss");
+@@ -47,10 +47,6 @@ int main(int argc, char *argv[])
+ //        QApplication::setFont(font); // Apply font globally
+ //    }
+ 
+-
+-
+-
+-
+     Widget w;
+     w.show();
+ 
+diff --git a/myqss.qss b/myqss.qss
+index 79cf384..bb71da6 100644
+--- a/myqss.qss
++++ b/myqss.qss
+@@ -28,6 +28,7 @@ QLabel, QPushButton {
+     background-position: left center;
+     background-size: 15px 15px;
+     padding-left: 35px;
++    background-image-size :10px 10px;
+ 
+     height: 35px;
+     font-family: Arial;
+diff --git a/myresource.qrc b/myresource.qrc
+index ef911c3..36a7644 100644
+--- a/myresource.qrc
++++ b/myresource.qrc
+@@ -21,9 +21,12 @@
+         <file>imgs/start.png</file>
+         <file>fonts/Ubuntu-Regular.ttf</file>
+         <file>translations/ar.qm</file>
+-        <file>imgs/downarrow.png</file>
+         <file>imgs/ep_arrow.svg</file>
+         <file>imgs/bluedot.svg</file>
+         <file>imgs/whitedot.svg</file>
++        <file>imgs/arrow_down.svg</file>
++        <file>imgs/greendot.svg</file>
++        <file>imgs/reddot.svg</file>
++        <file>imgs/yellowdot.svg</file>
+     </qresource>
+ </RCC>
+diff --git a/widget.cpp b/widget.cpp
+index 40cbb4e..70d55bb 100644
+--- a/widget.cpp
++++ b/widget.cpp
+@@ -77,47 +77,65 @@ Widget::Widget(QWidget *parent)
+ 
+     createTaskOverlayLayout->setContentsMargins(0,0,0,0);
+     QVBoxLayout *overlayLayout = new QVBoxLayout(overlayWidget);
+-    overlayLayout->setContentsMargins(0,0,0,0);
++    // overlayLayout->setContentsMargins(0,0,0,0);
+ 
+     //projects btn
+     QPushButton * projects_btn = new QPushButton(overlayWidget);
+-    QHBoxLayout * projectsLayout = new QHBoxLayout();
+-    projectsLayout->setContentsMargins(10,0,10,0);
++    QHBoxLayout * projectsLayout = new QHBoxLayout(overlayWidget);
++    projectsLayout->setContentsMargins(0,0,0,0);
++    projectsLayout->setAlignment(Qt::AlignLeft);
+     QLabel * point_icon = new QLabel();
+     QPixmap point("://imgs/whitedot.svg");
+     point_icon->setPixmap(point);
+-    // point_icon->setFixedSize(20,20);
+-    QLabel * projects_label = new QLabel("Projects");
++    point_icon->setFixedSize(20,30);
++    QLabel * projects_label = new QLabel(tr("Projects"));
++    projects_label->setFixedSize(110,28);
++    qDebug() << "label pos " << projects_label->pos();
+     QLabel * down_arrow_icon = new QLabel();
+-    QPixmap down_arrow("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-expand-arrow-18.png");
+-    // down_arrow_icon->setFixedSize(20,20);
++    QPixmap down_arrow("://imgs/arrow_down.svg");
++    down_arrow.scaled(QSize(30,30));
++    down_arrow_icon->setFixedSize(30,30);
+     down_arrow_icon->setPixmap(down_arrow);
+ 
+     QWidget * projects_widget = new QWidget();
+     QVBoxLayout * projects_display_layout = new QVBoxLayout();
+-    QPushButton * defaultbtn = new QPushButton("Default");
+-    defaultbtn->setFlat(true);
++    // QPushButton * defaultbtn = new QPushButton("Default");
++    // defaultbtn->setFlat(true);
++
++    QComboBox * projectsComboBox = new QComboBox();
++    projectsComboBox->addItem("Select Project");
++    // Add many items to the comboBox
++    for (int i = 0; i < 50; ++i) {
++        projectsComboBox->addItem(QString("Item %1").arg(i + 1));
++    }
++
++    // Set a QListView as the view for the QComboBox to enhance scrolling behavior
++    QListView *listView = new QListView(projectsComboBox);
++    projectsComboBox->setView(listView);
+ 
+     projects_display_layout->setContentsMargins(0,0,0,0);
+-    projects_display_layout->addWidget(defaultbtn);
++    projects_display_layout->addWidget(projectsComboBox);
+ 
+     projects_widget->setLayout(projects_display_layout);
+     projects_widget->setVisible(false);
+ 
+     //folders btn
+     QPushButton * folders_btn = new QPushButton(overlayWidget);
+-    QHBoxLayout * foldersLayout = new QHBoxLayout();
++    QHBoxLayout * foldersLayout = new QHBoxLayout(overlayWidget);
+     foldersLayout->setContentsMargins(0,0,0,0);
++    foldersLayout->setAlignment(Qt::AlignLeft);
+     QLabel * point_icon2 = new QLabel();
+     point_icon2->setPixmap(point);
+-    // point_icon2->setFixedSize(20,20);
++    point_icon2->setFixedSize(20,30);
+     QLabel * folders_label = new QLabel("Folder");
++    folders_label->setFixedSize(110,28);
+     QLabel * down_arrow_icon2 = new QLabel();
+-    // down_arrow_icon2->setFixedSize(20,20);
++    down_arrow_icon2->setFixedSize(30,30);
+     down_arrow_icon2->setPixmap(down_arrow);
+ 
+     QWidget * folders_widget = new QWidget();
+     QVBoxLayout * folders_display_layout = new QVBoxLayout();
++    folders_display_layout->setContentsMargins(50,10,0,0);
+ 
+     // current task btn
+     QPushButton * current_task_btn = new QPushButton();
+@@ -133,8 +151,8 @@ Widget::Widget(QWidget *parent)
+     QHBoxLayout * next_task_layout = new QHBoxLayout();
+     QLabel * next_task_icon = new QLabel();
+     next_task_icon->setFixedSize(24,24);
+-    QPixmap next_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-yellow.png");
+-    // next_task_icon->setPixmap(next_task_pic);
++    QPixmap next_task_pic("://imgs/yellowdot.svg");
++    next_task_icon->setPixmap(next_task_pic);
+     QLabel * next_task_label = new QLabel(tr("next task"));
+ 
+     // future task btn
+@@ -142,8 +160,8 @@ Widget::Widget(QWidget *parent)
+     QHBoxLayout * future_task_layout = new QHBoxLayout();
+     QLabel * future_task_icon = new QLabel();
+     future_task_icon->setFixedSize(24,24);
+-    QPixmap future_task_pic("");
+-    // future_task_icon->setPixmap(future_task_pic);
++    QPixmap future_task_pic("://imgs/reddot.svg");
++    future_task_icon->setPixmap(future_task_pic);
+     QLabel * future_task_label = new QLabel(tr("future task"));
+ 
+     // completed task btn
+@@ -151,8 +169,8 @@ Widget::Widget(QWidget *parent)
+     QHBoxLayout * completed_task_layout = new QHBoxLayout();
+     QLabel * completed_task_icon = new QLabel();
+     completed_task_icon->setFixedSize(24,24);
+-    QPixmap completed_task_pic("C:/Users/GLB-BLR-304/Documents/GitHub/images/icons8-dot-green.png");
+-    // completed_task_icon->setPixmap(completed_task_pic);
++    QPixmap completed_task_pic("://imgs/greendot.svg");
++    completed_task_icon->setPixmap(completed_task_pic);
+     QLabel * completed_task_label = new QLabel(tr("completed task"));
+ 
+     // setting current task btn
+@@ -201,6 +219,7 @@ Widget::Widget(QWidget *parent)
+     projectsLayout->addWidget(point_icon);
+     projectsLayout->addWidget(projects_label);
+     projectsLayout->addWidget(down_arrow_icon);
++    projectsLayout->addStretch();
+ 
+     // setting folders layout
+     foldersLayout->addWidget(point_icon2);
+@@ -222,11 +241,15 @@ Widget::Widget(QWidget *parent)
+ 
+     // setting overlayWidget
+     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+-    overlayWidget->setFixedSize(175,50);
++    overlayWidget->setFixedSize(200,70);
++    qDebug() << "overlayLayout margins" << overlayLayout->contentsMargins();
++    qDebug() << "projectsLayout margins" << projectsLayout->contentsMargins();
++    qDebug() << "foldersLayout margins" << foldersLayout->contentsMargins();
++    // overlayWidget->setFixedWidth(175);
+     overlayWidget->move(435,52);
+     overlayWidget->setAutoFillBackground(true);
+     overlayWidget->setLayout(overlayLayout);
+-    overlayWidget->setStyleSheet(" background-color: #D2232A ; border-radius:5px; color: white; ");
++    overlayWidget->setStyleSheet(" background-color: #D2232A ;padding:5px; border-radius:5px; color: white; ");
+     overlayWidget->setVisible(false);
+ 
+     overlayCreatetaskWidget->setFixedSize(45,45);
+@@ -371,7 +394,10 @@ Widget::Widget(QWidget *parent)
+ //    setFixedSize(700,450);
+ 
+     // First time calling the api so it should not come empty
+-    networkManager->fetchTasksForMobileList(token,10);
++    // networkManager->fetchTasksForMobileList(token,10);
++
++    overlayWidget->show();
++    overlayWidget->raise();
+ 
+     //signals and slots
+     connect(createTaskBtn,&QPushButton::clicked,this,[=]{
+@@ -383,6 +409,7 @@ Widget::Widget(QWidget *parent)
+ 
+     connect(filter_btn, &QPushButton::clicked, this, [=]{
+         qDebug() << "filter button clicked" << overlayWidget->size();
++        qDebug() << "label pos " << projects_label->pos();
+         if (overlayWidget->isHidden()) {
+             filter_btn->setStyleSheet(
+                 "QPushButton {"
+@@ -424,31 +451,29 @@ Widget::Widget(QWidget *parent)
+     connect(projects_btn,&QPushButton::clicked,this,[=]{
+         qDebug() << "projects_btn clicked ";
+         if(projects_widget->isHidden()){
+-            qDebug() << "is projects visible true ";
+-            // projects_widget->setVisible(true);
+-            // overlayWidget->setFixedHeight(81);
+-            // overlayWidget->setFixedHeight(overlayWidget->height() + projects_widget->height());
++            projects_widget->setVisible(true);
++            overlayWidget->setFixedHeight(100);
+         }else{
+-            qDebug() << "is projects visible false";
+-            // projects_widget->setVisible(false);
+-            // overlayWidget->setFixedHeight(52);
+-            // overlayWidget->setFixedHeight(50);
++            projects_widget->setVisible(false);
++            overlayWidget->setFixedHeight(70);
+         }
+     });
+     connect(folders_btn,&QPushButton::clicked,this,[=]{
+         qDebug() << "folders_btn clicked ";
+         if(folders_widget->isHidden()){
+-            // folders_widget->setVisible(true);
++            folders_widget->setVisible(true);
++            overlayWidget->setFixedHeight(180);
+         }else{
+-            // folders_widget->setVisible(false);
++            folders_widget->setVisible(false);
++            overlayWidget->setFixedHeight(70);
+         }
+     });
+ 
+-    connect(defaultbtn,&QPushButton::clicked,this,[=]{
+-        qDebug() << "default btn clicked ";
+-        overlayWidget->setVisible(false);
+-        projects_widget->setVisible(false);
+-    });
++    // connect(defaultbtn,&QPushButton::clicked,this,[=]{
++    //     qDebug() << "default btn clicked ";
++    //     overlayWidget->setVisible(false);
++    //     projects_widget->setVisible(false);
++    // });
+ 
+     connect(current_task_btn,&QPushButton::clicked,this,[=]{
+         qDebug() << "current_task_btn clicked ";
+-- 
+2.41.0.windows.1
+
