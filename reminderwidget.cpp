@@ -103,7 +103,6 @@ ReminderWidget::ReminderWidget(QWidget *parent)
         "border-radius: 10px;"
         "}"
         );
-    qDebug() << "custom time button " <<  custom_time_button->pos();
 
     custom_widget = new QWidget(this);
     QVBoxLayout * custom_time_layout = new QVBoxLayout();
@@ -122,8 +121,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QLineEdit * input_time_lineedit = new QLineEdit();
     input_time_lineedit->setFixedSize(180,28);
     input_time_lineedit->setAlignment(Qt::AlignCenter);
-    QIntValidator *validator = new QIntValidator(this);
-    validator->setRange(1, 1000); // Example range: 0 to 1000
+    QIntValidator *validator = new QIntValidator(1,480,this);
     input_time_lineedit->setValidator(validator);
     input_time_lineedit->setStyleSheet("QLineEdit { margin: 0px;  background-color : white; border: none; border-top-left-radius: 5px; border-bottom-left-radius: 5px;}");
 
@@ -271,7 +269,6 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     // signals and slots
     connect(custom_time_button,&QPushButton::clicked,this,[=]{
         qDebug() << "custom button clicked ";
-        qDebug() << "custom time button button clicked " <<  custom_time_button->pos().rx() << custom_time_button->pos().ry();
         if (lastClickedIndex <=5) {
             buttons[lastClickedIndex]->setStyleSheet(
                 "QPushButton {"
@@ -301,6 +298,13 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     connect(input_time_lineedit,&QLineEdit::editingFinished,this,[=]{
         input_time = input_time_lineedit->text().toInt(&ok);
         qDebug() << "lineedit editing finished " << input_time;
+        if(input_time > 480){
+            qDebug() << "in put value is greater ";
+            notify.setText("Please enter a valid min value");
+            notify.exec();
+            input_time_lineedit->clear();
+        }
+
         if(lastClickedIndex <=5){
             // buttons[lastClickedIndex]->setStyleSheet("");
             buttons[lastClickedIndex]->setStyleSheet(
@@ -314,15 +318,20 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     connect(done_button,&QPushButton::clicked,this,[=]{
         qDebug() << "done_button clicked ";
-        this->setFixedSize(408,350);
         if(input_time != 0){
             custom_time_button->setText(QString::number(input_time) +time_combo_box->currentText());
-
+            // qDebug() << "in put time " << input_time <<
             if(time_combo_box->currentText() == "mins"){
-                remindercountdownTime = QTime(0,input_time,0);
+                if(input_time < 60){
+                    remindercountdownTime = QTime(0,input_time,0);
+                }else if(input_time > 60){
+                    remindercountdownTime = QTime(input_time/60,input_time%60,0);
+                }else
+                    remindercountdownTime = QTime(1,0,0);
             }
             else{
-                remindercountdownTime = QTime(input_time,0,0);
+                if(input_time < 24)
+                    remindercountdownTime = QTime(input_time,0,0);
             }
             qDebug() << "input time " << remindercountdownTime.toString("hh:mm:ss");
             input_time_lineedit->clear();

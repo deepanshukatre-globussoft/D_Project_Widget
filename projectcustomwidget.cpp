@@ -200,7 +200,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     reminder_layout->addWidget(reminder_label);
     reminder_layout->addWidget(d_taskActiveTimeInReminder);
 
-    reminder_layout_button->setFixedSize(100,32);
+    reminder_layout_button->setFixedSize(100,35);
     reminder_layout_button->setFlat(true);
     reminder_layout_button->setLayout(reminder_layout);
 
@@ -395,7 +395,7 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
         "    border: none;"  // No border for any child widgets
         "}"
         );
-
+    // this->setStyleSheet("background-color: #f0dfe0;");
 
      // border: 2px solid rgba(76, 156, 229, 1)
 //    this->setStyleSheet("background-color: #F2F9FF;"
@@ -433,6 +433,11 @@ void ProjectCustomWidget::receiveData(const QString &projectStatus, const QStrin
         QIcon icon("://imgs/blue_icon.png");
         iconLabel->setPixmap(icon.pixmap(15, 15));
         textLabel->setText("Current Task");
+    }
+    else if(projectStatus.contains("Next")){
+        QIcon icon("://imgs/yellow_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15,15));
+        textLabel->setText("Next Task");
     }
     else if(projectStatus.contains("Future")){
         QIcon icon(":/imgs/red_circle.png");

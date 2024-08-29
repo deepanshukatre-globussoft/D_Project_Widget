@@ -28,6 +28,7 @@ public:
     QVBoxLayout *containerLayout;
     QWidget *containerWidget;
     QScrollArea *scrollArea;
+    QScrollArea * projectsscrollArea;
     MyNetworkManager *networkManager;
 
 
@@ -49,11 +50,22 @@ private:
     QPushButton *updatebtn;
     QPushButton * filter_btn;
     QWidget * searchbar_widget;
+    QPushButton *pro_btn[20];
+    QLabel *pro_name[20];
+    QLabel * projects_label;
+    QLabel * folders_label;
+    QLabel * current_task_label;
+    QLabel * next_task_label;
+    QLabel * future_task_label;
+    QLabel * completed_task_label;
+    QWidget * projects_widget;
+
     void onProjectDataFetched(const QJsonArray &dataArray);
     void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
     void onTaskDataFetched(int count);
 private slots:
     void onEmptySignal(); // Test slot for empty signal
+    void projectFilterSelect(int index);
 
 
 };
