@@ -17,7 +17,7 @@ QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-    // this->setStyleSheet("QWidget { background-color: white;  }");
+     this->setObjectName("MainWidget");
     this->setWindowTitle(tr("Silah TTS"));
 //    qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
@@ -31,6 +31,7 @@ Widget::Widget(QWidget *parent)
     containerLayout = new QVBoxLayout(containerWidget);
     containerLayout->setContentsMargins(0,0,5,5);
     containerWidget->setLayout(containerLayout);
+    containerWidget->setObjectName("containerWidget");
     // containerWidget->setStyleSheet("QWidget { background-color: white;  }");
 
     searchbar_widget = new QWidget(this);
@@ -121,10 +122,10 @@ Widget::Widget(QWidget *parent)
     projects_widget->setVisible(false);
 
 
-    QFrame* h_line = new QFrame(this);
-    h_line->setFrameShape(QFrame::HLine);
-    h_line->setFrameShadow(QFrame::Sunken);
-    h_line->setStyleSheet("color: white;");
+//    QFrame* h_line = new QFrame();
+//    h_line->setFrameShape(QFrame::HLine);
+//    h_line->setFrameShadow(QFrame::Sunken);
+//    h_line->setStyleSheet("color: white;");
 
     //folders btn
     QPushButton * folders_btn = new QPushButton(overlayWidget);
@@ -380,12 +381,14 @@ Widget::Widget(QWidget *parent)
     scrollArea->setWidgetResizable(true); //    scrollArea->setFixedSize(630,400); // Adjust size dk
 
     scrollArea->setStyleSheet(
+        "QScrollArea {"
+        "    border: none;"  // Removes the border from the scroll area
+        "background-color: #ffffff;"
+        "}"
         "QScrollBar:vertical {"
-//        "    background: #f0f0f0;"  // Background color of the scrollbar track
         "    width: 11px;"
         "    margin: 0px 0px 0px 0px;"
         "}"
-
         );
 
 
@@ -412,10 +415,10 @@ Widget::Widget(QWidget *parent)
     setFixedSize(700,450);
 
     // First time calling the api so it should not come empty
-    // networkManager->fetchTasksForMobileList(token,10);
+     networkManager->fetchTasksForMobileList(token,10);
 
-    overlayWidget->show();
-    overlayWidget->raise();
+//    overlayWidget->show();
+//    overlayWidget->raise();
 
     //signals and slots
     connect(createTaskBtn,&QPushButton::clicked,this,[=]{

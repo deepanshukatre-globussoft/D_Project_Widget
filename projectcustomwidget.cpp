@@ -42,12 +42,13 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
 
     d_containerLayout = new QVBoxLayout();
-    d_containerLayout->setContentsMargins(10,10,5,5);
+    d_containerLayout->setContentsMargins(10,10,10,10);
     d_containerWidget->setObjectName("projectContainerObject");
 
     // QSpacerItem *spacer = new QSpacerItem(5,3);
 
     d_projectStatuslabel = new QLabel(tr(""), this);  // shyad public karke access dena hoga
+    d_projectStatuslabel->setObjectName("d_projectStatuslabel");
     d_startTaskButton = new QPushButton(this);
     d_editTaskButton = new QPushButton(this);
     QFont font;
@@ -75,6 +76,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     //==================================================
     d_taskNameLabel = new QLabel("Task Title",this);
+    d_taskNameLabel->setObjectName("d_taskNameLabel");
     //==================================================
     d_setReminderbtn = new QPushButton("Set reminder",this);
     d_setReminderbtn->setObjectName("reminderbtnObj");
@@ -97,22 +99,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     d_taskActiveTimeLabel = new QLabel("00:00:00",this);
     d_taskActiveTimeLabel->setObjectName("d_taskActiveTimeLabel");
     // d_taskActiveTimeLabel->setFixedHeight(23);
-    active_task_time->setStyleSheet(
-        "QLabel {"
-        "color : #0F5EA9;"
-        "font-size: 13px;"
-        "}"
-        );
-    d_taskActiveTimeLabel->setStyleSheet(
-        "QLabel {"
-        "color : #0F5EA9;"
-        "}"
-        );
 
-    QFont active_time_font;
-    active_time_font.setPointSize(13);
 
-    d_taskActiveTimeLabel->setFont(active_time_font);
 
     // active_time_layout->setAlignment(Qt::AlignCenter);
     active_time_layout->setContentsMargins(0,0,0,0);
@@ -125,22 +113,23 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     start_icon->setStyleSheet("background-color: #D2232A; color:#FFFFFF");
     QPixmap start_pic("://imgs/start.png");
     QLabel * start_label = new QLabel(tr("Start"),this);
-    start_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF");
+    start_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF ; font-size: 12px;");
 //    start_label->setStyleSheet("background-color: #8be51e");
 
 //    start_label->setStyleSheet("color: #FFFFFF;");
     start_icon->setPixmap(start_pic);
 
     startbtn_layout->setContentsMargins(9,0,13,0);
+    startbtn_layout->addSpacing(5);
     startbtn_layout->addWidget(start_icon);
     startbtn_layout->addWidget(start_label);
 
-    d_startTaskButton->setFixedSize(68,29);
+    d_startTaskButton->setFixedSize(76,25);
     d_startTaskButton->setLayout(startbtn_layout);
     d_startTaskButton->setStyleSheet(
         "QPushButton {"
         "background-color: #D2232A;"
-        "border-radius: 10px;"
+        "border-radius: 11px;"
         "}"
         );
 
@@ -149,7 +138,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QPixmap edit_pic("://imgs/edit.svg");
     QLabel * edit_label = new QLabel("Edit",this);
 
-     edit_icon->setStyleSheet("border-top:1px solid #D2232A;border-bottom:1px solid #D2232A; ");
+    edit_icon->setStyleSheet("border-top:1px solid #D2232A;border-bottom:1px solid #D2232A; ");
     edit_icon->setPixmap(edit_pic);
     edit_label->setStyleSheet("color : #D2232A; border-top:1px solid #D2232A;border-bottom:1px solid #D2232A; ");
 
@@ -172,10 +161,10 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     p_FirstLayout->setContentsMargins(0,0,0,0);
     p_FirstLayout->addWidget(d_projectStatuslabel);
     p_FirstLayout->addStretch();
-    p_FirstLayout->addWidget(d_startTaskButton);
-    p_FirstLayout->addWidget(d_editTaskButton);
     p_FirstLayout->addWidget(completeBtn);
     p_FirstLayout->addWidget(deleteBtn);
+    p_FirstLayout->addWidget(d_startTaskButton);
+    p_FirstLayout->addWidget(d_editTaskButton);
     completeBtn->hide();
     deleteBtn->hide();
 
@@ -202,7 +191,6 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QLabel * reminder_label = new QLabel("Remaining Time");
     d_taskActiveTimeInReminder = new QLabel("00:00:00");
 
-    d_taskActiveTimeInReminder->setFont(active_time_font);
     reminder_label->setStyleSheet(
         "QLabel {"
         "font-size: 12px;"
@@ -247,7 +235,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     d_containerWidget->setLayout(d_containerLayout);
 
-    setFixedSize(650,150);
+    setFixedSize(655,150);
     m_HMainLayout->addWidget(d_containerWidget);
 
     //    m_HMainLayout->addSpacerItem(spacer);
@@ -391,9 +379,32 @@ ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QSt
 
 void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 {
+//    this->setStyleSheet(
+//        "background-color: #F2F9FF;"   // Set background color of the widget
+//        "border: 1px solid #D2232A;"    // Set border around the widget
+////        "QWidget > QWidget { border: none; }"  // Ensure child widgets have no border
+//        );
+
+
+    this->setStyleSheet(
+        "#customProjectItemWidget {"
+        "    background-color: #F2F9FF;"   // Set background color
+        "    border: 2px solid #D2232A;"    // Set border only for this widget
+        "}"
+        "QWidget#customProjectItemWidget > * {"
+        "    border: none;"  // No border for any child widgets
+        "}"
+        );
+
+
      // border: 2px solid rgba(76, 156, 229, 1)
-    this->setStyleSheet("background-color: #f0dfe0;");
-    this->setStyleSheet("QWidget {  border: 2px solid rgba(76, 156, 229, 1) }");
+//    this->setStyleSheet("background-color: #F2F9FF;"
+////                        "QWidget { border: 1px solid black; }"
+
+////                             "QWidget { border-radius: 80px; }"
+////                              "QWidget > * { border: 1px solid black; }"
+//                        "border:1px solid #D2232A");
+//    this->setStyleSheet("QWidget {  border: 2px solid rgba(76, 156, 229, 1) }");
     completeBtn->show();
     deleteBtn->show();
     QWidget::focusInEvent(event);
@@ -401,7 +412,7 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 
 void ProjectCustomWidget::focusOutEvent(QFocusEvent *event)
 {
-    this->setStyleSheet("background-color: #fff7f7;");
+    this->setStyleSheet("background-color: #F8F8F8;");
     completeBtn->hide();
     deleteBtn->hide();
     QWidget::focusOutEvent(event);
@@ -414,6 +425,7 @@ void ProjectCustomWidget::receiveData(const QString &projectStatus, const QStrin
 //        d_projectStatuslabel->s
 //    }
     QLabel *textLabel = new QLabel("");
+    textLabel->setStyleSheet("font-size : 13px; color: #414040;");
     QLabel *iconLabel = new QLabel;
     QHBoxLayout *statusLayout = new QHBoxLayout;
 
@@ -424,6 +436,14 @@ void ProjectCustomWidget::receiveData(const QString &projectStatus, const QStrin
     }
     else if(projectStatus.contains("Future")){
         QIcon icon(":/imgs/red_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Future Task");
+    }else if(projectStatus.contains("Next")){
+        QIcon icon("://imgs/yellow_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Future Task");
+    }else if(projectStatus.contains("Completed")){
+        QIcon icon("://imgs/green_circle.png");
         iconLabel->setPixmap(icon.pixmap(15, 15));
         textLabel->setText("Future Task");
     }else{

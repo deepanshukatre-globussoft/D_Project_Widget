@@ -158,10 +158,10 @@ void CreateTask::populateComboBoxes()
     // Populate task combo box with explicit values
 //    taskComboBox->addItem("Current", static_cast<int>(TaskStatus::Current));
     taskComboBox->addItem("Select Folder");
-    taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"current", static_cast<int>(TaskStatus::Current));
+    taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current", static_cast<int>(TaskStatus::Current));
     taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future", static_cast<int>(TaskStatus::Future));
     taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next", static_cast<int>(TaskStatus::Next));
-    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"completed", static_cast<int>(TaskStatus::completed));
+    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"Completed", static_cast<int>(TaskStatus::completed));
 }
 
 void CreateTask::onCancelClicked()
