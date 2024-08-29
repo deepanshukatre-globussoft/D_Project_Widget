@@ -24,7 +24,6 @@ QLabel, QPushButton {
     background-image: url(:/imgs/search.svg);
     background-repeat: no-repeat;
     background-position: left center;
-    background-size: 15px 15px;
     padding-left: 35px;
 
     height: 35px;
@@ -63,3 +62,4 @@ QLabel, QPushButton {
 #d_taskActiveTimeLabel {
         color : #0F5EA9;
 }
+

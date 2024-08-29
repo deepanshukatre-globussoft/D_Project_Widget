@@ -47,6 +47,7 @@ public slots:
 
 private:
     QSystemTrayIcon *trayIcon;
+    QMessageBox notify;
 
 signals:
     void displayReminderTime(QTime reminder_time);

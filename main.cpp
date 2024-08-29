@@ -50,11 +50,11 @@ int main(int argc, char *argv[])
 
 
 
-    // Widget w;
-    // w.show();
+    Widget w;
+    w.show();
 
-    CreateTask createTaskObj;
-    createTaskObj.show();
+    // CreateTask createTaskObj;
+    // createTaskObj.show();
 
     // ReminderWidget r;
     // r.show();
