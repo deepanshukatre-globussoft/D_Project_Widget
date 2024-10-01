@@ -1,5 +1,4 @@
 #include "widget.h"
-#include "createtask.h"
 #include "qdebug.h"
 
 
@@ -694,7 +693,7 @@ void Widget::onTaskDataFetched(int count) // adding data in the task container u
     if(count == 1){
         for(int i=0; i< TaskModelClassContainerList.size();++i){
             ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-            customWidgetTaskdata->receiveData(TaskModelClassContainerList[i]->m_taskFolderName,
+            customWidgetTaskdata->setTaskProjectsIdNameinProjectCustomWidget(TaskModelClassContainerList[i]->m_taskFolderName,
                                               TaskModelClassContainerList[i]->m_taskProjectName,
                                               TaskModelClassContainerList[i]->m_taskName,
                                               TaskModelClassContainerList[i]->m_taskid);

@@ -104,12 +104,12 @@ void MyNetworkManager::getAllProjects(const QString &authToken)
     request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
     QNetworkReply *reply = networkManager->get(request);
     connect(reply, &QNetworkReply::finished, this, [reply, this](){
-//        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+        //        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
         MyNetworkManager::onProjectIdAndNameDataFetched(reply);
     });
 }
 
-void MyNetworkManager::createProjects(const QString &authToken, const QString &title, const QString &folder_name, const QString &project_id)
+void MyNetworkManager::createTasks(const QString &authToken, const QString &title, const QString &folder_name, const QString &project_id)
 {
     QUrl url("http://192.168.5.134:6003/api/v3/project/create-project-tasks");
     QNetworkRequest request(url);
@@ -126,7 +126,26 @@ void MyNetworkManager::createProjects(const QString &authToken, const QString &t
 
     QNetworkReply *reply = networkManager->post(request,jsonData);
     connect(reply, &QNetworkReply::finished, this, [reply](){
-                qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+//        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+
+                QMessageBox::information(nullptr, "Silah TTS", message);
+
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+        }else{
+            qDebug() << "Error for delete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+        }
+
     });
 }
 
@@ -142,10 +161,146 @@ void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &ta
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
 
     QNetworkReply *reply = networkManager->deleteResource(request);
-    connect(reply, &QNetworkReply::finished, this, [reply](){
-        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        //        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+
+                // Now you can use the message value, for example in a QMessageBox:
+                QMessageBox::information(nullptr, "Silah TTS", message);
+
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
+        }else{
+            qDebug() << "Error for delete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
+        }
+
     });
 }
+
+void MyNetworkManager::completedTaskApi(const QString &authToken, const QString &taskid)
+{
+    QUrl url("http://192.168.5.134:6003/api/v3/project/finish-project-task");
+    QUrlQuery query;
+    query.addQueryItem("task_id", taskid);
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        //        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+                QMessageBox::information(nullptr, "Silah TTS", message);
+
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
+        }else{
+            qDebug() << "Error for complete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
+        }
+
+    });
+
+}
+
+void MyNetworkManager::startTaskApi(const QString &authToken, const QString &taskid)
+{
+    QUrl url("http://192.168.5.134:6003/api/v3/project/start-project-task");
+    QUrlQuery query;
+    query.addQueryItem("task_id", taskid);
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        //        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+                QMessageBox::information(nullptr, "Silah TTS", message);
+
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks
+        }else{
+            qDebug() << "Error for complete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString() + reply->error());
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks
+        }
+    });
+}
+
+void MyNetworkManager::stopTaskApi(const QString &authToken, const QString &taskid)
+{
+    QUrl url("http://192.168.5.134:6003/api/v3/project/stop-project-task");
+    QUrlQuery query;
+    query.addQueryItem("task_id", taskid);
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        //        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+                QMessageBox::information(nullptr, "Silah TTS", message);
+
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
+        }else{
+            qDebug() << "Error for complete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
+        }
+
+    });
+}
+
+
 
 void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
 {
@@ -164,10 +319,6 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
                 if (value.isObject()) {
                     QJsonObject projectObj = value.toObject();
                     QString id = projectObj["_id"].toString();
-                    QString title = projectObj["title"].toString();
-                    QString description = projectObj["description"].toString();
-                    QString startDate = projectObj["start_date"].toString();
-                    QString endDate = projectObj["end_date"].toString();
 
                     //                    qDebug()<<projectObj;
                     emit projectDataFetched(dataArray);
@@ -176,10 +327,6 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
 
                     //                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
                     qDebug()<<id;
-                    //                    qDebug()<<title;
-                    //                    qDebug()<<description;
-                    //                    qDebug()<<startDate;
-                    //                    qDebug()<<endDate;
 
                     //                    displayText.append("ID: " + id + "\n");
                     //                    displayText.append("Title: " + title + "\n");
@@ -197,7 +344,7 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
         qDebug() << "Error: " << reply->errorString();
         //        textEdit->setText("Failed to fetch data: " + reply->errorString());
     }
-    //        reply->deleteLater();
+    reply->deleteLater();   // need to check
 }
 
 void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
@@ -247,9 +394,9 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
 void MyNetworkManager::onProjectIdAndNameDataFetched(QNetworkReply *reply)
 {
 
-//    qDebug()<<"reply from get all project ++++ "<<reply->readAll();
+    //    qDebug()<<"reply from get all project ++++ "<<reply->readAll();
     if(reply->error() == QNetworkReply::NoError){
-//        QJsonArray dataArray;
+        //        QJsonArray dataArray;
         QByteArray response = reply->readAll();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
         QJsonObject jsonObj = jsonDoc.object();
@@ -257,7 +404,7 @@ void MyNetworkManager::onProjectIdAndNameDataFetched(QNetworkReply *reply)
             qDebug()<<"emitting the signal"<<response;
             dataArray = jsonObj["data"].toArray();
             emit dataSenderToComboBoxProjectList(dataArray);
-//            qDebug()<<"reply from get all project "<<dataArray;
+            //            qDebug()<<"reply from get all project "<<dataArray;
         }
     }else {
         qDebug() << "Error: " << reply->errorString();

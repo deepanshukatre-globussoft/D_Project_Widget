@@ -1,10 +1,12 @@
 #include "projectcustomwidget.h"
+#include "qapplication.h"
 #include "qdebug.h"
+#include "QFocusEvent"
 
 ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     : QWidget{parent}
 {
-    // networkManager = MyNetworkManager::instance();
+     networkManager = MyNetworkManager::instance();
 
     m_HMainLayout = new QVBoxLayout;
     m_HMainLayout->setContentsMargins(5,5,0,0);
@@ -272,6 +274,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     connect(d_startTaskButton,&QPushButton::clicked,this,[=]{
         // networkManager->checkTaskAndStart(token,task_id);
         if(!is_started){
+            networkManager->startTaskApi(token,task_id);  // need to remove other things and move them in slot that will be called by this api call reply finished
             is_started = true;
             qDebug() << "setting is_started" <<  is_started;
             m_startTimer->start();
@@ -283,6 +286,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
             qDebug() << "startbtn_layout if " << startbtn_layout->contentsMargins();
         }
         else{
+            networkManager->stopTaskApi(token,task_id);  // need to remove other things and move them in slot that will be called by this api call reply finished
             is_started = false;
             qDebug() << "setting is_started" <<  is_started;
             m_startTimer->stop();
@@ -353,14 +357,46 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     connect(completeBtn,&QPushButton::clicked,this,[=]{
         qDebug() << "complete btn clicked ";
-        d_startTaskButton->setVisible(false);
-        d_editTaskButton->setVisible(false);
         m_startTimer->stop();
-        d_projectStatuslabel->setText("Finish Task");
+//        d_startTaskButton->setVisible(false);
+//        d_editTaskButton->setVisible(false);
+//        d_projectStatuslabel->setText("Finish Task");
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Complete Task");
+        msgBox.setText("Are you sure you want to mark completed the task?");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);  // Default focus on "No" to prevent yes if user clicks  on no
+
+        int ret = msgBox.exec();
+        if (ret == QMessageBox::Yes) {
+            qDebug() << "Task completed!";
+            networkManager->completedTaskApi(token,task_id);
+        } else {
+            qDebug() << "Task not completed."; // No clicked: Do nothing
+            networkManager->fetchTasksForMobileList(token,10); // this will reload all tasks when delete failed
+        }
+
     });
 
     connect(deleteBtn,&QPushButton::clicked,this,[=]{
-        qDebug() << "delete btn clicked ";
+        qDebug() << "delete btn clicked " << task_id;
+
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Delete Task");
+        msgBox.setText("Are you sure you want to delete the task?");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);  // Default focus on "No" to prevent yes if user clicks  on no
+
+        int ret = msgBox.exec();
+        if (ret == QMessageBox::Yes) {
+            qDebug() << "Task deleted!";
+            networkManager->deleteTaskApi(token,task_id);
+        } else {
+            qDebug() << "Task not deleted."; // No clicked: Do nothing
+            networkManager->fetchTasksForMobileList(token,10); // this will reload all tasks when delete failed
+        }
     });
 }
 
@@ -381,15 +417,17 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
     //        );
 
 
-    this->setStyleSheet(
-        "#customProjectItemWidget {"
-        "    background-color: #F2F9FF;"   // Set background color
-        "    border: 2px solid #D2232A;"    // Set border only for this widget
-        "}"
-        "QWidget#customProjectItemWidget > * {"
-        "    border: none;"  // No border for any child widgets
-        "}"
-        );
+    this->setStyleSheet("background-color: #F2F9FF;");
+
+//    this->setStyleSheet(
+//        "#customProjectItemWidget {"
+//        "    background-color: #F2F9FF;"   // Set background color
+//        "    border: 2px solid #D2232A;"    // Set border only for this widget
+//        "}"
+//        "QWidget#customProjectItemWidget > * {"
+//        "    border: none;"  // No border for any child widgets
+//        "}"
+//        );
     // this->setStyleSheet("background-color: #f0dfe0;");
 
     // border: 2px solid rgba(76, 156, 229, 1)
@@ -407,18 +445,23 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 
 void ProjectCustomWidget::focusOutEvent(QFocusEvent *event)
 {
-    this->setStyleSheet("background-color: #F8F8F8;");
-    completeBtn->hide();
-    deleteBtn->hide();
-    QWidget::focusOutEvent(event);
+    QWidget *newFocusWidget = QApplication::focusWidget();
+    if (newFocusWidget && this->isAncestorOf(newFocusWidget)) {
+        // If the new focus is a child widget, do not hide the buttons
+        event->ignore();
+    } else {
+        // If the focus is moving away from the parent and its children, hide buttons
+        this->setStyleSheet("background-color: #F8F8F8;");
+        completeBtn->hide();
+        deleteBtn->hide();
+        QWidget::focusOutEvent(event);  // Call base class method
+    }
 }
 
-void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
+void ProjectCustomWidget::setTaskProjectsIdNameinProjectCustomWidget(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskid)
 {
     qDebug()<<"received data  "<<taskName;
-    //    if(projectStatus == "current task"){
-    //        d_projectStatuslabel->s
-    //    }
+
     QLabel *textLabel = new QLabel("");
     textLabel->setStyleSheet("font-size : 13px; color: #414040;");
     QLabel *iconLabel = new QLabel;
@@ -441,7 +484,54 @@ void ProjectCustomWidget::receiveData(const QString &projectStatus, const QStrin
     }else if(projectStatus.contains("Next")){
         QIcon icon("://imgs/yellow_circle.png");
         iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Next Task");
+    }else if(projectStatus.contains("Completed")){
+        QIcon icon("://imgs/green_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
         textLabel->setText("Future Task");
+    }else{
+        d_projectStatuslabel->setText(projectStatus);
+    }
+    d_projectStatuslabel->setLayout(statusLayout);
+    d_projectStatuslabel->setAlignment(Qt::AlignLeft);
+    statusLayout->addWidget(iconLabel);
+    statusLayout->addWidget(textLabel);
+    statusLayout->addStretch();
+    statusLayout->setMargin(0);
+
+    d_projectNameLabel->setText(projectName);
+    d_taskNameLabel->setText(taskName);
+    task_id = taskid;
+    qDebug() << "Task id " << task_id;
+}
+
+void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
+{
+    qDebug()<<"received data  "<<taskName;
+
+    QLabel *textLabel = new QLabel("");
+    textLabel->setStyleSheet("font-size : 13px; color: #414040;");
+    QLabel *iconLabel = new QLabel;
+    QHBoxLayout *statusLayout = new QHBoxLayout;
+
+    if(projectStatus.contains("Current")){
+        QIcon icon("://imgs/blue_icon.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Current Task");
+    }
+    else if(projectStatus.contains("Next")){
+        QIcon icon("://imgs/yellow_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15,15));
+        textLabel->setText("Next Task");
+    }
+    else if(projectStatus.contains("Future")){
+        QIcon icon(":/imgs/red_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Future Task");
+    }else if(projectStatus.contains("Next")){
+        QIcon icon("://imgs/yellow_circle.png");
+        iconLabel->setPixmap(icon.pixmap(15, 15));
+        textLabel->setText("Next Task");
     }else if(projectStatus.contains("Completed")){
         QIcon icon("://imgs/green_circle.png");
         iconLabel->setPixmap(icon.pixmap(15, 15));

@@ -17,23 +17,14 @@ CreateTask::CreateTask(QWidget *parent)
     //    connect(projectComboBox, QOverload<int>::of(&QComboBox::activated), this, &CreateTask::onComboBoxActivated);
 
     connect(netMgrObj,&MyNetworkManager::dataSenderToComboBoxProjectList,this,&CreateTask::ondataSenderToComboBoxProjectList);
-    //    connect(netMgrObj,&MyNetworkManager::dataSenderToComboBoxProjectList,this,[](const QJsonArray& projectArray){
-
-    //        for (const QJsonValue& value : projectArray) {
-    //            QJsonObject projectObject = value.toObject();
-    //            QString projectId = projectObject.value("_id").toString();   // Extract _id
-    //            QString projectTitle = projectObject.value("title").toString(); // Extract title
-
-    //            qDebug() << "Project ID:" << projectId;
-    //            qDebug() << "Project Title:" << projectTitle;
-    //        }
-    //    });
 
     netMgrObj->getAllProjects(token);
 
+}
 
-
-
+CreateTask::~CreateTask()
+{
+    this->close();
 }
 
 void CreateTask::setupUI()
@@ -178,7 +169,7 @@ void CreateTask::populateComboBoxes()
 
     // Populate task combo box with explicit values
     //    taskComboBox->addItem("Current", static_cast<int>(TaskStatus::Current));
-    taskComboBox->addItem("Select Folder");
+//    taskComboBox->addItem("Select Folder");
     taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current Task", static_cast<int>(TaskStatus::Current));
     taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future Task", static_cast<int>(TaskStatus::Future));
     taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next Task", static_cast<int>(TaskStatus::Next));
@@ -187,10 +178,11 @@ void CreateTask::populateComboBoxes()
 
 void CreateTask::onCancelClicked()
 {
+    this->close();
  //    qDebug() << "NetworkManager netMgrObj:" << netMgrObj;
     ////    netMgrObj->fetchProjectData(token,0,10);
     //    netMgrObj->fetchTasksForMobileList(token,10);
-    netMgrObj->deleteTaskApi(token,"66fa93cf86b90850bce0ae7d");
+//    netMgrObj->deleteTaskApi(token,"66fa93cf86b90850bce0ae7d");
 
 
 }
@@ -198,25 +190,35 @@ void CreateTask::onCancelClicked()
 void CreateTask::onCreateTaskClicked()
 {
     QString lineEditText = nameLineEdit->text();
+
+    if (nameLineEdit->text().isEmpty()) {
+        nameLineEdit->setStyleSheet("border: 1px solid red;");
+        QMessageBox::warning(this, "Input Error", "Task title field is mandatory!");
+        return;
+    } else {
+        nameLineEdit->setStyleSheet("");  // Reset to default style if valid
+    }
+
     QString comboBox1Text = taskComboBox->currentText();
-    QString comboBox2Text = projectComboBox->currentText();
+//    QString comboBox2Text = projectComboBox->currentText();
 
     QVariant hiddenFieldData = projectComboBox->currentData();
 
     if (hiddenFieldData.isValid()) {
-        hiddenFieldId = hiddenFieldData.toString(); // Convert to QString
+        hiddenFieldId = hiddenFieldData.toString();
 //        qDebug() << "Selected Project Title:" << comboBox2Text;
 //        qDebug() << "Selected Project ID (Hidden Field):" << hiddenFieldId;
     } else {
         qDebug() << "No hidden data found for the selected item.";
     }
 
-    netMgrObj->createProjects(token,
+    netMgrObj->createTasks(token,
                               lineEditText,comboBox1Text,hiddenFieldId);
-    QString message = QString("Submit Button Clicked:\nLine Edit: %1\nComboBox 1: %2\nComboBox 2: %3")
-                          .arg(lineEditText, comboBox1Text, comboBox2Text);
+    this->close();
+//    QString message = QString("Submit Button Clicked:\nLine Edit: %1\nComboBox 1: %2\nComboBox 2: %3")
+//                          .arg(lineEditText, comboBox1Text, comboBox2Text);
 
-    QMessageBox::information(this, "Submitted Data", message);
+//    QMessageBox::information(this, "Submitted Data", message);
 
 }
 
