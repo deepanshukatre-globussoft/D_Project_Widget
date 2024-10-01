@@ -114,9 +114,9 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     QPixmap start_pic("://imgs/start.png");
     QLabel * start_label = new QLabel(tr("Start"),this);
     start_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF ; font-size: 12px;");
-//    start_label->setStyleSheet("background-color: #8be51e");
+    //    start_label->setStyleSheet("background-color: #8be51e");
 
-//    start_label->setStyleSheet("color: #FFFFFF;");
+    //    start_label->setStyleSheet("color: #FFFFFF;");
     start_icon->setPixmap(start_pic);
 
     startbtn_layout->setContentsMargins(9,0,13,0);
@@ -180,10 +180,6 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     p_ForthLayout = new QHBoxLayout;
     p_ForthLayout->setContentsMargins(0,0,0,0);
 
-    // QWidget * hor_widget = new QWidget();
-    // hor_widget->setLayout(p_ForthLayout);
-    // hor_widget->setStyleSheet("QWidget { border: 1px solid black; }");
-
     reminder_widget = new QWidget();
     QVBoxLayout * reminder_widget_layout = new QVBoxLayout();
     QPushButton * reminder_layout_button = new QPushButton();
@@ -206,10 +202,6 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     reminder_widget_layout->setContentsMargins(0,0,0,0);
     reminder_widget_layout->addWidget(reminder_layout_button);
-
-    // reminder_layout_button->setLayout(reminder_layout);
-    // reminder_layout_button->setFlat(true);
-    // reminder_widget_layout->addWidget(reminder_layout_button);
 
     reminder_widget->setLayout(reminder_widget_layout);
     reminder_widget->setVisible(false);
@@ -262,8 +254,11 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
 
     rmd_wid = new ReminderWidget();
 
-    edit_task = new CreateTask();
-    edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
+    connect(d_editTaskButton,&QPushButton::clicked,this,[this](){
+        edit_task = new CreateTask(this);
+        edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
+
+    });
 
     // signals and slots
     connect(m_startTimer,&QTimer::timeout,this,[=]{
@@ -379,11 +374,11 @@ ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QSt
 
 void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 {
-//    this->setStyleSheet(
-//        "background-color: #F2F9FF;"   // Set background color of the widget
-//        "border: 1px solid #D2232A;"    // Set border around the widget
-////        "QWidget > QWidget { border: none; }"  // Ensure child widgets have no border
-//        );
+    //    this->setStyleSheet(
+    //        "background-color: #F2F9FF;"   // Set background color of the widget
+    //        "border: 1px solid #D2232A;"    // Set border around the widget
+    ////        "QWidget > QWidget { border: none; }"  // Ensure child widgets have no border
+    //        );
 
 
     this->setStyleSheet(
@@ -397,14 +392,14 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
         );
     // this->setStyleSheet("background-color: #f0dfe0;");
 
-     // border: 2px solid rgba(76, 156, 229, 1)
-//    this->setStyleSheet("background-color: #F2F9FF;"
-////                        "QWidget { border: 1px solid black; }"
+    // border: 2px solid rgba(76, 156, 229, 1)
+    //    this->setStyleSheet("background-color: #F2F9FF;"
+    ////                        "QWidget { border: 1px solid black; }"
 
-////                             "QWidget { border-radius: 80px; }"
-////                              "QWidget > * { border: 1px solid black; }"
-//                        "border:1px solid #D2232A");
-//    this->setStyleSheet("QWidget {  border: 2px solid rgba(76, 156, 229, 1) }");
+    ////                             "QWidget { border-radius: 80px; }"
+    ////                              "QWidget > * { border: 1px solid black; }"
+    //                        "border:1px solid #D2232A");
+    //    this->setStyleSheet("QWidget {  border: 2px solid rgba(76, 156, 229, 1) }");
     completeBtn->show();
     deleteBtn->show();
     QWidget::focusInEvent(event);
@@ -421,9 +416,9 @@ void ProjectCustomWidget::focusOutEvent(QFocusEvent *event)
 void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
 {
     qDebug()<<"received data  "<<taskName;
-//    if(projectStatus == "current task"){
-//        d_projectStatuslabel->s
-//    }
+    //    if(projectStatus == "current task"){
+    //        d_projectStatuslabel->s
+    //    }
     QLabel *textLabel = new QLabel("");
     textLabel->setStyleSheet("font-size : 13px; color: #414040;");
     QLabel *iconLabel = new QLabel;

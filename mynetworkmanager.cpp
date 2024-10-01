@@ -8,7 +8,8 @@ MyNetworkManager::MyNetworkManager(QObject *parent)
     : QObject{parent}
 {
     networkManager = new QNetworkAccessManager();
-//    connect(this,&MyNetworkManager::deleteConfigurationsignal,this,&MyNetworkManager::testslot);
+    //    connect(this,&MyNetworkManager::deleteConfigurationsignal,this,&MyNetworkManager::testslot);
+
 }
 
 
@@ -22,7 +23,10 @@ MyNetworkManager *MyNetworkManager::instance()
 
 void MyNetworkManager::fetchProjectData(const QString &authToken, int skip, int limit)
 {
-    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-mobile");
+    //    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-mobile");
+
+    QUrl url("http://192.168.5.134:6003/api/v3/project/get-project-task");
+    qDebug()<<"fetchTasksForMobileList";
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
     query.addQueryItem("limit", QString::number(limit));
@@ -45,7 +49,9 @@ void MyNetworkManager::fetchProjectData(const QString &authToken, int skip, int 
 
 void MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int skip, int limit, const QString &searchText, const QString &task_id, const QString &project_id, const QString &folder_name, const QString &start_date, const QString &end_date, const QString &sort_by)
 {
-    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-task-mobile-list");
+    //    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-task-mobile-list");
+
+    QUrl url("http://192.168.5.134:6003/api/v3/project/get-project-task");
 
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
@@ -70,7 +76,9 @@ void MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int ski
 
 bool MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int skip)
 {
-    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-task-mobile-list");
+    //    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-task-mobile-list");
+    qDebug()<<"fetchTasksForMobileList ++++++++++++++";
+    QUrl url("http://192.168.5.134:6003/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
@@ -80,16 +88,69 @@ bool MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int ski
     QNetworkReply *reply = networkManager->get(request);
     connect(reply, &QNetworkReply::finished, this, [reply, this](){
         MyNetworkManager::onTasksDataFetched(reply);
-//        qDebug()<<reply->readAll();
+        //        qDebug()<<reply->readAll();
     });
     return true;
 }
 
+void MyNetworkManager::getAllProjects(const QString &authToken)
+{
+    QUrl url("http://192.168.5.134:6003/api/v3/project/get-project-silah");
+    QUrlQuery query;
+    query.addQueryItem("skip", QString::number(0));
+    query.addQueryItem("limit", QString::number(10));
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+//        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+        MyNetworkManager::onProjectIdAndNameDataFetched(reply);
+    });
+}
+
+void MyNetworkManager::createProjects(const QString &authToken, const QString &title, const QString &folder_name, const QString &project_id)
+{
+    QUrl url("http://192.168.5.134:6003/api/v3/project/create-project-tasks");
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
+
+    QJsonObject json;
+    json["title"] = title;
+    json["folder_name"] = folder_name;
+    json["project_id"] = project_id;
+
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+
+    QNetworkReply *reply = networkManager->post(request,jsonData);
+    connect(reply, &QNetworkReply::finished, this, [reply](){
+                qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+    });
+}
+
+void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &taskid)
+{
+    QUrl url("http://192.168.5.134:6003/api/v3/project/delete-project-task");
+    QUrlQuery query;
+    query.addQueryItem("_id", taskid);
+    url.setQuery(query);
+
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
+
+    QNetworkReply *reply = networkManager->deleteResource(request);
+    connect(reply, &QNetworkReply::finished, this, [reply](){
+        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+    });
+}
 
 void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
 {
-//    qDebug()<<"fetch data successful " << reply;
-//    reply->deleteLater();
+    //    qDebug()<<"fetch data successful " << reply;
+    //    reply->deleteLater();
 
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
@@ -97,7 +158,7 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
         QJsonObject jsonObj = jsonDoc.object();
 
         if (jsonObj.contains("data") && jsonObj["data"].isArray()) {
-             dataArray = jsonObj["data"].toArray();
+            dataArray = jsonObj["data"].toArray();
 
             for (const QJsonValue &value : dataArray) {
                 if (value.isObject()) {
@@ -108,35 +169,35 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
                     QString startDate = projectObj["start_date"].toString();
                     QString endDate = projectObj["end_date"].toString();
 
-//                    qDebug()<<projectObj;
-                emit projectDataFetched(dataArray);
+                    //                    qDebug()<<projectObj;
+                    emit projectDataFetched(dataArray);
                     qDebug()<<"object get and emit signal";
-//                    ProjectMainLayout
+                    //                    ProjectMainLayout
 
-//                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
+                    //                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
                     qDebug()<<id;
-//                    qDebug()<<title;
-//                    qDebug()<<description;
-//                    qDebug()<<startDate;
-//                    qDebug()<<endDate;
+                    //                    qDebug()<<title;
+                    //                    qDebug()<<description;
+                    //                    qDebug()<<startDate;
+                    //                    qDebug()<<endDate;
 
-//                    displayText.append("ID: " + id + "\n");
-//                    displayText.append("Title: " + title + "\n");
-//                    displayText.append("Description: " + description + "\n");
-//                    displayText.append("Start Date: " + startDate + "\n");
-//                    displayText.append("End Date: " + endDate + "\n\n");
+                    //                    displayText.append("ID: " + id + "\n");
+                    //                    displayText.append("Title: " + title + "\n");
+                    //                    displayText.append("Description: " + description + "\n");
+                    //                    displayText.append("Start Date: " + startDate + "\n");
+                    //                    displayText.append("End Date: " + endDate + "\n\n");
                 }
             }
 
-//            textEdit->setText(displayText);
+            //            textEdit->setText(displayText);
         } else {
-//            textEdit->setText("No project data found.");
+            //            textEdit->setText("No project data found.");
         }
     } else {
         qDebug() << "Error: " << reply->errorString();
-//        textEdit->setText("Failed to fetch data: " + reply->errorString());
+        //        textEdit->setText("Failed to fetch data: " + reply->errorString());
     }
-//        reply->deleteLater();
+    //        reply->deleteLater();
 }
 
 void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
@@ -154,33 +215,54 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
             emit sendingTasksFromAPIdataSignal(dataArray); //  to set data in model class list  indirectly for model
 
             emit taskDataFetched(1);// to set the widgetes with data indirectly for UI
-//            for (const QJsonValue &value : dataArray) {
-//                if (value.isObject()) {
-//                    QJsonObject taskObject = value.toObject();
-//                    QString id = taskObject["_id"].toString();
-//                    QString title = taskObject["name"].toString();
-//                    QJsonObject folderObject = taskObject["folder_data"].toObject();
-//                    QString folderName = folderObject["name"].toString();
-//                    QJsonObject project_data_Obj = taskObject["project_data"].toObject();
-//                    QString projectTitle = project_data_Obj["title"].toString();
+            //            for (const QJsonValue &value : dataArray) {
+            //                if (value.isObject()) {
+            //                    QJsonObject taskObject = value.toObject();
+            //                    QString id = taskObject["_id"].toString();
+            //                    QString title = taskObject["name"].toString();
+            //                    QJsonObject folderObject = taskObject["folder_data"].toObject();
+            //                    QString folderName = folderObject["name"].toString();
+            //                    QJsonObject project_data_Obj = taskObject["project_data"].toObject();
+            //                    QString projectTitle = project_data_Obj["title"].toString();
 
-//                    //                    qDebug()<<projectObj;
-//                    qDebug()<<"onTasksDataFetched emiting taskDataFetched signal";
+            //                    //                    qDebug()<<projectObj;
+            //                    qDebug()<<"onTasksDataFetched emiting taskDataFetched signal";
 
-//                    //                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
-////                    qDebug()<<id;
+            //                    //                    emit customWidgetProject1->sendData("Status: In Progress", "Project Alpha", "Task 1", "01:23:45");
+            ////                    qDebug()<<id;
 
-//                }
-//            }
+            //                }
+            //            }
         } else {
 
         }
     } else {
         qDebug() << "Error: " << reply->errorString();
     }
-        reply->deleteLater();
+    reply->deleteLater();
 
     emit initConfigurationsignal();
+}
+
+void MyNetworkManager::onProjectIdAndNameDataFetched(QNetworkReply *reply)
+{
+
+//    qDebug()<<"reply from get all project ++++ "<<reply->readAll();
+    if(reply->error() == QNetworkReply::NoError){
+//        QJsonArray dataArray;
+        QByteArray response = reply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        QJsonObject jsonObj = jsonDoc.object();
+        if (jsonObj.contains("data") && jsonObj["data"].isArray()) {
+            qDebug()<<"emitting the signal"<<response;
+            dataArray = jsonObj["data"].toArray();
+            emit dataSenderToComboBoxProjectList(dataArray);
+//            qDebug()<<"reply from get all project "<<dataArray;
+        }
+    }else {
+        qDebug() << "Error: " << reply->errorString();
+    }
+    reply->deleteLater();
 }
 
 void MyNetworkManager::testslot()

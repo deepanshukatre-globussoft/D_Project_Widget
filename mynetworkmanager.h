@@ -24,6 +24,12 @@ public:
                                  const QString &start_date, const QString &end_date, const QString &sort_by);
     bool fetchTasksForMobileList(const QString &authToken, int skip);
 
+    //project id, title, description we will get here
+    void getAllProjects(const QString &authToken);
+
+    // creating a task using create task page
+    void createProjects(const QString &authToken,const QString &title,const QString &folder_name,const QString &project_id);
+    void deleteTaskApi(const QString &authToken,const QString &taskid);
 signals:
     void projectDataFetched(const QJsonArray &dataArray);
     void taskDataFetched(int count);
@@ -31,9 +37,16 @@ signals:
     void deleteConfigurationsignal();
     void initConfigurationsignal();
 
+    void dataSenderToComboBoxProjectList(const QJsonArray& projectIdAndNameList);
+
+
 public slots:
     void onProjectDataFetched(QNetworkReply *reply);
     void onTasksDataFetched(QNetworkReply *reply);
+
+    void onProjectIdAndNameDataFetched(QNetworkReply *reply);
+
+
 
     void testslot();
 

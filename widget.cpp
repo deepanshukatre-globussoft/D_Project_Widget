@@ -10,7 +10,7 @@ enum class TaskStatus {
     completed
 };
 
-QList<TaskModelClass*> Widget::TaskModelClassContainerList;
+QList<TaskModelClass*> Widget::TaskModelClassContainerList; // for all task to show we append in this list by default this will used
 QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
 //QList<TaskModelClass*> TaskModelClassContainerList;
 
@@ -172,7 +172,7 @@ Widget::Widget(QWidget *parent)
             projectsscrollArea->setFixedHeight((projectsscrollArea->height()+33));
         }
 
-        qDebug() << "projectsscrollArea height " << projectsscrollArea->height();
+//        qDebug() << "projectsscrollArea height " << projectsscrollArea->height();
 
         // qDebug() << "projectwidget height 3" << projects_widget->height();
 
@@ -355,9 +355,6 @@ Widget::Widget(QWidget *parent)
 
     networkManager =  MyNetworkManager::instance();;
 
-
-//    networkManager->testslot();
-
 //    CreateTask *createTaskObj =  new CreateTask();
 
     refreshbtn = new QPushButton(this);
@@ -495,6 +492,7 @@ Widget::Widget(QWidget *parent)
         CreateTask * create_task = new CreateTask();
         create_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
         create_task->show();
+
     });
 
     connect(filter_btn, &QPushButton::clicked, this, [=]{
@@ -623,7 +621,6 @@ void Widget::initConfiguration()
     containerLayout->addStretch();
     containerLayout->addStretch();
 
-
     //    qDeleteAll(TasksContainerList);
     //    TasksContainerList.clear();
     //    customWidgets.clear();
@@ -656,7 +653,7 @@ void Widget::onProjectDataFetched(const QJsonArray &dataArray)
     qDebug()<<"widget onprojectsdatafetched slot called" << dataArray;
 }
 
-void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
+void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)  // adding data in the task container model list
 {
     for (const QJsonValue &value : dataArray) {
         if (value.isObject()) {
@@ -687,11 +684,11 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
 
     for(int i=0; i< TaskModelClassContainerList.size();++i){
 //        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
-        qDebug()<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
+        qDebug()<<__LINE__<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
     }
 }
 
-void Widget::onTaskDataFetched(int count)
+void Widget::onTaskDataFetched(int count) // adding data in the task container ui list from task model container list
 {
 
     if(count == 1){
