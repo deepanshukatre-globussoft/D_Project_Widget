@@ -29,6 +29,7 @@ Widget::Widget(QWidget *parent)
     qDebug() << "containerWidget parent widget reference " << containerWidget->parentWidget();
     containerLayout = new QVBoxLayout(containerWidget);
     containerLayout->setContentsMargins(0,0,5,5);
+    containerLayout->setAlignment(Qt::AlignTop);
     containerWidget->setLayout(containerLayout);
     containerWidget->setObjectName("containerWidget");
     // containerWidget->setStyleSheet("QWidget { background-color: white;  }");
