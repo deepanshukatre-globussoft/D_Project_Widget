@@ -55,6 +55,7 @@ public:
 private:
     QLabel *d_projectStatuslabel;
     QPushButton *d_startTaskButton;
+    QPushButton *d_pauseTaskButton;
     QPushButton *d_editTaskButton;
 
     QLabel *d_projectNameLabel;
@@ -74,23 +75,48 @@ private:
 
     ReminderWidget * rmd_wid;
 
-    QString token = "f8a0b2386437b16f779142b19cdd9f56:c98860891d4885096e1ce9c1bde477d9f6601c606d4acf15544caa2807a3e1f46ebf72b114ab415562e066d2d70747fc33ba10fa529132678969b4c130847e8b21f700207516f9588958f1546e4ca4870db959b69a81bfa2da9be19370c0d68f4a9e0790afaa6d2440429e8395b428c67f48434ef787166736523e315f4652ec1d896aa973963bb0d88b2f09251fece60f4899f561aac579d3babd4c778724af9c62499a8974700afdd7e3a28c7a9a59d3cd2e623ccd29a5d714bc3fce98c35de36825c0b491c80b085e98d192c50d129e98e84ca555bdb7fbad744e5190c7f2103a0fffd4eebe41ce7721d5165a82e25b8a82010c40fad33e7ae2f70c2576c78cfbb9963e655a222ef23e232cd611ce4e2af72b320ab15103251fbbb949aedf";
-     MyNetworkManager * networkManager;
+    QString token = "6b52374aa22159ebd0c6da2292b4be41:6e8e67545005fb408234c632323e925a986ecbaed7e6a867d2466319c5b179144e51590c7a64c7086d5ec1dca39f8d9b21c7cc8d288da1648c3d40fbeae553c2ea737500e819b83fc94de770766e03111fd8aca541b262ca0a816faec8e069d2ee0a76737f0429942f0bd56142f0cbb1102dca0c400637db6edff0ff6ac7bf4ce52ca1d4f0c740f869ed1755ee7553c15c5317f9ca4702e01d0952a0dcd106c318f53096afa7b6fb6b62c7dd959e8f5c6951319d40f8c6a403aa8a879a3df1b2211d68261491e1f1719897190011c57a7d16346f76e71e7e9391637afb6cabad57a092f42e366193c97034e3d25f2cac7579e0f837ca884bc979cec64d821144025471ee5515b39d87160c4c0604650746c97486434f1228ee9555657b90575e";
+    MyNetworkManager * networkManager;
 
     QString task_id;
+
+    int m_taskStatus;
+    QString remainingTime;
+    QString activeTime;
+    QString FinishedTime;
+
+    QPoint startPos;            // Position of the mouse when pressed
+    const int swipeThreshold = 400;  // Minimum swipe distance to trigger the action
+    bool isSwipeDetected = false;
 
 protected:
     void focusInEvent(QFocusEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
 
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override ;
+    void mouseReleaseEvent(QMouseEvent *event) override ;
+
 signals:
     void sendData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
     void sendUpdateReminder();
+
+public:
+    QString secondsToTimeFormat(int totalSeconds);
+    int timeFormatToSeconds(const QString &time);
+
 public slots:
     void setTaskProjectsIdNameinProjectCustomWidget(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskid);
+
+    void setTaskAllDataInProjectCustomWidget(const QString &taskid, int taskStatus, const QString &taskName,
+                                             const QString &m_taskActiveTime, const QString &m_taskRemainingTime,
+                                             const QString &taskFolderName, const QString &taskProjectId, const QString &m_taskFinishedTime,
+                                             const QString &projectName);
+
     void receiveData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
     void updateStartTimer();
 
+    void taskStartDataSlot(const QString& taskid,bool success,const QString& time);
     void updateReminderTimer();
     void getTimer(QTime get_reminder_time);
 

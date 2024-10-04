@@ -2,7 +2,7 @@
 #include "qdebug.h"
 
 
-enum class TaskStatus {
+enum class FolderStatus {
     Current,
     Next,
     Future,
@@ -10,7 +10,7 @@ enum class TaskStatus {
 };
 
 QList<TaskModelClass*> Widget::TaskModelClassContainerList; // for all task to show we append in this list by default this will used
-QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
+//QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
 //QList<TaskModelClass*> TaskModelClassContainerList;
 
 Widget::Widget(QWidget *parent)
@@ -525,7 +525,13 @@ Widget::Widget(QWidget *parent)
         }
     });
 
-    connect(search_lineedit,&QLineEdit::textChanged,this,[=]{
+    connect(search_lineedit,&QLineEdit::editingFinished,this,[=]{
+
+        if(search_lineedit->text().isEmpty()){
+            networkManager->fetchTasksForMobileList(token,0);
+            return;
+        }
+        networkManager->allTasksInSeletedSearchKeyword(token,search_lineedit->text(),0,10);
         for(int i=0;i<TasksContainerList.length();i++){
             if(TasksContainerList.at(i)->d_taskNameLabel->text().contains(search_lineedit->text(),Qt::CaseInsensitive)){
                 qDebug() << "title starts with "<< search_lineedit->text() << " :" << TasksContainerList.at(i)->d_taskNameLabel->text();
@@ -538,6 +544,8 @@ Widget::Widget(QWidget *parent)
 
     connect(projects_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "projects_btn clicked ";
+
+//        ========================================================
         if(projects_widget->isHidden()){
             qDebug() << "is projects visible true ";
             projectsscrollArea->setVisible(true);
@@ -548,6 +556,7 @@ Widget::Widget(QWidget *parent)
             projects_widget->setVisible(false);
             projectsscrollArea->setVisible(false);
         }
+//        =========================================================
     });
     connect(folders_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "folders_btn clicked ";
@@ -566,6 +575,7 @@ Widget::Widget(QWidget *parent)
         folders_widget->setVisible(false);
         folders_label->setText(current_task_label->text());
         overlayWidget->setFixedHeight(70);
+        networkManager->allTasksInSeletedFolder(token,"Current Task",0,10);
     });
     connect(next_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "next_task_btn clicked ";
@@ -573,6 +583,7 @@ Widget::Widget(QWidget *parent)
         folders_widget->setVisible(false);
         folders_label->setText(next_task_label->text());
         overlayWidget->setFixedHeight(70);
+        networkManager->allTasksInSeletedFolder(token,"Next Task",0,10);
     });
     connect(future_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "future_task_btn clicked ";
@@ -580,6 +591,7 @@ Widget::Widget(QWidget *parent)
         folders_widget->setVisible(false);
         folders_label->setText(future_task_label->text());
         overlayWidget->setFixedHeight(70);
+        networkManager->allTasksInSeletedFolder(token,"Future Task",0,10);
     });
     connect(completed_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "completed_task_btn clicked ";
@@ -587,6 +599,7 @@ Widget::Widget(QWidget *parent)
         folders_widget->setVisible(false);
         folders_label->setText(completed_task_label->text());
         overlayWidget->setFixedHeight(70);
+        networkManager->allTasksInSeletedFolder(token,"Finished Task",0,10);
     });
 }
 
@@ -613,12 +626,12 @@ void Widget::initConfiguration()
         return;
     }
     for(ProjectCustomWidget *widgetObject : TasksContainerList ){
-        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
+//        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
         containerLayout->addWidget(widgetObject);
     }
 
-    containerLayout->addStretch();
-    containerLayout->addStretch();
+//    containerLayout->addStretch();  // let it be uncommented dk issue for bottom in 1,2 iter this will happen
+//    containerLayout->addStretch();
 
     //    qDeleteAll(TasksContainerList);
     //    TasksContainerList.clear();
@@ -660,10 +673,17 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)  // adding d
             int status = taskObject["status"].toInt();
             QString id = taskObject["_id"].toString();
             QString title = taskObject["name"].toString();
+            qint64 active_timeInt = taskObject["active_time"].toInt();
+            QString active_time = QString::number(active_timeInt);
+            QString task_remaining_time = taskObject["task_remaining_time"].toString();
+            QString task_finished_time = taskObject["task_finished_time"].toString();
 
             QJsonObject folderObject = taskObject["folder_data"].toObject();
             QString folderName = folderObject["name"].toString();
-            QString folderId = folderObject["_id"].toString();
+//            qDebug()<<"name " <<taskObject["active_time"].toInt();
+//            qDebug()<<"active_time " <<active_time << task_remaining_time <<task_finished_time;
+
+//            QString folderId = folderObject["_id"].toString();
 //    ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
 //    customWidgetTaskdata->receiveData(folderName,projectTitle,title,id);
     //    containerLayout->addWidget(customWidgetTaskdata);
@@ -673,8 +693,12 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)  // adding d
             QString projectId = project_data_Obj["_id"].toString();
 
 
-            TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
-                                                      folderName, projectId, projectTitle);
+//            TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
+//                                                      folderName, projectId, projectTitle);
+
+            TaskModelClass *task = new TaskModelClass(id, status, title, active_time,
+                                                      task_remaining_time,folderName,
+                                                      projectId,task_finished_time, projectTitle);
 
             TaskModelClassContainerList.append(task);       // for whole data in unfiltered list
 //            TaskModelFliterContainerList.append(task);    // setting data for the filtered list
@@ -683,7 +707,7 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)  // adding d
 
     for(int i=0; i< TaskModelClassContainerList.size();++i){
 //        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
-        qDebug()<<__LINE__<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
+//        qDebug()<<__LINE__<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
     }
 }
 
@@ -693,10 +717,15 @@ void Widget::onTaskDataFetched(int count) // adding data in the task container u
     if(count == 1){
         for(int i=0; i< TaskModelClassContainerList.size();++i){
             ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-            customWidgetTaskdata->setTaskProjectsIdNameinProjectCustomWidget(TaskModelClassContainerList[i]->m_taskFolderName,
-                                              TaskModelClassContainerList[i]->m_taskProjectName,
-                                              TaskModelClassContainerList[i]->m_taskName,
-                                              TaskModelClassContainerList[i]->m_taskid);
+//            customWidgetTaskdata->setTaskProjectsIdNameinProjectCustomWidget(TaskModelClassContainerList[i]->m_taskFolderName,
+//                                              TaskModelClassContainerList[i]->m_taskProjectName,
+//                                              TaskModelClassContainerList[i]->m_taskName,
+//                                              TaskModelClassContainerList[i]->m_taskid);
+            customWidgetTaskdata->setTaskAllDataInProjectCustomWidget(TaskModelClassContainerList[i]->m_taskid,TaskModelClassContainerList[i]->m_taskStatus,
+                                                                      TaskModelClassContainerList[i]->m_taskName,
+                                                                      TaskModelClassContainerList[i]->m_taskActiveTime,TaskModelClassContainerList[i]->m_taskRemainingTime,
+                                                                      TaskModelClassContainerList[i]->m_taskFolderName,TaskModelClassContainerList[i]->m_taskProjectId,
+                                                                      TaskModelClassContainerList[i]->m_taskFinishedTime,TaskModelClassContainerList[i]->m_taskProjectName);
             TasksContainerList.append(customWidgetTaskdata);
         }
     }else if(count == 2){  //

@@ -1,6 +1,6 @@
 #include "createtask.h"
 
-enum class TaskStatus {
+enum class FolderStatus {
     Current,
     Next,
     Future,
@@ -168,12 +168,12 @@ void CreateTask::populateComboBoxes()
 //    }
 
     // Populate task combo box with explicit values
-    //    taskComboBox->addItem("Current", static_cast<int>(TaskStatus::Current));
+    //    taskComboBox->addItem("Current", static_cast<int>(FolderStatus::Current));
 //    taskComboBox->addItem("Select Folder");
-    taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current Task", static_cast<int>(TaskStatus::Current));
-    taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future Task", static_cast<int>(TaskStatus::Future));
-    taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next Task", static_cast<int>(TaskStatus::Next));
-    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"Finished Task", static_cast<int>(TaskStatus::completed));
+    taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current Task", static_cast<int>(FolderStatus::Current));
+    taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future Task", static_cast<int>(FolderStatus::Future));
+    taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next Task", static_cast<int>(FolderStatus::Next));
+    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"Finished Task", static_cast<int>(FolderStatus::completed));
 }
 
 void CreateTask::onCancelClicked()
