@@ -250,7 +250,7 @@ Widget::Widget(QWidget *parent)
     dkpoint_icon2->setPixmap(point);
     dkpoint_icon2->setFixedSize(20,30);
     dkfolders_label = new QLabel(tr("Projects"));
-    dkfolders_label->setFixedSize(110,28);
+    dkfolders_label->setFixedSize(120,28);
     QLabel * dkdown_arrow_icon2 = new QLabel();
     dkdown_arrow_icon2->setFixedSize(30,30);
     dkdown_arrow_icon2->setPixmap(down_arrow);
@@ -407,6 +407,7 @@ Widget::Widget(QWidget *parent)
 
     // setting overlayLayout
 //    overlayLayout->addWidget(projects_btn);
+
     overlayLayout->addWidget(dddoverlayWidget);
 
     // overlayLayout->addWidget(projects_widget);
@@ -654,22 +655,33 @@ Widget::Widget(QWidget *parent)
         qDebug() << "folders_btn clicked ";
         if(folders_widget->isHidden()){
             folders_widget->setVisible(true);
+            dddoverlayWidget->setVisible(false);
             overlayWidget->setFixedHeight(200);
         }else{
             folders_widget->setVisible(false);
+            dddoverlayWidget->setVisible(false);
             overlayWidget->setFixedHeight(70);
         }
     });
     connect(dkProFolders_btn,&QPushButton::clicked,this,[=]{
-        qDebug() << "dkProFolders_btn clicked ";
         if(dddoverlayWidget->isHidden()){
+            qDebug() << "dkProFolders_btn clicked making comboox visible";
             dddoverlayWidget->setVisible(true);
+            folders_widget->setVisible(false);
 //            dddoverlayWidget->raise();
             overlayWidget->setFixedHeight(200);
         }else{
+            qDebug() << "dkProFolders_btn clicked making comboox invisible";
             dddoverlayWidget->setVisible(false);
+            folders_widget->setVisible(false);
             overlayWidget->setFixedHeight(70);
         }
+    });
+
+    connect(dddoverlayWidget, &QComboBox::textActivated, this, [this](const QString &text) {
+        int index = dddoverlayWidget->currentIndex();
+        QString projectId = dddoverlayWidget->itemData(index).toString();
+        networkManager->allTasksInSeletedProject(token,projectId,0,10);
     });
 
     connect(current_task_btn,&QPushButton::clicked,this,[=]{
@@ -860,6 +872,7 @@ void Widget::projectFilterSelect(int index)
 
 void Widget::ondataSenderToComboBoxProjectList(QJsonArray projectIdAndNameList)
 {
+    dddoverlayWidget->clear();
 
     for (const QJsonValue& value : projectIdAndNameList) {
         QJsonObject projectObject = value.toObject();
