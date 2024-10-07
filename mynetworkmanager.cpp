@@ -366,6 +366,26 @@ void MyNetworkManager::allTasksInSeletedSearchKeyword(const QString &authToken, 
     });
 }
 
+void MyNetworkManager::allTasksInSeletedProjectAndFolder(const QString &authToken, const QString &project_id, const QString &folder_name, int skip, int limit)
+{
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
+
+    QUrlQuery query;
+    query.addQueryItem("skip", QString::number(skip));
+    query.addQueryItem("limit", QString::number(limit));
+    query.addQueryItem("project_id", project_id);
+    query.addQueryItem("folder_name", folder_name);
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        MyNetworkManager::onTasksDataFetched(reply);
+        //        qDebug()<<reply->readAll();
+    });
+}
+
 
 
 void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)

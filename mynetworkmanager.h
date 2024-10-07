@@ -41,6 +41,7 @@ public:
     void allTasksInSeletedFolder(const QString &authToken,const QString &folder_name, int skip, int limit);
     void allTasksInSeletedProject(const QString &authToken,const QString &project_id, int skip, int limit);
     void allTasksInSeletedSearchKeyword(const QString &authToken,const QString &searchItem, int skip, int limit);
+    void allTasksInSeletedProjectAndFolder(const QString &authToken,const QString &project_id,const QString &folder_name, int skip, int limit);
 signals:
     void projectDataFetched(const QJsonArray &dataArray);
     void taskDataFetched(int count);

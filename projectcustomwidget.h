@@ -90,6 +90,7 @@ private:
     const int swipeThreshold = 400;  // Minimum swipe distance to trigger the action
     bool isSwipeDetected = false;
 
+
 protected:
     void focusInEvent(QFocusEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;

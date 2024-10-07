@@ -68,11 +68,12 @@ Widget::Widget(QWidget *parent)
 //                            "QScrollBar:vertical:hover { width: 0px; }"    // Hide vertical scrollbar on hover
 //                            "QScrollBar:horizontal:hover { height: 0px; }"); // Hide horizontal scrollbar on hover
 
+
 //    for (int i = 1; i <= 10; ++i) {                   // dk comment for the adding the comboox items via api
 //        dddoverlayWidget->addItem("Option " + QString::number(i));
 //    }
 
-//    dddoverlayWidget->setFixedSize(120, 30);
+    dddoverlayWidget->setFixedSize(120, 30);
     dddoverlayWidget->setMaxVisibleItems(5);
     dddoverlayWidget->setGeometry(50, 50, 120, 30);
     dddoverlayWidget->raise();
@@ -249,8 +250,8 @@ Widget::Widget(QWidget *parent)
     QLabel * dkpoint_icon2 = new QLabel();
     dkpoint_icon2->setPixmap(point);
     dkpoint_icon2->setFixedSize(20,30);
-    dkfolders_label = new QLabel(tr("Projects"));
-    dkfolders_label->setFixedSize(120,28);
+    dkfolders_label = new QLabel(tr("Pro"));
+    dkfolders_label->setFixedSize(150,28);
     QLabel * dkdown_arrow_icon2 = new QLabel();
     dkdown_arrow_icon2->setFixedSize(30,30);
     dkdown_arrow_icon2->setPixmap(down_arrow);
@@ -260,10 +261,6 @@ Widget::Widget(QWidget *parent)
     QVBoxLayout * folders_display_layout = new QVBoxLayout();
     folders_display_layout->setContentsMargins(23,0,10,0);
 
-    QWidget * dkfolders_widget = new QWidget(this);
-    dkfolders_widget->setStyleSheet("padding-left:0px;");
-    QVBoxLayout * dkfolders_display_layout = new QVBoxLayout();
-    dkfolders_display_layout->setContentsMargins(23,0,10,0);
 
     // current task btn
     QPushButton * current_task_btn = new QPushButton();
@@ -274,15 +271,6 @@ Widget::Widget(QWidget *parent)
     current_task_icon->setPixmap(current_task_pic);
     // current_task_icon->setFixedSize(12,18);
     current_task_label = new QLabel(tr("Current Tasks"));
-
-    QPushButton * dkcurrent_task_btn = new QPushButton();
-    // current_task_btn->setStyleSheet("border:1px solid white;");
-    QHBoxLayout * dkcurrent_task_layout = new QHBoxLayout();
-    QLabel * dkcurrent_task_icon = new QLabel();
-    QPixmap dkcurrent_task_pic("://imgs/bluedot.svg");
-    dkcurrent_task_icon->setPixmap(current_task_pic);
-    // current_task_icon->setFixedSize(12,18);
-    dkcurrent_task_label = new QLabel(tr("Current123 Tasks"));
 
 
     // next task btn
@@ -325,16 +313,6 @@ Widget::Widget(QWidget *parent)
     current_task_btn->setFlat(true);
 
 
-    // setting current task btn
-    dkcurrent_task_layout->setAlignment(Qt::AlignLeft);
-    dkcurrent_task_layout->setContentsMargins(0,0,0,0);
-    dkcurrent_task_layout->setSpacing(0);
-    dkcurrent_task_layout->addWidget(current_task_icon);
-    dkcurrent_task_layout->addWidget(current_task_label);
-
-    dkcurrent_task_btn->setLayout(dkcurrent_task_layout);
-    dkcurrent_task_btn->setFlat(true);
-
     // setting next task btn
     next_task_layout->setAlignment(Qt::AlignLeft);
     next_task_layout->setContentsMargins(0,0,0,0);
@@ -374,11 +352,6 @@ Widget::Widget(QWidget *parent)
     folders_widget->setLayout(folders_display_layout);
     folders_widget->setVisible(false);
 
-    dkfolders_display_layout->addWidget(dkcurrent_task_btn);
-    dkfolders_display_layout->setSpacing(0);
-
-    dkfolders_widget->setLayout(dkfolders_display_layout);
-    dkfolders_widget->setVisible(false);
 
     // setting projects layout
     projectsLayout->addWidget(point_icon);
@@ -393,7 +366,8 @@ Widget::Widget(QWidget *parent)
     // setting folders layout
     dkfoldersLayout->addWidget(dkpoint_icon2);
     dkfoldersLayout->addWidget(dkfolders_label);
-    dkfoldersLayout->addWidget(down_arrow_icon2);
+     dkfoldersLayout->addStretch();
+//    dkfoldersLayout->addWidget(down_arrow_icon2);
     // foldersLayout->addStretch();
 
     projects_btn->setLayout(projectsLayout);
@@ -408,14 +382,13 @@ Widget::Widget(QWidget *parent)
     // setting overlayLayout
 //    overlayLayout->addWidget(projects_btn);
 
+//    overlayLayout->addWidget(dkProFolders_btn);
     overlayLayout->addWidget(dddoverlayWidget);
 
     // overlayLayout->addWidget(projects_widget);
 //    overlayLayout->addWidget(h_line);
     overlayLayout->addWidget(folders_btn);
     overlayLayout->addWidget(folders_widget);
-//    overlayLayout->addWidget(dkProFolders_btn);
-//    overlayLayout->addWidget(dkfolders_widget);
     overlayLayout->setSpacing(0);
     createTaskOverlayLayout->addWidget(createTaskBtn);
 
@@ -514,6 +487,8 @@ Widget::Widget(QWidget *parent)
     connect(refreshbtn, &QPushButton::clicked, this,[this](){
         networkManager->fetchTasksForMobileList(token,10);
         networkManager->getAllProjects(token);
+        dddoverlayWidget->setCurrentIndex(-1);
+        dkfolders_label->setText("Project");
     });
 
 
@@ -668,20 +643,25 @@ Widget::Widget(QWidget *parent)
             qDebug() << "dkProFolders_btn clicked making comboox visible";
             dddoverlayWidget->setVisible(true);
             folders_widget->setVisible(false);
-//            dddoverlayWidget->raise();
-            overlayWidget->setFixedHeight(200);
+//            overlayWidget->setFixedHeight(200);
         }else{
             qDebug() << "dkProFolders_btn clicked making comboox invisible";
             dddoverlayWidget->setVisible(false);
             folders_widget->setVisible(false);
-            overlayWidget->setFixedHeight(70);
+//            overlayWidget->setFixedHeight(70);
         }
     });
 
     connect(dddoverlayWidget, &QComboBox::textActivated, this, [this](const QString &text) {
         int index = dddoverlayWidget->currentIndex();
         QString projectId = dddoverlayWidget->itemData(index).toString();
-        networkManager->allTasksInSeletedProject(token,projectId,0,10);
+        dkfolders_label->setText(text);
+        dddoverlayWidget->setVisible(false);
+        if(projectId.isEmpty() || projectId == "777"){
+            qDebug()<<"all projects is selected so not doing api call";
+        }else{
+            networkManager->allTasksInSeletedProject(token,projectId,0,10);
+        }
     });
 
     connect(current_task_btn,&QPushButton::clicked,this,[=]{
@@ -690,7 +670,16 @@ Widget::Widget(QWidget *parent)
         folders_widget->setVisible(false);
         folders_label->setText(current_task_label->text());
         overlayWidget->setFixedHeight(70);
-        networkManager->allTasksInSeletedFolder(token,"Current Task",0,10);
+
+        int index = dddoverlayWidget->currentIndex();
+        QString projectId = dddoverlayWidget->itemData(index).toString();
+        if(projectId.isEmpty() || projectId == "777"){
+            qDebug()<<"projectId is empty when current task is selected";
+            networkManager->allTasksInSeletedFolder(token,"Current Task",0,10);
+        }else{
+            networkManager->allTasksInSeletedProjectAndFolder(token,projectId,"Current Task",0,10);
+            qDebug()<<"projectId is not empty when current task is selected"<<projectId << index;
+        }
     });
     connect(next_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "next_task_btn clicked ";
@@ -698,7 +687,17 @@ Widget::Widget(QWidget *parent)
         folders_widget->setVisible(false);
         folders_label->setText(next_task_label->text());
         overlayWidget->setFixedHeight(70);
-        networkManager->allTasksInSeletedFolder(token,"Next Task",0,10);
+
+        int index = dddoverlayWidget->currentIndex();
+        QString projectId = dddoverlayWidget->itemData(index).toString();
+        if(projectId.isEmpty() || projectId == "777"){
+            qDebug()<<"projectId is empty when next task is selected";
+            networkManager->allTasksInSeletedFolder(token,"Next Task",0,10);
+        }else{
+            networkManager->allTasksInSeletedProjectAndFolder(token,projectId,"Next Task",0,10);
+            qDebug()<<"projectId is not empty when next task is selected"<<projectId << index;
+        }
+
     });
     connect(future_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "future_task_btn clicked ";
@@ -707,6 +706,16 @@ Widget::Widget(QWidget *parent)
         folders_label->setText(future_task_label->text());
         overlayWidget->setFixedHeight(70);
         networkManager->allTasksInSeletedFolder(token,"Future Task",0,10);
+
+        int index = dddoverlayWidget->currentIndex();
+        QString projectId = dddoverlayWidget->itemData(index).toString();
+        if(projectId.isEmpty() || projectId == "777"){
+            qDebug()<<"projectId is empty when future task is selected";
+            networkManager->allTasksInSeletedFolder(token,"Future Task",0,10);
+        }else{
+            networkManager->allTasksInSeletedProjectAndFolder(token,projectId,"Future Task",0,10);
+            qDebug()<<"projectId is not empty when Future  task is selected"<<projectId << index;
+        }
     });
     connect(completed_task_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "completed_task_btn clicked ";
@@ -715,6 +724,16 @@ Widget::Widget(QWidget *parent)
         folders_label->setText(completed_task_label->text());
         overlayWidget->setFixedHeight(70);
         networkManager->allTasksInSeletedFolder(token,"Finished Task",0,10);
+
+        int index = dddoverlayWidget->currentIndex();
+        QString projectId = dddoverlayWidget->itemData(index).toString();
+        if(projectId.isEmpty() || projectId == "777"){
+            qDebug()<<"projectId is empty when Finished task is selected";
+            networkManager->allTasksInSeletedFolder(token,"Finished Task",0,10);
+        }else{
+            networkManager->allTasksInSeletedProjectAndFolder(token,projectId,"Finished Task",0,10);
+            qDebug()<<"projectId is not empty when Finished task is selected"<<projectId << index;
+        }
     });
 }
 
@@ -873,6 +892,8 @@ void Widget::projectFilterSelect(int index)
 void Widget::ondataSenderToComboBoxProjectList(QJsonArray projectIdAndNameList)
 {
     dddoverlayWidget->clear();
+    QString projectTitle("All Projects");
+    dddoverlayWidget->addItem(projectTitle, 777);
 
     for (const QJsonValue& value : projectIdAndNameList) {
         QJsonObject projectObject = value.toObject();
@@ -881,7 +902,6 @@ void Widget::ondataSenderToComboBoxProjectList(QJsonArray projectIdAndNameList)
 
         dddoverlayWidget->addItem(projectTitle, projectId); // title, hidden _id
 
-        qDebug() << "Project ID:" << projectId;
-        qDebug() << "Project Title:" << projectTitle;
+        qDebug() << "Project ID:" << projectId << projectTitle;
     }
 }
