@@ -6,12 +6,17 @@
 ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     : QWidget{parent}
 {
-     networkManager = MyNetworkManager::instance();
+    initializeUIOfProjectsAndTasks();
+}
+
+void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
+{
+    networkManager = MyNetworkManager::instance();
 
     m_HMainLayout = new QVBoxLayout;
     m_HMainLayout->setContentsMargins(5,5,0,0);
     m_HMainLayout->setAlignment(Qt::AlignLeft);
-ActiveTaskQTime = QTime(0, 0, 0);
+    ActiveTaskQTime = QTime(0, 0, 0);
     QFont labelFont("Ubuntu",11,400);
     this->setFocusPolicy(Qt::ClickFocus);  // focus adding
     this->setObjectName("customProjectItemWidget") ;
@@ -104,9 +109,6 @@ ActiveTaskQTime = QTime(0, 0, 0);
     d_taskActiveTimeLabel = new QLabel(activeTime,this);
     d_taskActiveTimeLabel->setObjectName("d_taskActiveTimeLabel");
     // d_taskActiveTimeLabel->setFixedHeight(23);
-//    ActiveTaskQTime = QTime(0, 0, 0).addSecs(myIntActiveTime);
-//    qDebug()<<"active time in qtime : "<<ActiveTaskQTime << myIntActiveTime;
-
 
 
     // active_time_layout->setAlignment(Qt::AlignCenter);
@@ -159,7 +161,7 @@ ActiveTaskQTime = QTime(0, 0, 0);
 
 
     d_pauseTaskButton->setFixedSize(76,25);
-//    d_pauseTaskButton->setLayout(startbtn_layout);
+    //    d_pauseTaskButton->setLayout(startbtn_layout);
     d_pauseTaskButton->setStyleSheet(
         "QPushButton {"
         "background-color: #D2232A;"
@@ -320,53 +322,53 @@ ActiveTaskQTime = QTime(0, 0, 0);
         qDebug()<<"++++++++++++ : "<<activeTime;
         qDebug()<<"start api called";
         networkManager->startTaskApi(token,task_id);  // need to remove other things and move them in slot that will be called by this api call reply finished
-//        taskSpecificTimer->start(1);
-//        if(!is_started){
-//            is_started = true;
-//            qDebug() << "setting is_started" <<  is_started;
-//            m_startTimer->start();
-//            start_label->setText("Pause");
-//            startbtn_layout->setContentsMargins(5,0,8,0);
-//            QPixmap pause_icon("://imgs/pause.png");
-//            start_icon->setPixmap(pause_icon);
-//            d_setReminderbtn->setVisible(true);
-//            qDebug() << "startbtn_layout if " << startbtn_layout->contentsMargins();
-//        }
-//        else{
-//            is_started = false;
-//            qDebug() << "setting is_started" <<  is_started;
-//            m_startTimer->stop();
-//            m_startReminderTimer->stop();
-//            remindercountdownTime = QTime(0,0,0);
-//            start_label->setText("Start");
-//            start_icon->setPixmap(start_pic);
-//            // rmd_wid->deleteLater();
-//            // rmd_wid = new ReminderWidget();
-//            d_setReminderbtn->setVisible(false);
-//            reminder_widget->setVisible(false);
-//            rmd_wid->update_widget->setVisible(false);
-//            rmd_wid->custom_widget->setVisible(false);
-//            rmd_wid->custom_time_button->setStyleSheet(
-//                "QPushButton {"
-//                "background-color:  rgba(35, 31, 32, 0.1);"
-//                "border-radius: 10px;"
-//                "}"
-//                );
-//            rmd_wid->set_reminder_button->setVisible(true);
-//            d_taskActiveTimeInReminder->setText("00:00:00");
-//            rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
-//            startbtn_layout->setContentsMargins(9,0,13,0);
-//            qDebug() << "startbtn_layout else" << startbtn_layout->contentsMargins();
-//            emit sendUpdateReminder();
-//        }
+        //        taskSpecificTimer->start(1);
+        //        if(!is_started){
+        //            is_started = true;
+        //            qDebug() << "setting is_started" <<  is_started;
+        //            m_startTimer->start();
+        //            start_label->setText("Pause");
+        //            startbtn_layout->setContentsMargins(5,0,8,0);
+        //            QPixmap pause_icon("://imgs/pause.png");
+        //            start_icon->setPixmap(pause_icon);
+        //            d_setReminderbtn->setVisible(true);
+        //            qDebug() << "startbtn_layout if " << startbtn_layout->contentsMargins();
+        //        }
+        //        else{
+        //            is_started = false;
+        //            qDebug() << "setting is_started" <<  is_started;
+        //            m_startTimer->stop();
+        //            m_startReminderTimer->stop();
+        //            remindercountdownTime = QTime(0,0,0);
+        //            start_label->setText("Start");
+        //            start_icon->setPixmap(start_pic);
+        //            // rmd_wid->deleteLater();
+        //            // rmd_wid = new ReminderWidget();
+        //            d_setReminderbtn->setVisible(false);
+        //            reminder_widget->setVisible(false);
+        //            rmd_wid->update_widget->setVisible(false);
+        //            rmd_wid->custom_widget->setVisible(false);
+        //            rmd_wid->custom_time_button->setStyleSheet(
+        //                "QPushButton {"
+        //                "background-color:  rgba(35, 31, 32, 0.1);"
+        //                "border-radius: 10px;"
+        //                "}"
+        //                );
+        //            rmd_wid->set_reminder_button->setVisible(true);
+        //            d_taskActiveTimeInReminder->setText("00:00:00");
+        //            rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
+        //            startbtn_layout->setContentsMargins(9,0,13,0);
+        //            qDebug() << "startbtn_layout else" << startbtn_layout->contentsMargins();
+        //            emit sendUpdateReminder();
+        //        }
     });
 
     connect(d_pauseTaskButton,&QPushButton::clicked,this,[=]{
         qDebug()<<"stop api called";
         networkManager->stopTaskApi(token,task_id);  // need to remove other things and move them in slot that will be called by this api call reply finished
-//        taskSpecificTimer->stop();
+        //        taskSpecificTimer->stop();
 
-//        qDebug()<<"---------- : "<<this->activeTime;
+        //        qDebug()<<"---------- : "<<this->activeTime;
     });
     connect(d_editTaskButton,&QPushButton::clicked,this,[=]{
         edit_task->nameLineEdit->setText(d_taskNameLabel->text());
@@ -411,9 +413,9 @@ ActiveTaskQTime = QTime(0, 0, 0);
     connect(completeBtn,&QPushButton::clicked,this,[=]{
         qDebug() << "complete btn clicked ";
         m_startTimer->stop();
-//        d_startTaskButton->setVisible(false);
-//        d_editTaskButton->setVisible(false);
-//        d_projectStatuslabel->setText("Finish Task");
+        //        d_startTaskButton->setVisible(false);
+        //        d_editTaskButton->setVisible(false);
+        //        d_projectStatuslabel->setText("Finish Task");
         QMessageBox msgBox;
         msgBox.setWindowTitle("Complete Task");
         msgBox.setText("Are you sure you want to mark completed the task?");
@@ -472,15 +474,15 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 
     this->setStyleSheet("background-color: #F2F9FF;");
 
-//    this->setStyleSheet(
-//        "#customProjectItemWidget {"
-//        "    background-color: #F2F9FF;"   // Set background color
-//        "    border: 2px solid #D2232A;"    // Set border only for this widget
-//        "}"
-//        "QWidget#customProjectItemWidget > * {"
-//        "    border: none;"  // No border for any child widgets
-//        "}"
-//        );
+    //    this->setStyleSheet(
+    //        "#customProjectItemWidget {"
+    //        "    background-color: #F2F9FF;"   // Set background color
+    //        "    border: 2px solid #D2232A;"    // Set border only for this widget
+    //        "}"
+    //        "QWidget#customProjectItemWidget > * {"
+    //        "    border: none;"  // No border for any child widgets
+    //        "}"
+    //        );
     // this->setStyleSheet("background-color: #f0dfe0;");
 
     // border: 2px solid rgba(76, 156, 229, 1)
@@ -612,13 +614,13 @@ void ProjectCustomWidget::setTaskProjectsIdNameinProjectCustomWidget(const QStri
     d_projectNameLabel->setText(projectName);
     d_taskNameLabel->setText(taskName);
     task_id = taskid;
-//    qDebug() << "Task id " << task_id;
+    //    qDebug() << "Task id " << task_id;
 }
 
 void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &taskid, int taskStatus, const QString &taskName, const QString &m_taskActiveTime, const QString &m_taskRemainingTime,
                                                               const QString &projectStatus, const QString &taskProjectId, const QString &m_taskFinishedTime, const QString &projectName)
 {
-//    qDebug()<<"received data now setting in projectcustom widget for task: "<<taskName <<projectStatus;
+    //    qDebug()<<"received data now setting in projectcustom widget for task: "<<taskName <<projectStatus;
     QLabel *textLabel = new QLabel("");
     textLabel->setStyleSheet("font-size : 13px; color: #414040;");
     QLabel *iconLabel = new QLabel;
@@ -659,9 +661,8 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
     m_taskStatus = taskStatus;
     remainingTime = m_taskRemainingTime;
     activeTime = m_taskActiveTime;
-    myIntActiveTime = m_taskActiveTime.toInt();
     FinishedTime = m_taskFinishedTime;
-    ActiveTaskQTime = QTime(0, 0, 0).addSecs(myIntActiveTime);
+    ActiveTaskQTime = QTime(0, 0, 0).addSecs(m_taskActiveTime.toInt());
 
     d_taskActiveTimeLabel->setText(secondsToTimeFormat(activeTime.toInt()));
 
@@ -675,25 +676,25 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         d_startTaskButton->setVisible(false);
         d_pauseTaskButton->setVisible(true);
         d_setReminderbtn->setVisible(true);
-            taskSpecificTimer->start(1000);
-//        updatetaskSpecificTimer(m_taskActiveTime.toInt());
-            qDebug()<<"+++ ActiveTaskQTime : "<<ActiveTaskQTime;
-            ActiveTaskQTime.addSecs(m_taskActiveTime.toInt());
-            qDebug()<<"--- ActiveTaskQTime : "<<ActiveTaskQTime;
-//        activeTime = m_taskActiveTime.toInt();
+        taskSpecificTimer->start(1000);
+        //        updatetaskSpecificTimer(m_taskActiveTime.toInt());
+        qDebug()<<"+++ ActiveTaskQTime : "<<ActiveTaskQTime;
+        ActiveTaskQTime.addSecs(m_taskActiveTime.toInt());
+        qDebug()<<"--- ActiveTaskQTime : "<<ActiveTaskQTime;
+        //        activeTime = m_taskActiveTime.toInt();
         break;
     case 2:
         d_startTaskButton->setVisible(true);
         d_pauseTaskButton->setVisible(false);
         d_setReminderbtn->setVisible(false);
-                taskSpecificTimer->stop();
+        taskSpecificTimer->stop();
         break;
     case 3:
         d_startTaskButton->setVisible(false);
         d_editTaskButton->setVisible(false);
         d_pauseTaskButton->setVisible(false);
         d_setReminderbtn->setVisible(false);
-//        p_FirstLayout->removeWidget(completeBtn);
+        //        p_FirstLayout->removeWidget(completeBtn);
         completeBtn->hide();
         break;
     default:
@@ -701,7 +702,7 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         break;
     }
 
-//    qDebug() << "Task id " << task_id;
+    //    qDebug() << "Task id " << task_id;
 }
 
 void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
@@ -783,11 +784,11 @@ void ProjectCustomWidget::taskStartDataSlot(const QString &taskid, bool success,
         break;
     }
     if(m_taskStatus == 1){
-//        qDebug()<<"success of start task";
+        //        qDebug()<<"success of start task";
         d_startTaskButton->setVisible(false);
         d_pauseTaskButton->setVisible(true);
     }else{
-//        qDebug()<<"fail of start task";
+        //        qDebug()<<"fail of start task";
         d_startTaskButton->setVisible(true);
         d_pauseTaskButton->setVisible(false);
     }

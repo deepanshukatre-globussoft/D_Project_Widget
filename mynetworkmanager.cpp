@@ -126,7 +126,7 @@ void MyNetworkManager::createTasks(const QString &authToken, const QString &titl
 
     QNetworkReply *reply = networkManager->post(request,jsonData);
     connect(reply, &QNetworkReply::finished, this, [reply, this](){
-//        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+        //        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray response = reply->readAll();
             QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
@@ -267,7 +267,7 @@ void MyNetworkManager::startTaskApi(const QString &authToken, const QString &tas
             }else{
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString()+ "++ "+ reply->error());
             }
-//            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start failed
+            //            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start failed
             emit taskStartDataSignal("taskid",false,"00:00:00");
         }
     });
@@ -430,7 +430,7 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
         qDebug() << "Error: " << reply->errorString();
         //        textEdit->setText("Failed to fetch data: " + reply->errorString());
     }
-//    reply->deleteLater();   // need to check
+    //    reply->deleteLater();   // need to check
 }
 
 void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
@@ -486,7 +486,7 @@ void MyNetworkManager::onProjectIdAndNameDataFetched(QNetworkReply *reply) //wor
         QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
         QJsonObject jsonObj = jsonDoc.object();
         if (jsonObj.contains("data") && jsonObj["data"].isArray()) {
-//            qDebug()<<"emitting the signal"<<response;
+            //            qDebug()<<"emitting the signal"<<response;
             dataArray = jsonObj["data"].toArray();
             emit dataSenderToComboBoxProjectList(dataArray);
             //            qDebug()<<"reply from get all project "<<dataArray;

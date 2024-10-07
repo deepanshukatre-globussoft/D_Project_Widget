@@ -761,12 +761,12 @@ void Widget::initConfiguration()
         return;
     }
     for(ProjectCustomWidget *widgetObject : TasksContainerList ){
-//        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
+        //        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
         containerLayout->addWidget(widgetObject);
     }
 
-//    containerLayout->addStretch();  // let it be uncommented dk issue for bottom in 1,2 iter this will happen
-//    containerLayout->addStretch();
+    //    containerLayout->addStretch();  // let it be uncommented dk issue for bottom in 1,2 iter this will happen
+    //    containerLayout->addStretch();
 
     //    qDeleteAll(TasksContainerList);
     //    TasksContainerList.clear();
@@ -776,22 +776,22 @@ void Widget::initConfiguration()
 
 void Widget::deleteConfiguration()
 {
-        qDeleteAll(TasksContainerList);
-        TasksContainerList.clear();
-//        for(int i=0;i<TasksContainerList.size();i++){
-//            delete TasksContainerList[i];
-//        }
-        for (int i = 0; i < TaskModelClassContainerList.size(); ++i) {
-            delete TaskModelClassContainerList[i]; // Delete the object to avoid memory leaks
-        }
-        TaskModelClassContainerList.clear(); // Clear the list
+    qDeleteAll(TasksContainerList);
+    TasksContainerList.clear();
+    //        for(int i=0;i<TasksContainerList.size();i++){
+    //            delete TasksContainerList[i];
+    //        }
+    for (int i = 0; i < TaskModelClassContainerList.size(); ++i) {
+        delete TaskModelClassContainerList[i]; // Delete the object to avoid memory leaks
+    }
+    TaskModelClassContainerList.clear(); // Clear the list
 
-//        for (int i = 0; i < TaskModelFliterContainerList.size(); ++i) {
-//            delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
-//        }
-//        TaskModelFliterContainerList.clear(); // Clear the list
+    //        for (int i = 0; i < TaskModelFliterContainerList.size(); ++i) {
+    //            delete TaskModelFliterContainerList[i]; // Delete the object to avoid memory leaks
+    //        }
+    //        TaskModelFliterContainerList.clear(); // Clear the list
 
-        qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data" << QDateTime::currentDateTime().toString(Qt::ISODate);
+    qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data" << QDateTime::currentDateTime().toString(Qt::ISODate);
 
 }
 
@@ -816,34 +816,34 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)  // adding d
 
             QJsonObject folderObject = taskObject["folder_data"].toObject();
             QString folderName = folderObject["name"].toString();
-//            qDebug()<<"name " <<taskObject["active_time"].toInt();
-//            qDebug()<<"active_time " <<active_time << task_remaining_time <<task_finished_time;
+            //            qDebug()<<"name " <<taskObject["active_time"].toInt();
+            //            qDebug()<<"active_time " <<active_time << task_remaining_time <<task_finished_time;
 
-//            QString folderId = folderObject["_id"].toString();
-//    ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-//    customWidgetTaskdata->receiveData(folderName,projectTitle,title,id);
-    //    containerLayout->addWidget(customWidgetTaskdata);
+            //            QString folderId = folderObject["_id"].toString();
+            //    ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+            //    customWidgetTaskdata->receiveData(folderName,projectTitle,title,id);
+            //    containerLayout->addWidget(customWidgetTaskdata);
 
             QJsonObject project_data_Obj = taskObject["project_data"].toObject();
             QString projectTitle = project_data_Obj["title"].toString();
             QString projectId = project_data_Obj["_id"].toString();
 
 
-//            TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
-//                                                      folderName, projectId, projectTitle);
+            //            TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
+            //                                                      folderName, projectId, projectTitle);
 
             TaskModelClass *task = new TaskModelClass(id, status, title, active_time,
                                                       task_remaining_time,folderName,
                                                       projectId,task_finished_time, projectTitle);
 
             TaskModelClassContainerList.append(task);       // for whole data in unfiltered list
-//            TaskModelFliterContainerList.append(task);    // setting data for the filtered list
+            //            TaskModelFliterContainerList.append(task);    // setting data for the filtered list
         }
     }
 
     for(int i=0; i< TaskModelClassContainerList.size();++i){
-//        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
-//        qDebug()<<__LINE__<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
+        //        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
+        //        qDebug()<<__LINE__<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
     }
 }
 
@@ -853,10 +853,10 @@ void Widget::onTaskDataFetched(int count) // adding data in the task container u
     if(count == 1){
         for(int i=0; i< TaskModelClassContainerList.size();++i){
             ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-//            customWidgetTaskdata->setTaskProjectsIdNameinProjectCustomWidget(TaskModelClassContainerList[i]->m_taskFolderName,
-//                                              TaskModelClassContainerList[i]->m_taskProjectName,
-//                                              TaskModelClassContainerList[i]->m_taskName,
-//                                              TaskModelClassContainerList[i]->m_taskid);
+            //            customWidgetTaskdata->setTaskProjectsIdNameinProjectCustomWidget(TaskModelClassContainerList[i]->m_taskFolderName,
+            //                                              TaskModelClassContainerList[i]->m_taskProjectName,
+            //                                              TaskModelClassContainerList[i]->m_taskName,
+            //                                              TaskModelClassContainerList[i]->m_taskid);
             customWidgetTaskdata->setTaskAllDataInProjectCustomWidget(TaskModelClassContainerList[i]->m_taskid,TaskModelClassContainerList[i]->m_taskStatus,
                                                                       TaskModelClassContainerList[i]->m_taskName,
                                                                       TaskModelClassContainerList[i]->m_taskActiveTime,TaskModelClassContainerList[i]->m_taskRemainingTime,
@@ -865,14 +865,14 @@ void Widget::onTaskDataFetched(int count) // adding data in the task container u
             TasksContainerList.append(customWidgetTaskdata);
         }
     }else if(count == 2){  //
-//        for(int i=0; i< TaskModelFliterContainerList.size();++i){
-//            ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
-//            customWidgetTaskdata->receiveData(TaskModelFliterContainerList[i]->m_taskFolderName,
-//                                              TaskModelFliterContainerList[i]->m_taskProjectName,
-//                                              TaskModelFliterContainerList[i]->m_taskName,
-//                                              TaskModelFliterContainerList[i]->m_taskid);
-//            TasksContainerList.append(customWidgetTaskdata);
-//        }
+        //        for(int i=0; i< TaskModelFliterContainerList.size();++i){
+        //            ProjectCustomWidget *customWidgetTaskdata = new ProjectCustomWidget();
+        //            customWidgetTaskdata->receiveData(TaskModelFliterContainerList[i]->m_taskFolderName,
+        //                                              TaskModelFliterContainerList[i]->m_taskProjectName,
+        //                                              TaskModelFliterContainerList[i]->m_taskName,
+        //                                              TaskModelFliterContainerList[i]->m_taskid);
+        //            TasksContainerList.append(customWidgetTaskdata);
+        //        }
     }
 
     //    containerLayout->addWidget(customWidgetTaskdata);
@@ -880,7 +880,7 @@ void Widget::onTaskDataFetched(int count) // adding data in the task container u
 
 void Widget::onEmptySignal()
 {
-qDebug()<<" onEmptySignal";
+    qDebug()<<" onEmptySignal";
 }
 
 void Widget::projectFilterSelect(int index)

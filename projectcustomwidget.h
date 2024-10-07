@@ -91,7 +91,8 @@ private:
     bool isSwipeDetected = false;
     QTimer *taskSpecificTimer;
     QTime ActiveTaskQTime;
-    int myIntActiveTime;
+
+    void initializeUIOfProjectsAndTasks();
 
 protected:
     void focusInEvent(QFocusEvent *event) override;
