@@ -123,7 +123,7 @@ public slots:
     void taskStartDataSlot(const QString& taskid,bool success,const QString& time);
     void updateReminderTimer();
     void getTimer(QTime get_reminder_time);
-    void updatetaskSpecificTimer(int intTime);
+    void updatetaskSpecificTimer(QTime myQTime);
 
 
 };

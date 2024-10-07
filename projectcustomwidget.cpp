@@ -11,7 +11,7 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     m_HMainLayout = new QVBoxLayout;
     m_HMainLayout->setContentsMargins(5,5,0,0);
     m_HMainLayout->setAlignment(Qt::AlignLeft);
-
+ActiveTaskQTime = QTime(0, 0, 0);
     QFont labelFont("Ubuntu",11,400);
     this->setFocusPolicy(Qt::ClickFocus);  // focus adding
     this->setObjectName("customProjectItemWidget") ;
@@ -104,8 +104,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     d_taskActiveTimeLabel = new QLabel(activeTime,this);
     d_taskActiveTimeLabel->setObjectName("d_taskActiveTimeLabel");
     // d_taskActiveTimeLabel->setFixedHeight(23);
-    ActiveTaskQTime = QTime(0, 0, 0).addSecs(myIntActiveTime);
-    qDebug()<<"active time in qtime : "<<ActiveTaskQTime << myIntActiveTime;
+//    ActiveTaskQTime = QTime(0, 0, 0).addSecs(myIntActiveTime);
+//    qDebug()<<"active time in qtime : "<<ActiveTaskQTime << myIntActiveTime;
 
 
 
@@ -308,11 +308,9 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     });
 
     connect(taskSpecificTimer,&QTimer::timeout,this,[=]{
-        myIntActiveTime++;
-
-        updatetaskSpecificTimer(myIntActiveTime);
+        ActiveTaskQTime = ActiveTaskQTime.addSecs(1);
+        updatetaskSpecificTimer(ActiveTaskQTime);
     });
-
 
     connect(networkManager,&MyNetworkManager::taskStartDataSignal,this,&ProjectCustomWidget::taskStartDataSlot);
 
@@ -620,7 +618,7 @@ void ProjectCustomWidget::setTaskProjectsIdNameinProjectCustomWidget(const QStri
 void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &taskid, int taskStatus, const QString &taskName, const QString &m_taskActiveTime, const QString &m_taskRemainingTime,
                                                               const QString &projectStatus, const QString &taskProjectId, const QString &m_taskFinishedTime, const QString &projectName)
 {
-    qDebug()<<"received data now setting in projectcustom widget for task: "<<taskName <<projectStatus;
+//    qDebug()<<"received data now setting in projectcustom widget for task: "<<taskName <<projectStatus;
     QLabel *textLabel = new QLabel("");
     textLabel->setStyleSheet("font-size : 13px; color: #414040;");
     QLabel *iconLabel = new QLabel;
@@ -663,6 +661,7 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
     activeTime = m_taskActiveTime;
     myIntActiveTime = m_taskActiveTime.toInt();
     FinishedTime = m_taskFinishedTime;
+    ActiveTaskQTime = QTime(0, 0, 0).addSecs(myIntActiveTime);
 
     d_taskActiveTimeLabel->setText(secondsToTimeFormat(activeTime.toInt()));
 
@@ -677,7 +676,10 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         d_pauseTaskButton->setVisible(true);
         d_setReminderbtn->setVisible(true);
             taskSpecificTimer->start(1000);
-        updatetaskSpecificTimer(m_taskActiveTime.toInt());
+//        updatetaskSpecificTimer(m_taskActiveTime.toInt());
+            qDebug()<<"+++ ActiveTaskQTime : "<<ActiveTaskQTime;
+            ActiveTaskQTime.addSecs(m_taskActiveTime.toInt());
+            qDebug()<<"--- ActiveTaskQTime : "<<ActiveTaskQTime;
 //        activeTime = m_taskActiveTime.toInt();
         break;
     case 2:
@@ -825,10 +827,9 @@ void ProjectCustomWidget::getTimer(QTime get_reminder_time)
 
 }
 
-void ProjectCustomWidget::updatetaskSpecificTimer(int intTime)
+void ProjectCustomWidget::updatetaskSpecificTimer(QTime myQTime)
 {
-    QTime time = QTime(0, 0, 0).addSecs(intTime/10);
-    QString timeString = time.toString("hh:mm:ss");  // Convert QTime to QString in "hh:mm:ss" format
+    QString timeString = myQTime.toString("hh:mm:ss");  // Convert QTime to QString in "hh:mm:ss" format
     d_taskActiveTimeLabel->setText(timeString);
-    qDebug()<<"int time is "<<  intTime <<" in updatetaskSpecificTimer";
+    qDebug()<<"int time is "<<  myQTime <<" in updatetaskSpecificTimer";
 }
