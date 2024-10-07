@@ -89,7 +89,9 @@ private:
     QPoint startPos;            // Position of the mouse when pressed
     const int swipeThreshold = 400;  // Minimum swipe distance to trigger the action
     bool isSwipeDetected = false;
-
+    QTimer *taskSpecificTimer;
+    QTime ActiveTaskQTime;
+    int myIntActiveTime;
 
 protected:
     void focusInEvent(QFocusEvent *event) override;
@@ -121,6 +123,7 @@ public slots:
     void taskStartDataSlot(const QString& taskid,bool success,const QString& time);
     void updateReminderTimer();
     void getTimer(QTime get_reminder_time);
+    void updatetaskSpecificTimer(int intTime);
 
 
 };

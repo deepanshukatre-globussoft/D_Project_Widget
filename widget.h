@@ -44,6 +44,8 @@ public:
     QWidget *overlayWidget;
     QWidget *overlayCreatetaskWidget;
 
+    void initialize_UI_Components();
+
 protected:
            // void showEvent(QShowEvent  *event) override;
            // void hideEvent(QHideEvent *event) override;

@@ -24,6 +24,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     // completeBtn->setFixedSize(20,this->height());
     // completeBtn->setStyleSheet("background-color: #8be51e; color: white;");
 
+    taskSpecificTimer = new QTimer(this);
+
     // hor_layout->addWidget(completeBtn);
     QIcon complete_icon("://imgs/completed.svg");
     completeBtn->setIcon(complete_icon);
@@ -102,6 +104,8 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     d_taskActiveTimeLabel = new QLabel(activeTime,this);
     d_taskActiveTimeLabel->setObjectName("d_taskActiveTimeLabel");
     // d_taskActiveTimeLabel->setFixedHeight(23);
+    ActiveTaskQTime = QTime(0, 0, 0).addSecs(myIntActiveTime);
+    qDebug()<<"active time in qtime : "<<ActiveTaskQTime << myIntActiveTime;
 
 
 
@@ -303,13 +307,22 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
         updateReminderTimer();
     });
 
+    connect(taskSpecificTimer,&QTimer::timeout,this,[=]{
+        myIntActiveTime++;
+
+        updatetaskSpecificTimer(myIntActiveTime);
+    });
+
+
     connect(networkManager,&MyNetworkManager::taskStartDataSignal,this,&ProjectCustomWidget::taskStartDataSlot);
 
     connect(d_startTaskButton,&QPushButton::clicked,this,[=]{
         // networkManager->checkTaskAndStart(token,task_id);
 
+        qDebug()<<"++++++++++++ : "<<activeTime;
         qDebug()<<"start api called";
         networkManager->startTaskApi(token,task_id);  // need to remove other things and move them in slot that will be called by this api call reply finished
+//        taskSpecificTimer->start(1);
 //        if(!is_started){
 //            is_started = true;
 //            qDebug() << "setting is_started" <<  is_started;
@@ -353,6 +366,9 @@ ProjectCustomWidget::ProjectCustomWidget(QWidget *parent)
     connect(d_pauseTaskButton,&QPushButton::clicked,this,[=]{
         qDebug()<<"stop api called";
         networkManager->stopTaskApi(token,task_id);  // need to remove other things and move them in slot that will be called by this api call reply finished
+//        taskSpecificTimer->stop();
+
+//        qDebug()<<"---------- : "<<this->activeTime;
     });
     connect(d_editTaskButton,&QPushButton::clicked,this,[=]{
         edit_task->nameLineEdit->setText(d_taskNameLabel->text());
@@ -645,6 +661,7 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
     m_taskStatus = taskStatus;
     remainingTime = m_taskRemainingTime;
     activeTime = m_taskActiveTime;
+    myIntActiveTime = m_taskActiveTime.toInt();
     FinishedTime = m_taskFinishedTime;
 
     d_taskActiveTimeLabel->setText(secondsToTimeFormat(activeTime.toInt()));
@@ -659,11 +676,15 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         d_startTaskButton->setVisible(false);
         d_pauseTaskButton->setVisible(true);
         d_setReminderbtn->setVisible(true);
+            taskSpecificTimer->start(1000);
+        updatetaskSpecificTimer(m_taskActiveTime.toInt());
+//        activeTime = m_taskActiveTime.toInt();
         break;
     case 2:
         d_startTaskButton->setVisible(true);
         d_pauseTaskButton->setVisible(false);
         d_setReminderbtn->setVisible(false);
+                taskSpecificTimer->stop();
         break;
     case 3:
         d_startTaskButton->setVisible(false);
@@ -802,4 +823,12 @@ void ProjectCustomWidget::updateReminderTimer()
 void ProjectCustomWidget::getTimer(QTime get_reminder_time)
 {
 
+}
+
+void ProjectCustomWidget::updatetaskSpecificTimer(int intTime)
+{
+    QTime time = QTime(0, 0, 0).addSecs(intTime/10);
+    QString timeString = time.toString("hh:mm:ss");  // Convert QTime to QString in "hh:mm:ss" format
+    d_taskActiveTimeLabel->setText(timeString);
+    qDebug()<<"int time is "<<  intTime <<" in updatetaskSpecificTimer";
 }

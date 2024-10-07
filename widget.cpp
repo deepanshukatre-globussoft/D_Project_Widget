@@ -16,9 +16,16 @@ QList<TaskModelClass*> Widget::TaskModelClassContainerList; // for all task to s
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-     this->setObjectName("MainWidget");
+    initialize_UI_Components();
+}
+
+Widget::~Widget(){ }
+
+void Widget::initialize_UI_Components()
+{
+    this->setObjectName("MainWidget");
     this->setWindowTitle(tr("Silah TTS"));
-//    qDebug() << "widget constructor reference " << this;
+    //    qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
     ProjectMainLayout->setAlignment(Qt::AlignLeft);
@@ -37,15 +44,15 @@ Widget::Widget(QWidget *parent)
     searchbar_widget = new QWidget(this);
     QHBoxLayout * search_layout = new QHBoxLayout();
 
-//    QHBoxLayout * search_minilayout_icon = new QHBoxLayout();
-//    QLabel * search_label = new QLabel(this);
-//    QPixmap search_icon("://imgs/search.svg");
-//    search_label->setPixmap(search_icon);
-//    QLabel * serchtextlabel = new QLabel("search");
+    //    QHBoxLayout * search_minilayout_icon = new QHBoxLayout();
+    //    QLabel * search_label = new QLabel(this);
+    //    QPixmap search_icon("://imgs/search.svg");
+    //    search_label->setPixmap(search_icon);
+    //    QLabel * serchtextlabel = new QLabel("search");
     QLineEdit * search_lineedit = new QLineEdit();
 
-//    search_lineedit->setFixedHeight(35);
-//    search_lineedit->setFont(QFont("Arial", 13));
+    //    search_lineedit->setFixedHeight(35);
+    //    search_lineedit->setFont(QFont("Arial", 13));
     search_lineedit->setPlaceholderText(tr("Search"));
 
     search_lineedit->setObjectName("search_lineeditObject");
@@ -62,16 +69,16 @@ Widget::Widget(QWidget *parent)
     // Create the overlay widget
     dddoverlayWidget = new QComboBox(this);
 
-//    dddoverlayWidget->setStyleSheet("QComboBox::drop-down { border: none; }"   // Remove the drop-down border
-//                            "QScrollBar:vertical { width: 0px; }"    // Hide vertical scrollbar
-//                            "QScrollBar:horizontal { height: 0px; }" // Hide horizontal scrollbar
-//                            "QScrollBar:vertical:hover { width: 0px; }"    // Hide vertical scrollbar on hover
-//                            "QScrollBar:horizontal:hover { height: 0px; }"); // Hide horizontal scrollbar on hover
+    //    dddoverlayWidget->setStyleSheet("QComboBox::drop-down { border: none; }"   // Remove the drop-down border
+    //                            "QScrollBar:vertical { width: 0px; }"    // Hide vertical scrollbar
+    //                            "QScrollBar:horizontal { height: 0px; }" // Hide horizontal scrollbar
+    //                            "QScrollBar:vertical:hover { width: 0px; }"    // Hide vertical scrollbar on hover
+    //                            "QScrollBar:horizontal:hover { height: 0px; }"); // Hide horizontal scrollbar on hover
 
 
-//    for (int i = 1; i <= 10; ++i) {                   // dk comment for the adding the comboox items via api
-//        dddoverlayWidget->addItem("Option " + QString::number(i));
-//    }
+    //    for (int i = 1; i <= 10; ++i) {                   // dk comment for the adding the comboox items via api
+    //        dddoverlayWidget->addItem("Option " + QString::number(i));
+    //    }
 
     dddoverlayWidget->setFixedSize(120, 30);
     dddoverlayWidget->setMaxVisibleItems(5);
@@ -88,12 +95,12 @@ Widget::Widget(QWidget *parent)
     createTaskBtn->setIconSize(QSize(45,45));
     createTaskBtn->setStyleSheet("border-radius:5px");
     // createTaskBtn->move(328,360);
-//    createTaskBtn->setGeometry(100,100,30,30);
-//     createTaskBtn->raise();
+    //    createTaskBtn->setGeometry(100,100,30,30);
+    //     createTaskBtn->raise();
 
-//    create_layout->addWidget(createTaskBtn);
+    //    create_layout->addWidget(createTaskBtn);
     create_layout->setAlignment(Qt::AlignHCenter);
-//    createTaskBtn->setGeometry(100,100,)
+    //    createTaskBtn->setGeometry(100,100,)
 
     filter_btn = new QPushButton(this);
     QHBoxLayout * filter_layout = new QHBoxLayout();
@@ -140,28 +147,28 @@ Widget::Widget(QWidget *parent)
     // Add many items to the comboBox
     int count = 13;
     // if(count>5){
-        qDebug() << "in greater count";
-        projectsscrollArea = new QScrollArea(this);
-        projectsscrollArea->setContentsMargins(0,0,0,0);
-        projectsscrollArea->setWidget(projects_widget);
-        projectsscrollArea->setWidgetResizable(true); //    scrollArea->setFixedSize(630,400); // Adjust size dk
-        projectsscrollArea->setFixedSize(170,2);
-        projectsscrollArea->move(483,85);
-        projectsscrollArea->setVisible(false);
-        // Enable vertical scrolling
-        // projectsscrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    qDebug() << "in greater count";
+    projectsscrollArea = new QScrollArea(this);
+    projectsscrollArea->setContentsMargins(0,0,0,0);
+    projectsscrollArea->setWidget(projects_widget);
+    projectsscrollArea->setWidgetResizable(true); //    scrollArea->setFixedSize(630,400); // Adjust size dk
+    projectsscrollArea->setFixedSize(170,2);
+    projectsscrollArea->move(483,85);
+    projectsscrollArea->setVisible(false);
+    // Enable vertical scrolling
+    // projectsscrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-        // Disable horizontal scrolling
-        // projectsscrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        projectsscrollArea->setStyleSheet(
-            "QScrollBar:vertical {"
-            //        "    background: #f0f0f0;"  // Background color of the scrollbar track
-            "    width: 0px;"
-            "    margin: 0px 0px 0px 0px;"
-            "    border:0px;"
-            "}"
+    // Disable horizontal scrolling
+    // projectsscrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    projectsscrollArea->setStyleSheet(
+        "QScrollBar:vertical {"
+        //        "    background: #f0f0f0;"  // Background color of the scrollbar track
+        "    width: 0px;"
+        "    margin: 0px 0px 0px 0px;"
+        "    border:0px;"
+        "}"
 
-            );
+        );
     // }
 
     QSignalMapper *signalMapper = new QSignalMapper(this);
@@ -194,13 +201,13 @@ Widget::Widget(QWidget *parent)
         qDebug() << pro_btn[i]->size() << "size";
         // qDebug() << "projectwidget height 1" << projects_widget->height();
         // qDebug() << "projectwidget height 2" << projects_widget->height();
-// count<5
+        // count<5
         if(i<5){
             qDebug() << "in i<5 and count >5";
             projectsscrollArea->setFixedHeight((projectsscrollArea->height()+33));
         }
 
-//        qDebug() << "projectsscrollArea height " << projectsscrollArea->height();
+        //        qDebug() << "projectsscrollArea height " << projectsscrollArea->height();
 
         // qDebug() << "projectwidget height 3" << projects_widget->height();
 
@@ -366,8 +373,8 @@ Widget::Widget(QWidget *parent)
     // setting folders layout
     dkfoldersLayout->addWidget(dkpoint_icon2);
     dkfoldersLayout->addWidget(dkfolders_label);
-     dkfoldersLayout->addStretch();
-//    dkfoldersLayout->addWidget(down_arrow_icon2);
+    dkfoldersLayout->addStretch();
+    //    dkfoldersLayout->addWidget(down_arrow_icon2);
     // foldersLayout->addStretch();
 
     projects_btn->setLayout(projectsLayout);
@@ -380,13 +387,13 @@ Widget::Widget(QWidget *parent)
     dkProFolders_btn->setFlat(true);
 
     // setting overlayLayout
-//    overlayLayout->addWidget(projects_btn);
+    //    overlayLayout->addWidget(projects_btn);
 
-//    overlayLayout->addWidget(dkProFolders_btn);
+    //    overlayLayout->addWidget(dkProFolders_btn);
     overlayLayout->addWidget(dddoverlayWidget);
 
     // overlayLayout->addWidget(projects_widget);
-//    overlayLayout->addWidget(h_line);
+    //    overlayLayout->addWidget(h_line);
     overlayLayout->addWidget(folders_btn);
     overlayLayout->addWidget(folders_widget);
     overlayLayout->setSpacing(0);
@@ -416,7 +423,7 @@ Widget::Widget(QWidget *parent)
 
     networkManager =  MyNetworkManager::instance();;
 
-//    CreateTask *createTaskObj =  new CreateTask();
+    //    CreateTask *createTaskObj =  new CreateTask();
 
     refreshbtn = new QPushButton(this);
     QHBoxLayout * refresh_layout = new QHBoxLayout();
@@ -492,9 +499,9 @@ Widget::Widget(QWidget *parent)
     });
 
 
-//    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
-//    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
-//    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
+    //    customWidgetProject1->setStyleSheet("background-color: #f0dfdf;");
+    //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
+    //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
     search_layout->addWidget(search_lineedit);
     // search_layout->addWidget(createTaskBtn);
@@ -504,7 +511,7 @@ Widget::Widget(QWidget *parent)
     // searchbar_widget->setLayout(search_layout);
     ProjectMainLayout->addLayout(search_layout);
     // ProjectMainLayout->addWidget(headingLabel);
-//    ProjectMainLayout->addWidget(refreshbtn);
+    //    ProjectMainLayout->addWidget(refreshbtn);
 
 
     scrollArea = new QScrollArea(this);
@@ -543,7 +550,7 @@ Widget::Widget(QWidget *parent)
     ProjectMainLayout->addLayout(create_layout);
 
     setLayout(ProjectMainLayout);
-//    setFixedSize(650,400);
+    //    setFixedSize(650,400);
     setFixedSize(700,450);
 
     // First time calling the api so it should not come empty
@@ -613,7 +620,7 @@ Widget::Widget(QWidget *parent)
     connect(projects_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "projects_btn clicked ";
 
-//        ========================================================
+        //        ========================================================
         if(projects_widget->isHidden()){
             qDebug() << "is projects visible true ";
             projectsscrollArea->setVisible(true);
@@ -624,7 +631,7 @@ Widget::Widget(QWidget *parent)
             projects_widget->setVisible(false);
             projectsscrollArea->setVisible(false);
         }
-//        =========================================================
+        //        =========================================================
     });
     connect(folders_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "folders_btn clicked ";
@@ -643,12 +650,12 @@ Widget::Widget(QWidget *parent)
             qDebug() << "dkProFolders_btn clicked making comboox visible";
             dddoverlayWidget->setVisible(true);
             folders_widget->setVisible(false);
-//            overlayWidget->setFixedHeight(200);
+            //            overlayWidget->setFixedHeight(200);
         }else{
             qDebug() << "dkProFolders_btn clicked making comboox invisible";
             dddoverlayWidget->setVisible(false);
             folders_widget->setVisible(false);
-//            overlayWidget->setFixedHeight(70);
+            //            overlayWidget->setFixedHeight(70);
         }
     });
 
@@ -736,12 +743,6 @@ Widget::Widget(QWidget *parent)
         }
     });
 }
-
-
-Widget::~Widget()
-{
-}
-
 void Widget::initConfiguration()
 {
     //    networkManager->fetchTasksForMobileList(token,10);
@@ -793,6 +794,7 @@ void Widget::deleteConfiguration()
         qDebug() << "delete all TasksContainerList & TaskModelClassContainerList data" << QDateTime::currentDateTime().toString(Qt::ISODate);
 
 }
+
 
 void Widget::onProjectDataFetched(const QJsonArray &dataArray)
 {
