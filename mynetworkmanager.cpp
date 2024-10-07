@@ -25,7 +25,7 @@ void MyNetworkManager::fetchProjectData(const QString &authToken, int skip, int 
 {
     //    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-mobile");
 
-    QUrl url("http://192.168.5.59:6003/api/v3/project/get-project-task");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task");
     qDebug()<<"fetchTasksForMobileList";
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
@@ -51,7 +51,7 @@ void MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int ski
 {
     //    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-task-mobile-list");
 
-    QUrl url("http://192.168.5.59:6003/api/v3/project/get-project-task");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task");
 
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
@@ -78,7 +78,7 @@ bool MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int ski
 {
     //    QUrl url("https://service.dev.empmonitor.com/api/v3/mobile/admin-dashboard/fetch-project-task-mobile-list");
     qDebug()<<"fetchTasksForMobileList ++++++++++++++";
-    QUrl url("http://192.168.5.59:6003/api/v3/project/get-project-task-silah");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
@@ -93,9 +93,9 @@ bool MyNetworkManager::fetchTasksForMobileList(const QString &authToken, int ski
     return true;
 }
 
-void MyNetworkManager::getAllProjects(const QString &authToken)
+void MyNetworkManager::getAllProjects(const QString &authToken)  // this is used to show data in the all projects combobox
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/get-project-silah");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-silah"); // to get all projects details not tasks
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(0));
     query.addQueryItem("limit", QString::number(10));
@@ -111,7 +111,7 @@ void MyNetworkManager::getAllProjects(const QString &authToken)
 
 void MyNetworkManager::createTasks(const QString &authToken, const QString &title, const QString &folder_name, const QString &project_id)
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/create-project-tasks");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/create-project-tasks");
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
@@ -150,7 +150,7 @@ void MyNetworkManager::createTasks(const QString &authToken, const QString &titl
 
 void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &taskid)
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/delete-project-task");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/delete-project-task");
     QUrlQuery query;
     query.addQueryItem("_id", taskid);
     url.setQuery(query);
@@ -190,7 +190,7 @@ void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &ta
 
 void MyNetworkManager::completedTaskApi(const QString &authToken, const QString &taskid)
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/finish-project-task");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/finish-project-task");
     QUrlQuery query;
     query.addQueryItem("task_id", taskid);
     url.setQuery(query);
@@ -228,7 +228,7 @@ void MyNetworkManager::completedTaskApi(const QString &authToken, const QString 
 
 void MyNetworkManager::startTaskApi(const QString &authToken, const QString &taskid)
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/start-project-task");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/start-project-task");
     QUrlQuery query;
     query.addQueryItem("task_id", taskid);
     url.setQuery(query);
@@ -275,7 +275,7 @@ void MyNetworkManager::startTaskApi(const QString &authToken, const QString &tas
 
 void MyNetworkManager::stopTaskApi(const QString &authToken, const QString &taskid)
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/stop-project-task");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/stop-project-task");
     QUrlQuery query;
     query.addQueryItem("task_id", taskid);
     url.setQuery(query);
@@ -313,7 +313,7 @@ void MyNetworkManager::stopTaskApi(const QString &authToken, const QString &task
 void MyNetworkManager::allTasksInSeletedFolder(const QString &authToken, const QString &folder_name, int skip, int limit)
 {
 
-    QUrl url("http://192.168.5.59:6003/api/v3/project/get-project-task-silah");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
@@ -331,12 +331,25 @@ void MyNetworkManager::allTasksInSeletedFolder(const QString &authToken, const Q
 
 void MyNetworkManager::allTasksInSeletedProject(const QString &authToken, const QString &project_id, int skip, int limit)
 {
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
+    QUrlQuery query;
+    query.addQueryItem("skip", QString::number(skip));
+    query.addQueryItem("limit", QString::number(limit));
+    query.addQueryItem("project_id", project_id);
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        MyNetworkManager::onTasksDataFetched(reply);
+    });
 }
 
 void MyNetworkManager::allTasksInSeletedSearchKeyword(const QString &authToken, const QString &searchItem, int skip, int limit)
 {
-    QUrl url("http://192.168.5.59:6003/api/v3/project/get-project-task-silah");
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;
     query.addQueryItem("skip", QString::number(skip));
