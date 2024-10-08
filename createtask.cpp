@@ -160,20 +160,10 @@ void CreateTask::setupUI()
 
 void CreateTask::populateComboBoxes()
 {
-    QList<QString> projectNames = {"Select Project", "Project A", "Project B", "Project C", "Project D"};
-
-    // Populate project combo box using a for loop
-    //    for (int i = 0; i < projectNames.size(); ++i) {
-    //        projectComboBox->addItem(projectNames[i], i);
-    //    }
-
-    // Populate task combo box with explicit values
-    //    taskComboBox->addItem("Current", static_cast<int>(FolderStatus::Current));
-    //    taskComboBox->addItem("Select Folder");
     taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current Task", static_cast<int>(FolderStatus::Current));
     taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future Task", static_cast<int>(FolderStatus::Future));
     taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next Task", static_cast<int>(FolderStatus::Next));
-    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"Finished Task", static_cast<int>(FolderStatus::completed));
+//    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"Finished Task", static_cast<int>(FolderStatus::completed)); // user should not create already completed task
 }
 
 void CreateTask::onCancelClicked()
@@ -183,7 +173,6 @@ void CreateTask::onCancelClicked()
     ////    netMgrObj->fetchProjectData(token,0,10);
     //    netMgrObj->fetchTasksForMobileList(token,10);
     //    netMgrObj->deleteTaskApi(token,"66fa93cf86b90850bce0ae7d");
-
 
 }
 
@@ -212,8 +201,11 @@ void CreateTask::onCreateTaskClicked()
         qDebug() << "No hidden data found for the selected item.";
     }
 
-    netMgrObj->createTasks(token,
-                           lineEditText,comboBox1Text,hiddenFieldId);
+    if(this->windowTitle().contains("Edit")){
+        qDebug()<<"update is called";
+    }else{
+        netMgrObj->createTasks(token,lineEditText,comboBox1Text,hiddenFieldId);
+    }
     this->close();
     //    QString message = QString("Submit Button Clicked:\nLine Edit: %1\nComboBox 1: %2\nComboBox 2: %3")
     //                          .arg(lineEditText, comboBox1Text, comboBox2Text);

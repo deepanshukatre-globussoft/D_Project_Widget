@@ -31,9 +31,9 @@ void Widget::initialize_UI_Components()
     ProjectMainLayout->setAlignment(Qt::AlignLeft);
 
     containerWidget = new QWidget(this);
-    qDebug() << "containerWidget  reference " << containerWidget;
-    qDebug() << "containerWidget parent object reference " << containerWidget->parent();
-    qDebug() << "containerWidget parent widget reference " << containerWidget->parentWidget();
+//    qDebug() << "containerWidget  reference " << containerWidget;   // for object creation and core code checking added this commented
+//    qDebug() << "containerWidget parent object reference " << containerWidget->parent();
+//    qDebug() << "containerWidget parent widget reference " << containerWidget->parentWidget();
     containerLayout = new QVBoxLayout(containerWidget);
     containerLayout->setContentsMargins(0,0,5,5);
     containerLayout->setAlignment(Qt::AlignTop);
@@ -59,12 +59,12 @@ void Widget::initialize_UI_Components()
 
     QHBoxLayout * create_layout = new QHBoxLayout();
 
-    QVBoxLayout * dddOverlaylayout =  new QVBoxLayout();
+//    QVBoxLayout * dddOverlaylayout =  new QVBoxLayout();
 
-    QLabel *label = new QLabel("Main Content Below", this);
-    QPushButton *button = new QPushButton("Click Me", this);
-    dddOverlaylayout->addWidget(label);
-    dddOverlaylayout->addWidget(button);
+//    QLabel *label = new QLabel("Main Content Below", this);  // overlaylayout commented that one was not used
+//    QPushButton *button = new QPushButton("Click Me", this);
+//    dddOverlaylayout->addWidget(label);
+//    dddOverlaylayout->addWidget(button);
 
     // Create the overlay widget
     dddoverlayWidget = new QComboBox(this);
@@ -198,12 +198,12 @@ void Widget::initialize_UI_Components()
 
         // qDebug() << "projectwidget height " << projects_widget->height();
         projects_display_layout->addWidget(pro_btn[i]);
-        qDebug() << pro_btn[i]->size() << "size";
+//        qDebug() << pro_btn[i]->size() << "size";                            // not used projects this part as created new one
         // qDebug() << "projectwidget height 1" << projects_widget->height();
         // qDebug() << "projectwidget height 2" << projects_widget->height();
         // count<5
         if(i<5){
-            qDebug() << "in i<5 and count >5";
+//            qDebug() << "in i<5 and count >5";
             projectsscrollArea->setFixedHeight((projectsscrollArea->height()+33));
         }
 
@@ -225,7 +225,7 @@ void Widget::initialize_UI_Components()
     // projects_widget->setFixedSize(170,170);
     projects_widget->setStyleSheet("margin:0px; background-color: rgba(210, 35, 42, 1); padding :2px; border-radius:5px; color: #ffffff; ");
 
-    QFrame* h_line = new QFrame(this);
+    QFrame* h_line = new QFrame(); // removing parent relation but temporary coz it can leak memory
     h_line->setFrameShape(QFrame::HLine);
     h_line->setFrameShadow(QFrame::Sunken);
     // h_line->setLineWidth(150);
@@ -764,16 +764,14 @@ void Widget::initConfiguration()
         imageLabel->setAlignment(Qt::AlignJustify);
 
         QPixmap pixmap("://imgs/no-task-img.jpg");  // Load the image
-
-        // Scale the pixmap to fit within the label's size
         pixmap = pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
         imageLabel->setPixmap(pixmap);
         imageLabel->setStyleSheet("QLabel { padding-left: 80px; }");
         containerLayout->addWidget(imageLabel);
         return;
     }else{
-        while (QLayoutItem* item = containerLayout->takeAt(0)) {
+        QLayoutItem* item;
+        while ((item = containerLayout->takeAt(0))  != nullptr) {
             if (QWidget* widget = item->widget()) {
                 widget->hide();         // Hide the widget
                 widget->deleteLater();  // Schedule the widget for deletion

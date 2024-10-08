@@ -148,6 +148,11 @@ void MyNetworkManager::createTasks(const QString &authToken, const QString &titl
     });
 }
 
+void MyNetworkManager::updateTasks(const QString &authToken, const QString &title, const QString &folder_name, const QString &project_id)
+{
+
+}
+
 void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &taskid)
 {
     QUrl url("https://track.dev.empmonitor.com/api/v3/project/delete-project-task");
