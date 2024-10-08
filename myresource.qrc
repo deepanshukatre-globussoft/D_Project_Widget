@@ -29,5 +29,6 @@
         <file>imgs/greendot.svg</file>
         <file>imgs/reddot.svg</file>
         <file>imgs/yellowdot.svg</file>
+        <file>imgs/no-task-img.jpg</file>
     </qresource>
 </RCC>

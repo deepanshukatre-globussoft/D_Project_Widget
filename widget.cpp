@@ -758,7 +758,28 @@ void Widget::initConfiguration()
     //    bool flag = networkManager->fetchTasksForMobileList(token,10);
     if(TasksContainerList.isEmpty()){
         qDebug() << "taskcontainerList is empty";
+        QLabel *imageLabel = new QLabel(this);
+        imageLabel->setFixedSize(500, 400);  // Set fixed size for the image label
+        imageLabel->setText("To Task found for selcted filteration");
+        imageLabel->setAlignment(Qt::AlignJustify);
+
+        QPixmap pixmap("://imgs/no-task-img.jpg");  // Load the image
+
+        // Scale the pixmap to fit within the label's size
+        pixmap = pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        imageLabel->setPixmap(pixmap);
+        imageLabel->setStyleSheet("QLabel { padding-left: 80px; }");
+        containerLayout->addWidget(imageLabel);
         return;
+    }else{
+        while (QLayoutItem* item = containerLayout->takeAt(0)) {
+            if (QWidget* widget = item->widget()) {
+                widget->hide();         // Hide the widget
+                widget->deleteLater();  // Schedule the widget for deletion
+            }
+            delete item;  // Delete the layout item (not the widget itself)
+        }
     }
     for(ProjectCustomWidget *widgetObject : TasksContainerList ){
         //        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
