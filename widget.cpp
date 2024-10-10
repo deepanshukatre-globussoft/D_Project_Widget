@@ -755,10 +755,6 @@ void Widget::initConfiguration()
     //        delete item;
     //    }
     //    bool flag = networkManager->fetchTasksForMobileList(token,10);
-
-
-//    loaderMovie->setParent();
-
     if(TasksContainerList.isEmpty()){
         qDebug() << "taskcontainerList is empty";
         QLabel *imageLabel = new QLabel(this);
@@ -771,7 +767,6 @@ void Widget::initConfiguration()
         imageLabel->setPixmap(pixmap);
         imageLabel->setStyleSheet("QLabel { padding-left: 80px; }");
         containerLayout->addWidget(imageLabel);
-
         return;
     }else{
         QLayoutItem* item;
@@ -783,32 +778,10 @@ void Widget::initConfiguration()
             delete item;  // Delete the layout item (not the widget itself)
         }
     }
-
-    QLabel* loaderLabel = new QLabel("MOvie label+++++++++++++++++++++++++++++",this);
-    QMovie* loaderMovie = new QMovie("://imgs/loader.gif");
-    qDebug()<<"else case++++++++";
-    loaderLabel->setFixedSize(300, 300);
-    loaderLabel->setAlignment(Qt::AlignCenter);
-    loaderLabel->setMovie(loaderMovie);
-    loaderMovie->start();
-    //    QPixmap pixmap("://imgs/no-task-img.jpg");  // Load the image
-    //    pixmap = pixmap.scaled(loaderLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    //    loaderLabel->setPixmap(pixmap);
-    containerLayout->addWidget(loaderLabel);
-    qDebug()<<"set movie successfully case++++++++";
-
-//    QThread::sleep(2);
-
-        loaderMovie->stop();  // Stop loader
-        loaderLabel->deleteLater();  // Remove loader
-
-
     for(ProjectCustomWidget *widgetObject : TasksContainerList ){
         //        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
         containerLayout->addWidget(widgetObject);
     }
-
-        QThread::sleep(2);
 
     //    containerLayout->addStretch();  // let it be uncommented dk issue for bottom in 1,2 iter this will happen
     //    containerLayout->addStretch();

@@ -30,6 +30,5 @@
         <file>imgs/reddot.svg</file>
         <file>imgs/yellowdot.svg</file>
         <file>imgs/no-task-img.jpg</file>
-        <file>imgs/loader.gif</file>
     </qresource>
 </RCC>
