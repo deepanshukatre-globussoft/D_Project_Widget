@@ -8,6 +8,8 @@
 #include <QJsonArray>
 #include <QPixmap>
 #include <QEvent>
+#include <QThread>
+#include <QMovie>
 #include "createtask.h"
 
 #include <QList>
