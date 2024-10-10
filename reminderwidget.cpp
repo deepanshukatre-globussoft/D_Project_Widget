@@ -5,8 +5,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 {
     this->setFixedSize(408,350);
     this->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
-    // this->setStyleSheet("background-color : white;");
     this->setWindowTitle("Set Reminder");
+    netMgrObj =  MyNetworkManager::instance();
 
     m_reminderLayout = new QVBoxLayout();
     m_reminderLayout->setContentsMargins(30,30,30,30);
@@ -341,7 +341,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     });
 
     connect(set_reminder_button,&QPushButton::clicked,this,[=]{
-        qDebug() << "set_reminder_button clicked ";
+        qDebug() << "set_reminder_button clicked "<< taskIdForReminder;
         custom_time_button->setText("Custom Time");
         time_combo_box->setCurrentText("mins");
         d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
@@ -357,6 +357,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
                 );
         }
         qDebug() << "after button clear";
+        int totalSeconds = QTime(0, 0, 0).secsTo(remindercountdownTime);
+        netMgrObj->addRemainingTimeApi(token,taskIdForReminder,totalSeconds);
         emit displayReminderTime(remindercountdownTime);
     });
 
@@ -400,6 +402,11 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     });
     // this->setFixedSize(408,350);
     // qDebug() << "this size " << this->size();
+}
+
+void ReminderWidget::setTaskIdForReminder(const QString &newTaskIdForReminder)
+{
+    taskIdForReminder = newTaskIdForReminder;
 }
 
 void ReminderWidget::addbuttonbackground(int index)

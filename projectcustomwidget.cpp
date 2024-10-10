@@ -292,12 +292,16 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     //     );
     // this->setStyleSheet("background-color: rgba(35, 31, 32, 0.1);"); // #231F20 with 10% opacity
 
-    rmd_wid = new ReminderWidget();
+    rmd_wid = new ReminderWidget(this);
 
     connect(d_editTaskButton,&QPushButton::clicked,this,[this](){
         edit_task = new CreateTask(this);
+        edit_task->TaskId = task_id;
         edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
-
+        edit_task->nameLineEdit->setText(d_taskNameLabel->text());
+        edit_task->show();
+        edit_task->createBtn->setText("Update");
+        edit_task->setWindowTitle("Edit Task");
     });
 
     // signals and slots
@@ -369,12 +373,6 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         //        taskSpecificTimer->stop();
 
         //        qDebug()<<"---------- : "<<this->activeTime;
-    });
-    connect(d_editTaskButton,&QPushButton::clicked,this,[=]{
-        edit_task->nameLineEdit->setText(d_taskNameLabel->text());
-        edit_task->show();
-        edit_task->createBtn->setText("Update");
-        edit_task->setWindowTitle("Edit Task");
     });
 
     connect(d_setReminderbtn,&QPushButton::clicked,this,[=]{
@@ -662,6 +660,8 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
     remainingTime = m_taskRemainingTime;
     activeTime = m_taskActiveTime;
     FinishedTime = m_taskFinishedTime;
+
+    rmd_wid->setTaskIdForReminder(task_id);
     ActiveTaskQTime = QTime(0, 0, 0).addSecs(m_taskActiveTime.toInt());
 
     d_taskActiveTimeLabel->setText(secondsToTimeFormat(activeTime.toInt()));
@@ -764,7 +764,7 @@ void ProjectCustomWidget::updateStartTimer()
 
 void ProjectCustomWidget::taskStartDataSlot(const QString &taskid, bool success, const QString &time)
 {
-    qDebug()<<"it will manage the data from the slot when start is done";
+//    qDebug()<<"it will manage the data from the slot when start is done" << time;
     switch (m_taskStatus) {
     case 0:
         qDebug()<<"project is not started switch case";
@@ -779,7 +779,6 @@ void ProjectCustomWidget::taskStartDataSlot(const QString &taskid, bool success,
 
         break;
     default:
-
         qDebug()<<"project is in default switch case";
         break;
     }
@@ -832,5 +831,5 @@ void ProjectCustomWidget::updatetaskSpecificTimer(QTime myQTime)
 {
     QString timeString = myQTime.toString("hh:mm:ss");  // Convert QTime to QString in "hh:mm:ss" format
     d_taskActiveTimeLabel->setText(timeString);
-    qDebug()<<"int time is "<<  myQTime <<" in updatetaskSpecificTimer";
+//    qDebug()<<"int time is "<<  myQTime <<" in updatetaskSpecificTimer";
 }

@@ -12,7 +12,6 @@ MyNetworkManager::MyNetworkManager(QObject *parent)
 
 }
 
-
 MyNetworkManager *MyNetworkManager::instance()
 {
     if (m_instance == nullptr) {
@@ -148,9 +147,44 @@ void MyNetworkManager::createTasks(const QString &authToken, const QString &titl
     });
 }
 
-void MyNetworkManager::updateTasks(const QString &authToken, const QString &title, const QString &folder_name, const QString &project_id)
+void MyNetworkManager::updateTasks(const QString &authToken, const QString &title, const QString &task_id, const QString &folder_name, const QString &project_id)
 {
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/update-project-task");
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
 
+    QJsonObject json;
+    json["title"] = title;
+    json["folder_name"] = folder_name;
+    json["project_id"] = project_id;
+    json["task_id"] = task_id;
+    json["is_start"] = false;
+
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+
+    QNetworkReply *reply = networkManager->post(request,jsonData);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+
+                QMessageBox::information(nullptr, "Silah TTS", message);
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start
+        }else{
+            qDebug() << "Error for delete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+        }
+    });
 }
 
 void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &taskid)
@@ -315,9 +349,46 @@ void MyNetworkManager::stopTaskApi(const QString &authToken, const QString &task
     });
 }
 
+void MyNetworkManager::addRemainingTimeApi(const QString &authToken, const QString &taskid, int remainingTime)
+{
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/add-remaining-time");
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // Set content type to JSON
+
+    QJsonObject json;
+    json["remaining_time"] = remainingTime;
+    json["task_id"] = taskid;
+
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+
+    QNetworkReply *reply = networkManager->post(request,jsonData);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        //        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+        if (reply->error() == QNetworkReply::NoError) {
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObj = jsonDoc.object();
+            if (jsonObj.contains("message")) {
+                QString message = jsonObj["message"].toString();
+                qDebug() << "Message from API response:" << message;
+
+                QMessageBox::information(nullptr, "Silah TTS", message);
+            }else{
+                qDebug()<<"data is not in array of not contains array";
+                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
+            }
+            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start
+        }else{
+            qDebug() << "Error for delete task: " << reply->errorString();
+            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+        }
+    });
+}
+
 void MyNetworkManager::allTasksInSeletedFolder(const QString &authToken, const QString &folder_name, int skip, int limit)
 {
-
     QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;

@@ -202,7 +202,8 @@ void CreateTask::onCreateTaskClicked()
     }
 
     if(this->windowTitle().contains("Edit")){
-        qDebug()<<"update is called";
+        qDebug()<<"update is called"<< this->TaskId;
+        netMgrObj->updateTasks(token,lineEditText,this->TaskId,comboBox1Text,hiddenFieldId);
     }else{
         netMgrObj->createTasks(token,lineEditText,comboBox1Text,hiddenFieldId);
     }

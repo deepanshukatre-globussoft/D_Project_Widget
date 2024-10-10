@@ -563,10 +563,9 @@ void Widget::initialize_UI_Components()
     //signals and slots
     connect(createTaskBtn,&QPushButton::clicked,this,[=]{
         qDebug() << "clicked create task button ";
-        CreateTask * create_task = new CreateTask();
+        CreateTask * create_task = new CreateTask(this);
         create_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
         create_task->show();
-
     });
 
     connect(filter_btn, &QPushButton::clicked, this, [=]{
