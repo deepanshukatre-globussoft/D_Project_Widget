@@ -4,6 +4,12 @@ background-color: #ffffff;
 #containerWidget{
 background-color: #ffffff;
 }
+#mainreminderwidget{
+background-color: #ffffff;
+}
+#createWidget{
+background-color: #ffffff;
+}
 
 QPushButton  {
 
@@ -26,15 +32,10 @@ QLabel, QPushButton {
 
 
 #search_lineeditObject {
-    background-image: url(:/imgs/search.svg);
-    background-repeat: no-repeat;
-    background-position: left center;
-    padding-left: 35px;
-
-    height: 35px;
     font-family: Arial;
     font-size: 15px;
     border-radius : 17px;
+    border:none;
 
 }
 
@@ -42,7 +43,7 @@ QLabel, QPushButton {
     border :1px solid #D2232A;
     border-radius: 6px;
     color : #D2232A;
-    font-size: 17px;
+    font-size: 15px;
 }
 
 
@@ -73,5 +74,6 @@ color: #414040;
 #d_taskActiveTimeLabel {
         color : #0F5EA9;
         font-size: 15px;
+        font-weight: 500;
 }
 

@@ -188,3 +188,109 @@ void MyNetworkManager::testslot()
     qDebug() << "testslot: " ;
 
 }
+
+void MyNetworkManager::getAllProjectTask(QString authToken, int skip, int limit)
+{
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
+
+    QUrlQuery query;
+    query.addQueryItem("skip", QString::number(skip));
+    query.addQueryItem("limit", QString::number(limit));
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, this](){
+        QByteArray response = reply->readAll();
+        // qDebug() << "Tasklist response " << response;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        QJsonObject jsonObj = jsonDoc.object();
+        // qDebug() << "Project task json obj" << jsonObj;
+        // if(jsonObj.isEmpty())
+        emit this->toSendProjectTaskList(jsonObj);
+    });
+}
+
+bool MyNetworkManager::toStartTask(QString authToken, QString taskIdToStart)
+{
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/start-project-task");
+    qDebug() << "in network manager class start task function task id " << taskIdToStart;
+
+    QUrlQuery query;
+    query.addQueryItem("task_id",taskIdToStart);
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply](){
+        QByteArray response = reply->readAll();
+        qDebug() <<"Start Task Response "<<response;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        QJsonObject jsonObj = jsonDoc.object();
+        int statusCode = jsonObj.value("code").toInt();
+        QString message = jsonObj.value("message").toString();
+        if(statusCode == 200){
+            if (message == "Task started successfully") {
+                qDebug() << "Task started successfully";
+                // QMessageBox::information(this, "Start Task", message);
+                return true;
+            } else {
+                qDebug() << "Message does not contain the expected text!";
+                return false;
+                // QMessageBox::information(this, "Start Task", message);
+            }
+        }
+        else {
+            // QMessageBox::information(this, "Start Task", message);
+            return false;
+        }
+    });
+    return false;
+}
+
+bool MyNetworkManager::toUpdateTask(QString authToken, QString title, QString folderName, QString projectId, QString taskIdToUpdate)
+{
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/update-project-task");
+
+    QJsonObject jsonObject;
+    jsonObject["title"] = title;
+    jsonObject["folder_name"] = folderName;
+    jsonObject["project_id"] = projectId;
+    jsonObject["task_id"] = taskIdToUpdate;
+
+    QJsonDocument jsonDocument(jsonObject);
+    QByteArray jsonData = jsonDocument.toJson();
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + authToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkReply *reply = networkManager->post(request, jsonData);
+    connect(reply, &QNetworkReply::finished, this, [reply](){
+        QByteArray response = reply->readAll();
+        qDebug() <<"Start Task Response "<<response;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        QJsonObject jsonObj = jsonDoc.object();
+        int statusCode = jsonObj.value("code").toInt();
+        QString message = jsonObj.value("message").toString();
+        if(statusCode == 200){
+            if (message == "Task started successfully") {
+                qDebug() << "Task started successfully";
+                // QMessageBox::information(this, "Start Task", message);
+                return true;
+            } else {
+                qDebug() << "Message does not contain the expected text!";
+                return false;
+                // QMessageBox::information(this, "Start Task", message);
+            }
+        }
+        else {
+            // QMessageBox::information(this, "Start Task", message);
+            return false;
+        }
+    });
+    return false;
+}

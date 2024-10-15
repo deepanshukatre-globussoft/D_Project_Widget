@@ -12,6 +12,7 @@ enum class TaskStatus {
 
 QList<TaskModelClass*> Widget::TaskModelClassContainerList;
 QList<TaskModelClass*> Widget::TaskModelFliterContainerList;
+QMap<QString,QString> Widget::projectMap;
 //QList<TaskModelClass*> TaskModelClassContainerList;
 
 Widget::Widget(QWidget *parent)
@@ -19,36 +20,42 @@ Widget::Widget(QWidget *parent)
 {
      this->setObjectName("MainWidget");
     this->setWindowTitle(tr("Silah TTS"));
+     this->show();
 //    qDebug() << "widget constructor reference " << this;
     ProjectMainLayout = new QVBoxLayout;
     //    ProjectMainLayout->setContentsMargins(20,20,20,20);
-    ProjectMainLayout->setAlignment(Qt::AlignLeft);
+    // ProjectMainLayout->setAlignment(Qt::AlignLeft);
 
     containerWidget = new QWidget(this);
-    qDebug() << "containerWidget  reference " << containerWidget;
-    qDebug() << "containerWidget parent object reference " << containerWidget->parent();
-    qDebug() << "containerWidget parent widget reference " << containerWidget->parentWidget();
     containerLayout = new QVBoxLayout(containerWidget);
     containerLayout->setContentsMargins(0,0,5,5);
     containerWidget->setLayout(containerLayout);
     containerWidget->setObjectName("containerWidget");
     // containerWidget->setStyleSheet("QWidget { background-color: white;  }");
 
-    searchbar_widget = new QWidget(this);
     QHBoxLayout * search_layout = new QHBoxLayout();
 
-//    QHBoxLayout * search_minilayout_icon = new QHBoxLayout();
-//    QLabel * search_label = new QLabel(this);
-//    QPixmap search_icon("://imgs/search.svg");
-//    search_label->setPixmap(search_icon);
+    searchbar_widget = new QWidget(this);
+    QHBoxLayout * search_minilayout_icon = new QHBoxLayout();
+    QLabel * search_label = new QLabel(this);
+    QPixmap search_icon("://imgs/search.svg");
+    search_label->setPixmap(search_icon);
+    search_label->setFixedSize(25,25);
+    search_label->setScaledContents(true);
 //    QLabel * serchtextlabel = new QLabel("search");
     QLineEdit * search_lineedit = new QLineEdit();
 
 //    search_lineedit->setFixedHeight(35);
 //    search_lineedit->setFont(QFont("Arial", 13));
     search_lineedit->setPlaceholderText(tr("Search"));
-
+    search_lineedit->setFocusPolicy(Qt::ClickFocus);
     search_lineedit->setObjectName("search_lineeditObject");
+
+    search_minilayout_icon->addWidget(search_label);
+    search_minilayout_icon->addWidget(search_lineedit);
+
+    searchbar_widget->setLayout(search_minilayout_icon);
+    searchbar_widget->setStyleSheet(" background: rgba(248, 248, 248, 1); border-radius :20px;");
 
     QHBoxLayout * create_layout = new QHBoxLayout();
 
@@ -80,12 +87,11 @@ Widget::Widget(QWidget *parent)
 
     createTaskOverlayLayout->setContentsMargins(0,0,0,0);
     QVBoxLayout *overlayLayout = new QVBoxLayout(overlayWidget);
-    qDebug() << "overlaymargins " << overlayLayout->contentsMargins();
 
     //projects btn
     QPushButton * projects_btn = new QPushButton(overlayWidget);
     // projects_btn->setStyleSheet("padding-left:0px;");
-    QHBoxLayout * projectsLayout = new QHBoxLayout(overlayWidget);
+    QHBoxLayout * projectsLayout = new QHBoxLayout();
     projectsLayout->setContentsMargins(0,0,0,0);
     projectsLayout->setAlignment(Qt::AlignLeft);
     projectsLayout->setSpacing(0);
@@ -110,9 +116,8 @@ Widget::Widget(QWidget *parent)
     // QVBoxLayout * projects_scroll_layout = new QVBoxLayout();
     // projects_scroll_layout->setContentsMargins(0,0,0,0);
     // Add many items to the comboBox
-    int count = 13;
+    int count = 6;
     // if(count>5){
-        qDebug() << "in greater count";
         projectsscrollArea = new QScrollArea(this);
         projectsscrollArea->setContentsMargins(0,0,0,0);
         projectsscrollArea->setWidget(projects_widget);
@@ -148,7 +153,7 @@ Widget::Widget(QWidget *parent)
         pro_icon->setPixmap(pro_pic);
         // current_task_icon->setFixedSize(12,18);
         pro_name[i] = new QLabel("Project " + QString::number(i+1));
-        pro_name[i]->setFixedHeight(25);
+        pro_name[i]->setFixedHeight(23);
 
         // setting current task btn
         pro_layout->setAlignment(Qt::AlignLeft);
@@ -158,21 +163,21 @@ Widget::Widget(QWidget *parent)
         pro_layout->addWidget(pro_name[i]);
 
         pro_btn[i]->setLayout(pro_layout);
-        pro_btn[i]->setFixedHeight(27);
+        pro_btn[i]->setFixedHeight(25);
         pro_btn[i]->setFlat(true);
 
         // qDebug() << "projectwidget height " << projects_widget->height();
         projects_display_layout->addWidget(pro_btn[i]);
-        qDebug() << pro_btn[i]->size() << "size";
+        // qDebug() << pro_btn[i]->size() << "size";
         // qDebug() << "projectwidget height 1" << projects_widget->height();
         // qDebug() << "projectwidget height 2" << projects_widget->height();
 // count<5
         if(i<5){
-            qDebug() << "in i<5 and count >5";
+            // qDebug() << "in i<5 and count >5";
             projectsscrollArea->setFixedHeight((projectsscrollArea->height()+33));
         }
 
-        qDebug() << "projectsscrollArea height " << projectsscrollArea->height();
+        // qDebug() << "projectsscrollArea height " << projectsscrollArea->height();
 
         // qDebug() << "projectwidget height 3" << projects_widget->height();
 
@@ -185,6 +190,7 @@ Widget::Widget(QWidget *parent)
     connect(signalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mappedInt), this, &Widget::projectFilterSelect);
 
     projects_widget->setLayout(projects_display_layout);
+    // projects_widget->setWindowFlags(Qt::FramelessWindowHint);
     projects_widget->setVisible(false);
     projects_widget->move(483,85);
     // projects_widget->setFixedSize(170,170);
@@ -212,7 +218,7 @@ Widget::Widget(QWidget *parent)
     down_arrow_icon2->setFixedSize(30,30);
     down_arrow_icon2->setPixmap(down_arrow);
 
-    QWidget * folders_widget = new QWidget(this);
+    folders_widget = new QWidget(this);
     folders_widget->setStyleSheet("padding-left:0px;");
     QVBoxLayout * folders_display_layout = new QVBoxLayout();
     folders_display_layout->setContentsMargins(23,0,10,0);
@@ -334,14 +340,14 @@ Widget::Widget(QWidget *parent)
     // setting overlayWidget
     overlayWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     overlayWidget->setFixedSize(170,70);
-    overlayWidget->move(483,52);
+    overlayWidget->move(483,53);
     overlayWidget->setAutoFillBackground(true);
     overlayWidget->setLayout(overlayLayout);
     overlayWidget->setStyleSheet(" background-color: rgba(210, 35, 42, 1); padding :5px; border-radius:5px; color: white; ");
     overlayWidget->setVisible(false);
 
     overlayCreatetaskWidget->setFixedSize(45,45);
-    overlayCreatetaskWidget->move(325,370);
+    overlayCreatetaskWidget->move(325,390);
     overlayCreatetaskWidget->setLayout(createTaskOverlayLayout);
 
     overlayCreatetaskWidget->setVisible(true);
@@ -364,7 +370,7 @@ Widget::Widget(QWidget *parent)
     QHBoxLayout * refresh_layout = new QHBoxLayout();
     QLabel * refresh_icon = new QLabel();
     QPixmap refresh_pic("://imgs/refresh.svg");
-    QLabel * refresh_label = new QLabel("Refresh",this);
+    QLabel * refresh_label = new QLabel(tr("Refresh"),this);
 
     filter_icon->setPixmap(filter_pic);
     filter_icon->setFixedSize(24,24);
@@ -424,7 +430,13 @@ Widget::Widget(QWidget *parent)
     connect(networkManager, &MyNetworkManager::initConfigurationsignal, this,[this](){
         initConfiguration();
     });
+    connect(networkManager,&MyNetworkManager::toSendProjectTaskList,this,&Widget::toDisplayTasks);
     connect(refreshbtn, &QPushButton::clicked, this,[this](){
+        overlayWidget->setVisible(false);
+        projects_widget->setVisible(false);
+        folders_widget->setVisible(false);
+        projects_label->setText(tr("Projects"));
+        folders_label->setText(tr("Folder"));
         networkManager->fetchTasksForMobileList(token,10);
     });
 
@@ -433,7 +445,7 @@ Widget::Widget(QWidget *parent)
 //    customWidgetProject2->setStyleSheet("background-color: #0078D4;");
 //    customWidgetProject3->setStyleSheet("background-color: #dbc3c4;");
 
-    search_layout->addWidget(search_lineedit);
+    search_layout->addWidget(searchbar_widget);
     // search_layout->addWidget(createTaskBtn);
     search_layout->addWidget(filter_btn);
     search_layout->addWidget(refreshbtn);
@@ -462,15 +474,15 @@ Widget::Widget(QWidget *parent)
 
 
 
-    QList<ProjectCustomWidget *> customWidgets = containerWidget->findChildren<ProjectCustomWidget *>();
-    for (ProjectCustomWidget *widget : customWidgets) {
-        // Check if the widget is selected
-        QPushButton *pushbtn = widget->findChild<QPushButton *>();
-        qDebug()<<"pushbtn : "<<pushbtn->text();
-        //        if (checkBox && checkBox->isChecked()) {
-        //            delete widget;
-        //        }
-    }
+    // QList<ProjectCustomWidget *> customWidgets = containerWidget->findChildren<ProjectCustomWidget *>();
+    // for (ProjectCustomWidget *widget : customWidgets) {
+    //     // Check if the widget is selected
+    //     QPushButton *pushbtn = widget->findChild<QPushButton *>();
+    //     qDebug()<<"pushbtn : "<<pushbtn->text();
+    //     //        if (checkBox && checkBox->isChecked()) {
+    //     //            delete widget;
+    //     //        }
+    // }
 
     overlayCreatetaskWidget->show();
     overlayCreatetaskWidget->raise();
@@ -494,6 +506,7 @@ Widget::Widget(QWidget *parent)
         qDebug() << "clicked create task button ";
         CreateTask * create_task = new CreateTask();
         create_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
+        connect(create_task,&CreateTask::sendToCreateTask,this,&Widget::onTaskCreation);
         create_task->show();
     });
 
@@ -515,6 +528,7 @@ Widget::Widget(QWidget *parent)
             // projectsscrollArea->raise();
         }else{
             overlayWidget->setVisible(false);
+            projects_widget->setVisible(false);
             projectsscrollArea->setVisible(false);
             filter_icon->setPixmap(filter_pic);
             filter_label->setStyleSheet("color : #D2232A;");
@@ -591,6 +605,31 @@ Widget::Widget(QWidget *parent)
         folders_label->setText(completed_task_label->text());
         overlayWidget->setFixedHeight(70);
     });
+
+    // qDebug() << "end of widget constructor ";
+    // QUrl url("https://track.dev.empmonitor.com/api/v3/project/stop-project-task");   // 6704ed000e8f24f13150e509
+
+    // QUrlQuery query;
+    // // query.addQueryItem("skip", QString::number(10));
+    // // query.addQueryItem("limit", QString::number(10));
+    // // query.addQueryItem("title", "FirstTask123");
+    // // query.addQueryItem("folder_name", "Current Task");
+    // // query.addQueryItem("project_id", "67037fe16cb902bf9f726f0e");
+    // query.addQueryItem("task_id","6704ed000e8f24f13150e509");
+    // url.setQuery(query);
+    // QNetworkRequest request(url);
+    // request.setRawHeader("Authorization", "Bearer " + token.toUtf8());
+    // request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    // QNetworkReply *reply = networkManager->networkManager->get(request);
+    // connect(reply, &QNetworkReply::finished, this, [reply](){
+    //     qDebug() <<"Project list "<<reply->readAll();
+    // });
+    // qDebug() << "reply error " << reply->errorString();
+    // toGetProjectList();
+
+    networkManager->getAllProjectTask(token,0,10);
+
 }
 
 
@@ -615,13 +654,13 @@ void Widget::initConfiguration()
         qDebug() << "taskcontainerList is empty";
         return;
     }
-    for(ProjectCustomWidget *widgetObject : TasksContainerList ){
-        qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
-        containerLayout->addWidget(widgetObject);
-    }
+    // for(ProjectCustomWidget *widgetObject : TasksContainerList ){
+    //     // qDebug() << "This ProjectCustomWidget  added from TasksContainerList:" << widgetObject;
+    //     containerLayout->addWidget(widgetObject);
+    // }
 
-    containerLayout->addStretch();
-    containerLayout->addStretch();
+    // containerLayout->addStretch();
+    // containerLayout->addStretch();
 
 
     //    qDeleteAll(TasksContainerList);
@@ -675,6 +714,7 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
             QJsonObject project_data_Obj = taskObject["project_data"].toObject();
             QString projectTitle = project_data_Obj["title"].toString();
             QString projectId = project_data_Obj["_id"].toString();
+            qDebug() << "Pro Name" << projectTitle << "Pro Id" << projectId << "Task Name" << title << "Task Id" << id;
 
 
             TaskModelClass *task = new TaskModelClass(id, status, title, folderId,
@@ -685,10 +725,10 @@ void Widget::onsendingTasksFromAPIdata(const QJsonArray &dataArray)
         }
     }
 
-    for(int i=0; i< TaskModelClassContainerList.size();++i){
-//        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
-        qDebug()<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
-    }
+//     for(int i=0; i< TaskModelClassContainerList.size();++i){
+// //        TaskModelClass *taskobjdata = TaskModelClassContainerList[i];
+//         qDebug()<<"task name in the model containser list" << TaskModelClassContainerList[i]->m_taskName << TaskModelClassContainerList[i]->m_taskid;
+//     }
 }
 
 void Widget::onTaskDataFetched(int count)
@@ -700,7 +740,8 @@ void Widget::onTaskDataFetched(int count)
             customWidgetTaskdata->receiveData(TaskModelClassContainerList[i]->m_taskFolderName,
                                               TaskModelClassContainerList[i]->m_taskProjectName,
                                               TaskModelClassContainerList[i]->m_taskName,
-                                              TaskModelClassContainerList[i]->m_taskid);
+                                              TaskModelClassContainerList[i]->m_taskid,
+                                              TaskModelClassContainerList[i]->m_taskProjectId);
             TasksContainerList.append(customWidgetTaskdata);
         }
     }else if(count == 2){  //
@@ -729,3 +770,141 @@ void Widget::projectFilterSelect(int index)
     projects_widget->setVisible(false);
     projects_label->setText(pro_name[index]->text());
 }
+
+void Widget::onTaskCreation(QString taskName, QString projectName, QString folderName, bool isStarted)
+{
+    qDebug() << "in ontotaskcreation function" << taskName << projectName << folderName << isStarted;
+    // ProjectCustomWidget * taskCreatingWidget = new ProjectCustomWidget();
+    // taskCreatingWidget->receiveData(folderName, projectName, taskName, "","");
+    // containerLayout->insertWidget(0,taskCreatingWidget);
+    // TasksContainerList.append(taskCreatingWidget);
+    // if(isStarted)
+    //     taskCreatingWidget->startOrPauseTaskAction();
+
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/create-project-tasks");
+
+    QJsonObject jsonObject;
+    jsonObject["title"] = taskName;
+    jsonObject["folder_name"] = "Current Task";
+    jsonObject["project_id"] = "666aa77d044107706577a5cb";
+    // jsonObject["start_date"] = NULL;
+    // jsonObject["end_date"] = NULL;
+
+    QJsonDocument jsonDocument(jsonObject);
+    QByteArray jsonData = jsonDocument.toJson();
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + token.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkReply *reply = networkManager->networkManager->post(request,jsonData);
+    connect(reply, &QNetworkReply::finished, this, [reply](){
+        QByteArray response = reply->readAll();
+        qDebug() <<"Create Task Response "<<response;
+        // if(reply->error() == QNetworkReply::NoError && reply->isReadable()){
+        //     QByteArray response = reply->readAll();
+        //     qDebug() <<"Create Task Response "<<response;
+        //     QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        //     QJsonObject jsonObj = jsonDoc.object();
+        //     QString message = jsonObj.value("message").toString();
+        //     if (message == "Project task created successfully") {
+        //         QMessageBox::information(this, "Task Created", message);
+        //     } else {
+        //         qDebug() << "Message does not contain the expected text!";
+        //     }
+        // } else {
+        //     qDebug() << "Network reply error " << reply->errorString();
+        // }
+    });
+}
+
+void Widget::toDisplayTasks(QJsonObject jsonTasksObj)
+{
+    if(jsonTasksObj.isEmpty()){
+        QMessageBox::information(this,"Silah TTS","No tasks Assigned");
+        return;
+    }
+
+    if (jsonTasksObj.contains("data") && jsonTasksObj["data"].isArray()){
+        QJsonArray dataArray = jsonTasksObj["data"].toArray();
+
+        if (!dataArray.isEmpty()) {
+            for (int i = 0; i < dataArray.size(); ++i) {
+                QJsonObject dataObject = dataArray[i].toObject();
+                // qDebug() << "taskdataobject " << dataObject;
+
+                ProjectCustomWidget * prowid = new ProjectCustomWidget();
+                // qDebug() << "===========================================================";
+                prowid->setProjectTaskDetails(dataObject);
+                containerLayout->addWidget(prowid);
+
+                // QString projectTitle = dataObject["title"].toString();
+                // QString projectId = dataObject["_id"].toString();
+
+                // qDebug() << "Project Title:" << projectTitle;
+                // qDebug() << "Project ID:" << projectId;
+
+                // projectMap.insert(projectId,projectTitle);
+                // qDebug() << "first element in map " << projectMap.first() << projectMap.firstKey();
+            }
+            containerLayout->addStretch();
+        } else {
+            qDebug() << "No data found!";
+        }
+    } else {
+        qDebug() << "Failed to parse JSON!";
+    }
+    //     }
+    //     else {
+    //         qDebug() << "reply error " << reply->errorString();
+    //     }
+    // });
+}
+
+// void Widget::toGetFolderList()
+// {
+//     QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-folder-silah");   // 6704ed000e8f24f13150e509
+
+//     QUrlQuery query;
+//     query.addQueryItem("skip", QString::number(10));
+//     query.addQueryItem("limit", QString::number(10));
+//     // query.addQueryItem("title", "FirstTask123");
+//     // query.addQueryItem("folder_name", "Current Task");
+//     query.addQueryItem("project_id", projectMap.first());
+//     // query.addQueryItem("task_id","6704ed000e8f24f13150e509");
+//     url.setQuery(query);
+//     QNetworkRequest request(url);
+//     request.setRawHeader("Authorization", "Bearer " + token.toUtf8());
+//     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+//     QNetworkReply *reply = networkManager->networkManager->get(request);
+//     connect(reply, &QNetworkReply::finished, this, [reply](){
+//         if(reply->error() == QNetworkReply::NoError && reply->isReadable()){
+//             QByteArray response = reply->readAll();
+//             qDebug() <<"Project list "<<response;
+//             QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+//             QJsonObject jsonObj = jsonDoc.object();
+
+//             if (jsonObj.contains("data") && jsonObj["data"].isArray()){
+//                 QJsonArray jsonArray = jsonObj["data"].toArray();
+
+//                 if (!jsonArray.isEmpty()) {
+//                     QJsonObject dataObject = jsonArray[0].toObject();
+
+//                     QString projectId = dataObject["_id"].toString();
+//                     QString projectTitle = dataObject["title"].toString();
+
+//                     qDebug() << "Project ID:" << projectId;
+//                     qDebug() << "Project Title:" << projectTitle;
+//                 } else {
+//                     qDebug() << "No data found!";
+//                 }
+//             } else {
+//                 qDebug() << "Failed to parse JSON!";
+//             }
+//         }
+//         else {
+//             qDebug() << "reply error " << reply->errorString();
+//         }
+//     });
+// }
+

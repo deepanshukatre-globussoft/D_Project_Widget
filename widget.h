@@ -19,6 +19,7 @@ public:
     Widget(QWidget *parent = nullptr);
     static QList<TaskModelClass*> TaskModelClassContainerList;
     static QList<TaskModelClass*> TaskModelFliterContainerList;
+    static QMap<QString,QString> projectMap;
     ~Widget();
 
 
@@ -35,7 +36,7 @@ public:
     QList<ProjectCustomWidget *> TasksContainerList ;
     void initConfiguration();
     void deleteConfiguration();
-    QString token = "cba094201826bfcac1cfabfd4712a27f:e036145a11c6cabf024e998d9f9953420c4f14c4f139e1de6c1475f38aca1901a44abf9379a2a31853e45747f6b71e9b68ffe6de5efca8e5be88a9500987a7d5e13d7f101110148068e655102b32dfc97821d220c991dc6779cfe10fe243da20da5dc92cae219b0c57039bb1efc2862e2394eb798ac9ea5c038b7795f87826f4af534d53bde1b515660a07b57b6c8785a975b605fc80fdf723959a9627ab6bdb498a94f2d10bbe6bc827d054f46b99dc31bda1fa8f0b6d9503aca9157494b97bad81b1eb9725f4f7eb9681865318a4ef5a9d0f47942e58da47cb2a0c62b35ca957e5f5257ff86e7d19d3acb6fdd2262deeeaf995e644dc6f439f313e33733f9f756b08e49cecbebbad93ce3728d952b1ffeda24a4009fe87dbf540499a35da87";
+    QString token = "6fa89948c9bcb27c6adbbf5b4635b53a:61a2e8a4e06f0c833c0f99d1e1699a6b8c02e6216c7819e8d920b624df4d1535e897e03bbac27712419109bba1eb36c35d77a71edc11b371f64505878873b46034bbdf80fe45b621e638b373159aa4e1dfc16e2655d14aea60a1fbe688e59fcc84fe63d03dfa9e6dbd44d414dd917dc9dbe4075ec40ad7cd713598a8f3bbf05f39a9a123a28a3f98f31e5ebe71a550c739605d3b3a5d0a2fbd33c3fd5cd17d162c124668d5b86d7d96013938add9a0dc0f2055e36e018a1a257c040441e71f16016f941ac4f82a31c5ddee1de81aab69f5da8e6c54fe3859ea65e948c193cf9bb8299520b8f686b65219fc4e34a6180457c5a75949dc3aada27a4caa0e48cd3431c84f3042592156f90e3a0da8dbb360ba658b4fd2c0166518616c45ae3291d9";
 
     QWidget *overlayWidget;
     QWidget *overlayCreatetaskWidget;
@@ -59,6 +60,8 @@ private:
     QLabel * future_task_label;
     QLabel * completed_task_label;
     QWidget * projects_widget;
+    QWidget * folders_widget;
+
 
     void onProjectDataFetched(const QJsonArray &dataArray);
     void onsendingTasksFromAPIdata(const QJsonArray &dataArray);
@@ -66,6 +69,9 @@ private:
 private slots:
     void onEmptySignal(); // Test slot for empty signal
     void projectFilterSelect(int index);
+    void onTaskCreation(QString taskName, QString projectName, QString folderName, bool isStarted);
+    void toDisplayTasks(QJsonObject jsonTasksObj);
+    // void toGetFolderList();
 
 
 };

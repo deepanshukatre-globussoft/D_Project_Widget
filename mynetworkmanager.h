@@ -31,11 +31,16 @@ signals:
     void deleteConfigurationsignal();
     void initConfigurationsignal();
 
+    void toSendProjectTaskList(QJsonObject jsonObj);
+
 public slots:
     void onProjectDataFetched(QNetworkReply *reply);
     void onTasksDataFetched(QNetworkReply *reply);
 
     void testslot();
+    void getAllProjectTask(QString authToken, int skip, int limit);
+    bool toStartTask(QString authToken, QString taskIdToStart);
+    bool toUpdateTask(QString authToken, QString title, QString folderName, QString projectId, QString taskIdToUpdate);
 
 private:
     explicit MyNetworkManager(QObject *parent = nullptr);

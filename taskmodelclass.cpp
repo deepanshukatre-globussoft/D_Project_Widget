@@ -19,7 +19,7 @@ TaskModelClass::TaskModelClass(const QString &taskid, int taskStatus, const QStr
     m_taskProjectId(taskProjectId),
     m_taskProjectName(taskProjectName)
 {
-    qDebug()<<"****** ";
+    // qDebug()<<"****** ";
 //    qDebug() << "TaskModelClass created with values:";
 //    qDebug() << "Task ID:" << m_taskid;
 //    qDebug() << "Task Status:" << m_taskStatus;

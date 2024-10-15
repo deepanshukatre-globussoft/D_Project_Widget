@@ -13,11 +13,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-//    QTranslator translator;
-//    qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
+    // QTranslator translator;
+    // qDebug() << "Loading translation file:" << translator.load(":/translations/ar.qm");
 
-//    qApp->installTranslator(&translator);
+    // qApp->installTranslator(&translator);
 
+    // a.setLayoutDirection(Qt::RightToLeft);
 
     QFile file("://myqss.qss");
 
@@ -47,14 +48,23 @@ int main(int argc, char *argv[])
 //    }
 
 
+    Widget w;
+    // w.show();
 
+    // QMap<QString,QString> map;
+    // map.insert("1","firstvalue");
+    // map.insert("2","secondvalue");
+    // map.insert("3","thirdvalue");
+    // map.insert("4","fourthvalue");
+    // map.insert("5","fifthvalue");
+    // map.insert("6","sixthvalue");
+    // map.insert("7","seventhvalue");
+    // map.insert("8","eighthvalue");
 
+    // qDebug() << "map value " << map.key("seventhvalue");
 
-     Widget w;
-     w.show();
-
-//    CreateTask createTaskObj;
-//    createTaskObj.show();
+   // CreateTask createTaskObj;
+   // createTaskObj.show();
 
     // ReminderWidget r;
     // r.show();

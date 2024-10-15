@@ -1,12 +1,15 @@
 #include "reminderwidget.h"
 
+int ReminderWidget::reminderTimeSecs;
+
 ReminderWidget::ReminderWidget(QWidget *parent)
     : QWidget{parent}
 {
     this->setFixedSize(408,350);
     this->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
     // this->setStyleSheet("background-color : white;");
-    this->setWindowTitle("Set Reminder");
+    this->setWindowTitle(tr("Set Reminder"));
+    this->setObjectName("mainreminderwidget");
 
     m_reminderLayout = new QVBoxLayout();
     m_reminderLayout->setContentsMargins(30,30,30,30);
@@ -26,19 +29,19 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     // m_hor_reminderLayout1->setAlignment(Qt::AlignTop);
     // m_hor_reminderLayout1->setAlignment(Qt::AlignHCenter);
 
-    QLabel * work_label = new QLabel("Work");
-    work_label->setFont(QFont("Ubuntu",12,400));
-    QLabel * task_title_label = new QLabel("Task Title");
+    work_label = new QLabel(tr("Work"));
+    work_label->setFont(QFont("Ubuntu",12,500));
+    task_title_label = new QLabel(tr("Task Title"));
 
     d_taskActiveTimeInReminder = new QLabel("00:00:00");
-    d_taskActiveTimeInReminder->setFixedSize(87,21);
+    d_taskActiveTimeInReminder->setFixedSize(70,21);
     d_taskActiveTimeInReminder->setStyleSheet(
         "QLabel {"
         "border :1px solid #0F5EA9;"
         "border-radius: 6px;"
         "color : #0F5EA9;"
-        "font-size: 17px;"
-        "padding-left:5px;"
+        "font-size: 15px;"
+        // "padding-left:5px;"
         "}"
         );
     QFrame* h_line = new QFrame(this);
@@ -46,9 +49,9 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     h_line->setFrameShadow(QFrame::Sunken);
     h_line->setStyleSheet("color: #414040;");
 
-    QLabel * d_taskRemindLabel = new QLabel("Remind me that I'm timing in:");
+    QLabel * d_taskRemindLabel = new QLabel(tr("Remind me that I'm timing in:"));
     d_taskReminderTimeLabel = new QLabel("00:00:00");
-    d_taskReminderTimeLabel->setFixedSize(87,21);
+    d_taskReminderTimeLabel->setFixedSize(70,21);
     d_taskReminderTimeLabel->setObjectName("TaskReminderLabel");
 //    d_taskReminderTimeLabel->setStyleSheet(
 //        "QLabel {"
@@ -64,18 +67,23 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     h_line2->setFrameShadow(QFrame::Sunken);
     h_line2->setStyleSheet("color: #414040;");
 
-    QLabel * selectTimerLabel = new QLabel("Select a new reminder interval:");
+    QLabel * selectTimerLabel = new QLabel(tr("Select a new reminder interval:"));
 
-    buttonsList << "5 min" << "15 min" << "30 min" << "1 hr" << "2 hr" << "3 hr";
+    buttonsList << "5 " << "15 " << "30 " << "1 " << "2 " << "3 ";
 
     QSignalMapper *signalMapper = new QSignalMapper(this);
 
     for (int i = 0; i < 6; ++i) {
-        buttons[i] = new QPushButton(buttonsList.at(i), this);
+        buttons[i] = new QPushButton(this);
+        QString btnText = buttonsList.at(i);
         if(i<=2){
+            btnText.append(tr("min"));
+            buttons[i]->setText(btnText);
             m_hor_minbtnLayout->addWidget(buttons[i]);
         }
         else{
+            btnText.append(tr("hr"));
+            buttons[i]->setText(btnText);
             m_hor_hrbtnLayout->addWidget(buttons[i]);
         }
         // buttons[i]->setFlat(true);
@@ -95,7 +103,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     // Connect signalMapper's mappedInt signal to handleButtonClicked slot
     connect(signalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mappedInt), this, &ReminderWidget::addbuttonbackground);
 
-    custom_time_button = new QPushButton("Custom Time");
+    custom_time_button = new QPushButton(tr("Custom Time"));
     custom_time_button->setFixedHeight(28);
     custom_time_button->setStyleSheet(
         "QPushButton {"
@@ -107,7 +115,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     custom_widget = new QWidget(this);
     QVBoxLayout * custom_time_layout = new QVBoxLayout();
     custom_time_layout->setContentsMargins(0,0,0,0);
-    QLabel * custom_time_label = new QLabel("Enter custom time");
+    QLabel * custom_time_label = new QLabel(tr("Enter custom time"));
 //    custom_time_label->setAutoFillBackground(true);
     custom_widget->setStyleSheet(     //15, 94, 169
         " QWidget {"
@@ -117,7 +125,6 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     QHBoxLayout * time_imput_layout = new QHBoxLayout();
 
-
     QLineEdit * input_time_lineedit = new QLineEdit();
     input_time_lineedit->setFixedSize(180,28);
     input_time_lineedit->setAlignment(Qt::AlignCenter);
@@ -126,8 +133,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     input_time_lineedit->setStyleSheet("QLineEdit { margin: 0px;  background-color : white; border: none; border-top-left-radius: 5px; border-bottom-left-radius: 5px;}");
 
     QComboBox * time_combo_box = new QComboBox();
-    time_combo_box->addItem("mins");
-    time_combo_box->addItem("hrs");
+    time_combo_box->addItem(tr("mins"));
+    time_combo_box->addItem(tr("hrs"));
 
     time_combo_box->setFixedSize(144,28);
 
@@ -156,7 +163,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QHBoxLayout * done_btn_layout = new QHBoxLayout();
     done_btn_layout->setAlignment(Qt::AlignRight);
     done_btn_layout->setContentsMargins(5,5,2,5);
-    QPushButton * done_button = new QPushButton("Done");
+    QPushButton * done_button = new QPushButton(tr("Done"));
     done_button->setFixedSize(30,15);
     done_button->setFlat(true);
     done_button->setStyleSheet("color: #0F5EA9; padding-right: 0px; border :0px;margin :0px; font-size: 13px;");
@@ -170,7 +177,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QHBoxLayout * setReminderBtn_layout = new QHBoxLayout();
     setReminderBtn_layout->setAlignment(Qt::AlignHCenter);
 
-    set_reminder_button = new QPushButton("Set Reminder");
+    set_reminder_button = new QPushButton(tr("Set Reminder"));
     set_reminder_button->setFixedSize(176,42);
     set_reminder_button->setFont(QFont("Ubuntu",-1,400));
     set_reminder_button->setStyleSheet(
@@ -183,8 +190,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     update_widget = new QWidget();
     QHBoxLayout * reset_update_btnLayout = new QHBoxLayout();
-    QPushButton * reset_reminder_btn = new QPushButton("Reset");
-    QPushButton * update_reminder_btn = new QPushButton("Update");
+    QPushButton * reset_reminder_btn = new QPushButton(tr("Reset"));
+    QPushButton * update_reminder_btn = new QPushButton(tr("Update"));
 
     reset_reminder_btn->setFixedSize(124,42);
     reset_reminder_btn->setFlat(true);
@@ -266,6 +273,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     // this->show();
     remindercountdownTime = QTime(0,0,0);
 
+    rmdNetworkMgr = MyNetworkManager::instance();
+
     // signals and slots
     connect(custom_time_button,&QPushButton::clicked,this,[=]{
         qDebug() << "custom button clicked ";
@@ -298,12 +307,12 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     connect(input_time_lineedit,&QLineEdit::editingFinished,this,[=]{
         input_time = input_time_lineedit->text().toInt(&ok);
         qDebug() << "lineedit editing finished " << input_time;
-        if(input_time > 480){
-            qDebug() << "in put value is greater ";
-            notify.setText("Please enter a valid min value");
-            notify.exec();
-            input_time_lineedit->clear();
-        }
+        // if(input_time > 480){
+        //     qDebug() << "in put value is greater ";
+        //     notify.setText("Please enter a valid min value");
+        //     notify.exec();
+        //     input_time_lineedit->clear();
+        // }
 
         if(lastClickedIndex <=5){
             // buttons[lastClickedIndex]->setStyleSheet("");
@@ -319,6 +328,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     connect(done_button,&QPushButton::clicked,this,[=]{
         qDebug() << "done_button clicked ";
         if(input_time != 0){
+            this->setFixedSize(408,350);
             custom_time_button->setText(QString::number(input_time) +time_combo_box->currentText());
             // qDebug() << "in put time " << input_time <<
             if(time_combo_box->currentText() == "mins"){
@@ -334,16 +344,22 @@ ReminderWidget::ReminderWidget(QWidget *parent)
                     remindercountdownTime = QTime(input_time,0,0);
             }
             qDebug() << "input time " << remindercountdownTime.toString("hh:mm:ss");
+            reminderTimeSecs = -(remindercountdownTime.secsTo(QTime(0,0,0)));
+            qDebug() << "reminder time in secs " << reminderTimeSecs;
             input_time_lineedit->clear();
             input_time = 0;
+            custom_widget->setVisible(false);
+        }else{
+            notify.setText("Set a value for timer");
+            notify.exec();
         }
-        custom_widget->setVisible(false);
     });
 
     connect(set_reminder_button,&QPushButton::clicked,this,[=]{
         qDebug() << "set_reminder_button clicked ";
-        custom_time_button->setText("Custom Time");
-        time_combo_box->setCurrentText("mins");
+        toAddRemainingTimeOfTask(tokenStr, taskIdStr);
+        custom_time_button->setText(tr("Custom Time"));
+        time_combo_box->setCurrentText(tr("mins"));
         d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
         this->hide();
         set_reminder_button->setVisible(false);
@@ -377,8 +393,8 @@ ReminderWidget::ReminderWidget(QWidget *parent)
 
     connect(update_reminder_btn,&QPushButton::clicked,this,[=]{
         qDebug() << "update_reminder_btn clicked ";
-        custom_time_button->setText("Custom Time");
-        time_combo_box->setCurrentText("mins");
+        custom_time_button->setText(tr("Custom Time"));
+        time_combo_box->setCurrentText(tr("mins"));
         if(remindercountdownTime != QTime(0,0,0)){
             this->hide();
             emit displayReminderTime(remindercountdownTime);
@@ -452,6 +468,8 @@ void ReminderWidget::addbuttonbackground(int index)
         remindercountdownTime = QTime(button_time,0,0);
     }
     qDebug() << remindercountdownTime.toString("hh:mm:ss");
+    reminderTimeSecs = -(remindercountdownTime.secsTo(QTime(0,0,0)));
+    qDebug() << "reminder time in secs " << reminderTimeSecs;
 
 }
 
@@ -468,5 +486,50 @@ void ReminderWidget::SetUpdateReminder()
             "}"
             );
     }
+}
+
+void ReminderWidget::toAddRemainingTimeOfTask(QString token, QString task_id)
+{
+    QUrl url("https://track.dev.empmonitor.com/api/v3/project/add-remaining-time");
+    qDebug() << "Reminder time in seconds " << reminderTimeSecs;
+    QJsonObject jsonObject;
+    jsonObject["remaining_time"] = reminderTimeSecs;
+    jsonObject["task_id"] = task_id;
+
+    QJsonDocument jsonDocument(jsonObject);
+    QByteArray jsonData = jsonDocument.toJson();
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Bearer " + token.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkReply *reply = rmdNetworkMgr->networkManager->post(request, jsonData);
+    connect(reply, &QNetworkReply::finished, this, [reply](){
+        if(reply->error() == QNetworkReply::NoError && reply->isReadable()){
+            QByteArray response = reply->readAll();
+            qDebug() <<"AddRemainingTimeOfTask Task Response "<<response;
+            // this->deleteLater();
+            // QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+
+            // QJsonObject jsonObj = jsonDoc.object();
+
+            // QString message = jsonObj.value("message").toString();
+
+            // // Check if the message contains "Project task created successfully"
+            // if (message == "Project task created successfully") {
+            //     // Display a message box
+            //     QMessageBox::information(this, "Task Created", message);
+            // } else {
+            //     qDebug() << "Message does not contain the expected text!"; https://track.dev.empmonitor.com/api/v3/project/finish-project-task
+            // }
+        } else {
+            qDebug() << "Network reply error " << reply->errorString();
+        }
+    });
+}
+
+void ReminderWidget::getTokenAndTaskIdForReminderTimeSec(QString tokenValue, QString taskId)
+{
+    tokenStr = tokenValue;
+    taskIdStr = taskId;
 }
 
