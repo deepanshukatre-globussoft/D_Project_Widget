@@ -24,7 +24,7 @@ QLabel, QPushButton {
 
 /*=======   Fonts end ========*/
 
-
+/*
 #search_lineeditObject {
     background-image: url(:/imgs/search.svg);
     background-repeat: no-repeat;
@@ -35,8 +35,8 @@ QLabel, QPushButton {
     font-family: Arial;
     font-size: 15px;
     border-radius : 17px;
-
 }
+*/
 
 #TaskReminderLabel{
     border :1px solid #D2232A;
@@ -53,7 +53,7 @@ QLabel, QPushButton {
 
 #projectContainerObject {
     background-color: #F8F8F8;
-    border-radius : 5px;
+    border-radius : 8px;
 }
 
 #d_projectNameLabel{

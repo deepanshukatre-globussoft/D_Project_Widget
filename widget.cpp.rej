@@ -1,0 +1,15 @@
+diff a/widget.cpp b/widget.cpp	(rejected hunks)
+@@ -430,7 +430,13 @@
+     connect(networkManager, &MyNetworkManager::initConfigurationsignal, this,[this](){
+         initConfiguration();
+     });
++    connect(networkManager,&MyNetworkManager::toSendProjectTaskList,this,&Widget::toDisplayTasks);
+     connect(refreshbtn, &QPushButton::clicked, this,[this](){
++        overlayWidget->setVisible(false);
++        projects_widget->setVisible(false);
++        folders_widget->setVisible(false);
++        projects_label->setText(tr("Projects"));
++        folders_label->setText(tr("Folder"));
+         networkManager->fetchTasksForMobileList(token,10);
+     });
+ 

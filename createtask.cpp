@@ -54,6 +54,7 @@ void CreateTask::setupUI()
         "padding-right : 55px;"
         "}");
 
+    QFont font("Ubuntu",11);
     nameWidget = new QWidget(this);
     nameLayout = new QVBoxLayout(nameWidget);
     nameLabel = new QLabel("Title", nameWidget);
@@ -63,7 +64,7 @@ void CreateTask::setupUI()
     //    nameLabel->setFont(font);
     nameLineEdit->setPlaceholderText("Enter Title");
     nameLineEdit->setFixedSize(290,37);
-    // nameLineEdit->setFont(font);
+    nameLineEdit->setFont(QFont("Ubuntu",11));
     nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px;");
 
     nameLayout->setContentsMargins(0,0,0,0);
@@ -80,7 +81,7 @@ void CreateTask::setupUI()
     //    projectLabel->setFont(font);
 
     projectComboBox->setFixedSize(290,37);
-    //    projectComboBox->setFont(font);
+    // projectComboBox->setFont(font);
     projectComboBox->setStyleSheet(styleSheet);
 
     projectLayout->setContentsMargins(0,0,0,0);
@@ -153,6 +154,19 @@ void CreateTask::setupUI()
 
     setLayout(createTaskMainLayout);
 
+    //signals and slots
+    connect(check_box,&QCheckBox::stateChanged,[=](int state){
+        qDebug() << "Checkbox state:" << state;
+        if (state == Qt::Checked) {
+            qDebug() << "Checkbox is checked";
+            isStarted = true;
+        } else if (state == Qt::Unchecked) {
+            qDebug() << "Checkbox is unchecked";
+            isStarted = false;
+        } else {
+            qDebug() << "Checkbox is partially checked";
+        }
+    });
     connect(cancelBtn, &QPushButton::clicked, this, &CreateTask::onCancelClicked);
     connect(createBtn, &QPushButton::clicked, this, &CreateTask::onCreateTaskClicked);
 
@@ -181,8 +195,12 @@ void CreateTask::onCreateTaskClicked()
     QString lineEditText = nameLineEdit->text();
 
     if (nameLineEdit->text().isEmpty()) {
-        nameLineEdit->setStyleSheet("border: 1px solid red;");
+        // nameLineEdit->setStyleSheet("border: 1px solid red;");
         QMessageBox::warning(this, "Input Error", "Task title field is mandatory!");
+        return;
+    } else if(lineEditText.length() > 50){
+        QMessageBox::warning(this, "Input Error", "Task title length must be less than or equal to 50 characters!");
+        nameLineEdit->clear();
         return;
     } else {
         nameLineEdit->setStyleSheet("");  // Reset to default style if valid
@@ -200,12 +218,13 @@ void CreateTask::onCreateTaskClicked()
     } else {
         qDebug() << "No hidden data found for the selected item.";
     }
+    qDebug() << "is started " << isStarted;
 
     if(this->windowTitle().contains("Edit")){
         qDebug()<<"update is called"<< this->TaskId;
-        netMgrObj->updateTasks(token,lineEditText,this->TaskId,comboBox1Text,hiddenFieldId);
+        netMgrObj->updateTasks(token,lineEditText,this->TaskId,comboBox1Text,hiddenFieldId,isStarted);
     }else{
-        netMgrObj->createTasks(token,lineEditText,comboBox1Text,hiddenFieldId);
+        netMgrObj->createTasks(token,lineEditText,comboBox1Text,hiddenFieldId,isStarted);
     }
     this->close();
     //    QString message = QString("Submit Button Clicked:\nLine Edit: %1\nComboBox 1: %2\nComboBox 2: %3")

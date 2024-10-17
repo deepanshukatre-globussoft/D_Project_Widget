@@ -14,7 +14,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     networkManager = MyNetworkManager::instance();
 
     m_HMainLayout = new QVBoxLayout;
-    m_HMainLayout->setContentsMargins(5,5,0,0);
+    m_HMainLayout->setContentsMargins(2,2,2,2);
     m_HMainLayout->setAlignment(Qt::AlignLeft);
     ActiveTaskQTime = QTime(0, 0, 0);
     QFont labelFont("Ubuntu",11,400);
@@ -34,8 +34,8 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     // hor_layout->addWidget(completeBtn);
     QIcon complete_icon("://imgs/completed.svg");
     completeBtn->setIcon(complete_icon);
-    completeBtn->setFixedSize(29,29);
-    completeBtn->setIconSize(QSize(29,29));
+    completeBtn->setFixedSize(24,24);
+    completeBtn->setIconSize(QSize(24,24));
     completeBtn->setStyleSheet("border-radius: 2px;");
 
     deleteBtn = new QPushButton(this);
@@ -44,14 +44,14 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     QIcon deleteIcon(":/imgs/delete.svg");
     deleteBtn->setIcon(deleteIcon);
     deleteBtn->setFlat(true);
-    deleteBtn->setIconSize(QSize(29,29));
-    deleteBtn->setFixedSize(29,29);
+    deleteBtn->setIconSize(QSize(24,24));
+    deleteBtn->setFixedSize(24,24);
     deleteBtn->setStyleSheet("border-radius: 2px;");
 
 
 
     d_containerLayout = new QVBoxLayout();
-    d_containerLayout->setContentsMargins(10,10,10,10);
+    d_containerLayout->setContentsMargins(10,10,15,10);
     d_containerWidget->setObjectName("projectContainerObject");
 
     // QSpacerItem *spacer = new QSpacerItem(5,3);
@@ -120,20 +120,28 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     QHBoxLayout * startbtn_layout = new QHBoxLayout();
     QLabel * start_icon = new QLabel();
     start_icon->setStyleSheet("background-color: #D2232A; color:#FFFFFF");
-    QPixmap start_pic("://imgs/start.png");
+    // QPixmap start_pic("://imgs/start.png");
+    QIcon icon("://imgs/start.png");
+    QSize iconSize(12,12);
+    QPixmap pixmap = icon.pixmap(iconSize);
+    // QIcon resizedIcon(pixmap);
     QLabel * start_label = new QLabel(tr("Start"),this);
-    start_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF ; font-size: 12px;");
+    start_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF ; font-size: 11px; ");
     //    start_label->setStyleSheet("background-color: #8be51e");
 
     //    start_label->setStyleSheet("color: #FFFFFF;");
-    start_icon->setPixmap(start_pic);
+    start_icon->setPixmap(pixmap);
+
 
     startbtn_layout->setContentsMargins(6,0,13,0);
-    startbtn_layout->addSpacing(5);
+    // startbtn_layout->addSpacing(5);
+    startbtn_layout->addStretch();
     startbtn_layout->addWidget(start_icon);
+    startbtn_layout->addStretch();
     startbtn_layout->addWidget(start_label);
+    startbtn_layout->addStretch();
 
-    d_startTaskButton->setFixedSize(76,25);
+    d_startTaskButton->setFixedSize(80,24);
     d_startTaskButton->setLayout(startbtn_layout);
     d_startTaskButton->setStyleSheet(
         "QPushButton {"
@@ -147,7 +155,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     pause_icon->setStyleSheet("background-color: #D2232A; color:#FFFFFF");
     QPixmap pause_pic(":/imgs/pause.png");
     QLabel * pause_label = new QLabel(tr("Pause"),this);
-    pause_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF ; font-size: 12px;");
+    pause_label->setStyleSheet("background-color: #D2232A; color:#FFFFFF ; font-size: 11px;");
 
     pause_icon->setPixmap(pause_pic);
 
@@ -157,10 +165,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     pausebtn_layout->addWidget(pause_label);
 
     d_pauseTaskButton->setLayout(pausebtn_layout);
-
-
-
-    d_pauseTaskButton->setFixedSize(76,25);
+    d_pauseTaskButton->setFixedSize(80,24);
     //    d_pauseTaskButton->setLayout(startbtn_layout);
     d_pauseTaskButton->setStyleSheet(
         "QPushButton {"
@@ -179,16 +184,21 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     edit_label->setStyleSheet("color : #D2232A; border-top:1px solid #D2232A;border-bottom:1px solid #D2232A; ");
 
     editbtn_layout->setContentsMargins(9,0,13,0);
+    editbtn_layout->addStretch();
+    editbtn_layout->addStretch();
     editbtn_layout->addWidget(edit_icon);
+    editbtn_layout->addStretch();
     editbtn_layout->addWidget(edit_label);
+    editbtn_layout->addStretch();
+    editbtn_layout->addStretch();
 
-    d_editTaskButton->setFixedSize(72,29);
+    d_editTaskButton->setFixedSize(80,24);
     d_editTaskButton->setLayout(editbtn_layout);
     d_editTaskButton->setStyleSheet(
         "QPushButton {"
         "border: 1px solid #D2232A;"
         // "background-color: #D2232A;"
-        "border-radius: 10px;"
+        "border-radius: 11px;"
         "}"
         );
 
@@ -197,14 +207,14 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     p_FirstLayout->setContentsMargins(0,0,0,0);
     p_FirstLayout->addWidget(d_projectStatuslabel);
     p_FirstLayout->addStretch();
-    p_FirstLayout->addWidget(deleteBtn);
 
     if(m_taskStatus != 3 ){     // completed task case
-        p_FirstLayout->addWidget(completeBtn);
         p_FirstLayout->addWidget(d_startTaskButton);
         p_FirstLayout->addWidget(d_pauseTaskButton);
         p_FirstLayout->addWidget(d_editTaskButton);
+        p_FirstLayout->addWidget(completeBtn);
     }
+    p_FirstLayout->addWidget(deleteBtn);
     completeBtn->hide();
     deleteBtn->hide();
 
@@ -225,7 +235,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     QPushButton * reminder_layout_button = new QPushButton();
     QVBoxLayout * reminder_layout = new QVBoxLayout();
     QLabel * reminder_label = new QLabel("Remaining Time");
-    d_taskActiveTimeInReminder = new QLabel("00:00:00");
+    d_taskRemainingTime = new QLabel("00:00:00");
 
     reminder_label->setStyleSheet(
         "QLabel {"
@@ -234,7 +244,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         );
     reminder_layout->setContentsMargins(0,0,0,0);
     reminder_layout->addWidget(reminder_label);
-    reminder_layout->addWidget(d_taskActiveTimeInReminder);
+    reminder_layout->addWidget(d_taskRemainingTime);
 
     reminder_layout_button->setFixedSize(100,35);
     reminder_layout_button->setFlat(true);
@@ -267,7 +277,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
 
     d_containerWidget->setLayout(d_containerLayout);
 
-    setFixedSize(655,150);
+    setFixedSize(655,140);
     m_HMainLayout->addWidget(d_containerWidget);
 
     //    m_HMainLayout->addSpacerItem(spacer);
@@ -284,24 +294,24 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
 
     // Apply the shadow effect to the label
     this->setGraphicsEffect(shadow);
-    // this->setStyleSheet("QWidget {border-radius: 8px; }");
-
-    // this->setStyleSheet(
-    //     "QWidget { border-radius: 80px; }"
-    //     // "QWidget > * { border: none; }"
-    //     );
-    // this->setStyleSheet("background-color: rgba(35, 31, 32, 0.1);"); // #231F20 with 10% opacity
 
     rmd_wid = new ReminderWidget(this);
 
     connect(d_editTaskButton,&QPushButton::clicked,this,[this](){
-        edit_task = new CreateTask(this);
-        edit_task->TaskId = task_id;
-        edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
-        edit_task->nameLineEdit->setText(d_taskNameLabel->text());
-        edit_task->show();
-        edit_task->createBtn->setText("Update");
-        edit_task->setWindowTitle("Edit Task");
+        if(!edit_task){
+            edit_task = new CreateTask(this);
+            edit_task->TaskId = task_id;
+            edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
+            edit_task->setAttribute(Qt::WA_DeleteOnClose);
+            edit_task->nameLineEdit->setText(d_taskNameLabel->text());
+            edit_task->createBtn->setText("Update");
+            edit_task->setWindowTitle("Edit Task");
+            edit_task->show();
+            connect(edit_task, &QWidget::destroyed, this, [this]() {
+                qDebug() << "edit_task Widget destroyed!";
+                edit_task = nullptr;
+            });
+        }
     });
 
     // signals and slots
@@ -359,7 +369,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         //                "}"
         //                );
         //            rmd_wid->set_reminder_button->setVisible(true);
-        //            d_taskActiveTimeInReminder->setText("00:00:00");
+        //            d_taskRemainingTime->setText("00:00:00");
         //            rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
         //            startbtn_layout->setContentsMargins(9,0,13,0);
         //            qDebug() << "startbtn_layout else" << startbtn_layout->contentsMargins();
@@ -377,6 +387,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
 
     connect(d_setReminderbtn,&QPushButton::clicked,this,[=]{
         qDebug() << "d_setReminderbtn button clicked " << d_setReminderbtn;
+        // rmd_wid->d_taskActiveTimeInReminder->setText(countdownTime.toString("hh:mm:ss"));
         rmd_wid->show();
     });
 
@@ -385,7 +396,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         remindercountdownTime =getremindertime;
         reminder_widget->setVisible(true);
         d_setReminderbtn->setVisible(false);
-        d_taskActiveTimeInReminder->setText(remindercountdownTime.toString("hh:mm:ss"));
+        d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
         m_startReminderTimer->start();
     });
 
@@ -402,9 +413,10 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         qDebug() << "in  displaying the reset reminder time slot";
         m_startReminderTimer->stop();
         remindercountdownTime = QTime(0,0,0);
-        d_taskActiveTimeInReminder->setText("00:00:00");
+        d_taskRemainingTime->setText("00:00:00");
         rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
         reminder_widget->setVisible(false);
+        qDebug() << "reminder_widget - set visible is false 2";
         d_setReminderbtn->setVisible(true);
     });
 
@@ -463,34 +475,9 @@ ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QSt
 
 void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 {
-    //    this->setStyleSheet(
-    //        "background-color: #F2F9FF;"   // Set background color of the widget
-    //        "border: 1px solid #D2232A;"    // Set border around the widget
-    ////        "QWidget > QWidget { border: none; }"  // Ensure child widgets have no border
-    //        );
-
-
     this->setStyleSheet("background-color: #F2F9FF;");
-
-    //    this->setStyleSheet(
-    //        "#customProjectItemWidget {"
-    //        "    background-color: #F2F9FF;"   // Set background color
-    //        "    border: 2px solid #D2232A;"    // Set border only for this widget
-    //        "}"
-    //        "QWidget#customProjectItemWidget > * {"
-    //        "    border: none;"  // No border for any child widgets
-    //        "}"
-    //        );
-    // this->setStyleSheet("background-color: #f0dfe0;");
-
-    // border: 2px solid rgba(76, 156, 229, 1)
-    //    this->setStyleSheet("background-color: #F2F9FF;"
-    ////                        "QWidget { border: 1px solid black; }"
-
-    ////                             "QWidget { border-radius: 80px; }"
-    ////                              "QWidget > * { border: 1px solid black; }"
-    //                        "border:1px solid #D2232A");
-    //    this->setStyleSheet("QWidget {  border: 2px solid rgba(76, 156, 229, 1) }");
+    drawBorder = true; // Enable border drawing
+    update(); // Trigger repaint
     if(m_taskStatus == 3 ){
         deleteBtn->show();
         d_startTaskButton->hide();
@@ -504,6 +491,8 @@ void ProjectCustomWidget::focusInEvent(QFocusEvent *event)
 void ProjectCustomWidget::focusOutEvent(QFocusEvent *event)
 {
     QWidget *newFocusWidget = QApplication::focusWidget();
+    drawBorder = false; // Enable border drawing
+    update(); // Trigger repaint
     if (newFocusWidget && this->isAncestorOf(newFocusWidget)) {
         // If the new focus is a child widget, do not hide the buttons
         event->ignore();
@@ -549,6 +538,20 @@ void ProjectCustomWidget::mouseReleaseEvent(QMouseEvent *event)
     isSwipeDetected = false;
 }
 
+void ProjectCustomWidget::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing); // Enable antialiasing for smoother edges
+    if (drawBorder) { // Only draw border if the widget is clicked or focused
+        painter.setPen(QPen(QColor(76, 156, 229, 255),1)); // Set pen color and border thickness   border: 1px solid rgba(76, 156, 229, 1)
+        // painter.drawRect(rect().adjusted(1, 1, -1, -1)); // Draw border inside widget's boundaries
+    } else {
+        // border: 1px solid rgba(35, 31, 32, 0.1)
+        painter.setPen(QPen(QColor(35, 31, 32, 255),0.2));
+    }
+    int radius = 8; // Set the border radius
+    painter.drawRoundedRect(rect().adjusted(1, 1, -1, -1), radius, radius); // Draw a rounded rectangle
+}
+
 QString ProjectCustomWidget::secondsToTimeFormat(int totalSeconds)
 {
     int hours = totalSeconds / 3600;
@@ -571,6 +574,43 @@ int ProjectCustomWidget::timeFormatToSeconds(const QString &time)
         return -1;
     }
     return hours * 3600 + minutes * 60 + seconds;
+}
+
+void ProjectCustomWidget::toStartTask(int activeTime)
+{
+    qDebug() << "in start task functionality " << activeTime;
+    d_startTaskButton->setVisible(false);
+    d_pauseTaskButton->setVisible(true);
+    d_setReminderbtn->setVisible(true);
+    taskSpecificTimer->start(1000);
+    //        updatetaskSpecificTimer(m_taskActiveTime.toInt());
+    qDebug()<<"+++ ActiveTaskQTime : "<<ActiveTaskQTime;
+    ActiveTaskQTime.addSecs(activeTime);
+    qDebug()<<"--- ActiveTaskQTime : "<< ActiveTaskQTime;
+    //        activeTime = m_taskActiveTime.toInt();
+    if(!remainingTime.isEmpty()){
+        QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
+        QDateTime reminderdatetime = QDateTime::fromString(remainingTime, Qt::ISODate);
+        qDebug() << "Qdate time " << reminderdatetime << remainingTime;
+        if (currentDateTime < reminderdatetime) {
+            qDebug() << "datetime is in the future compared to currentDateTime";
+            int remintimesecs = qAbs(currentDateTime.secsTo(reminderdatetime));
+            qDebug() << "Remaining time in seconds:" << remintimesecs;
+            remindercountdownTime = QTime(0, 0).addSecs(remintimesecs);
+            d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
+            qDebug() << "Reminder countdown time set:" << remindercountdownTime.toString("hh:mm:ss");
+            m_startReminderTimer->start(1000);
+            d_setReminderbtn->setVisible(false);
+            reminder_widget->setVisible(true);
+        } else {
+            qDebug() << "datetime is in the past compared to currentDateTime";
+        }
+    }
+}
+
+void ProjectCustomWidget::toStopTask()
+{
+
 }
 
 void ProjectCustomWidget::setTaskProjectsIdNameinProjectCustomWidget(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskid)
@@ -661,6 +701,8 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
     activeTime = m_taskActiveTime;
     FinishedTime = m_taskFinishedTime;
 
+    qDebug() << "task name " << taskName << "task id " << task_id;
+
     rmd_wid->setTaskIdForReminder(task_id);
     ActiveTaskQTime = QTime(0, 0, 0).addSecs(m_taskActiveTime.toInt());
 
@@ -673,15 +715,34 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         d_setReminderbtn->setVisible(false);
         break;
     case 1:
-        d_startTaskButton->setVisible(false);
-        d_pauseTaskButton->setVisible(true);
-        d_setReminderbtn->setVisible(true);
-        taskSpecificTimer->start(1000);
-        //        updatetaskSpecificTimer(m_taskActiveTime.toInt());
-        qDebug()<<"+++ ActiveTaskQTime : "<<ActiveTaskQTime;
-        ActiveTaskQTime.addSecs(m_taskActiveTime.toInt());
-        qDebug()<<"--- ActiveTaskQTime : "<<ActiveTaskQTime;
-        //        activeTime = m_taskActiveTime.toInt();
+        toStartTask(m_taskActiveTime.toInt());
+        // d_startTaskButton->setVisible(false);
+        // d_pauseTaskButton->setVisible(true);
+        // d_setReminderbtn->setVisible(true);
+        // taskSpecificTimer->start(1000);
+        // //        updatetaskSpecificTimer(m_taskActiveTime.toInt());
+        // qDebug()<<"+++ ActiveTaskQTime : "<<ActiveTaskQTime;
+        // ActiveTaskQTime.addSecs(m_taskActiveTime.toInt());
+        // qDebug()<<"--- ActiveTaskQTime : "<< ActiveTaskQTime;
+        // //        activeTime = m_taskActiveTime.toInt();
+        // if(!remainingTime.isEmpty()){
+        //     QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
+        //     QDateTime reminderdatetime = QDateTime::fromString(remainingTime, Qt::ISODate);
+        //     qDebug() << "Qdate time " << reminderdatetime << remainingTime;
+        //     if (currentDateTime < reminderdatetime) {
+        //         qDebug() << "datetime is in the future compared to currentDateTime";
+        //         int remintimesecs = qAbs(currentDateTime.secsTo(reminderdatetime));
+        //         qDebug() << "Remaining time in seconds:" << remintimesecs;
+        //         remindercountdownTime = QTime(0, 0).addSecs(remintimesecs);
+        //         d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
+        //         qDebug() << "Reminder countdown time set:" << remindercountdownTime.toString("hh:mm:ss");
+        //         m_startReminderTimer->start(1000);
+        //         d_setReminderbtn->setVisible(false);
+        //         reminder_widget->setVisible(true);
+        //     } else {
+        //         qDebug() << "datetime is in the past compared to currentDateTime";
+        //     }
+        // }
         break;
     case 2:
         d_startTaskButton->setVisible(true);
@@ -702,7 +763,7 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         break;
     }
 
-    //    qDebug() << "Task id " << task_id;
+    // qDebug() << "taskName" << taskName << "Task id " << task_id;
 }
 
 void ProjectCustomWidget::receiveData(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
@@ -758,7 +819,7 @@ void ProjectCustomWidget::updateStartTimer()
     countdownTime = countdownTime.addSecs(1); // increment by one second
     d_taskActiveTimeLabel->setText(countdownTime.toString("hh:mm:ss"));
     // if(rmd_wid != nullptr){
-    rmd_wid->d_taskActiveTimeInReminder->setText(countdownTime.toString("hh:mm:ss"));
+    rmd_wid->d_taskActiveTimeInReminder->setText("countdownTime");
     // }
 }
 
@@ -796,7 +857,7 @@ void ProjectCustomWidget::taskStartDataSlot(const QString &taskid, bool success,
 void ProjectCustomWidget::updateReminderTimer()
 {
     remindercountdownTime = remindercountdownTime.addSecs(-1); // Decrement by one second
-    d_taskActiveTimeInReminder->setText(remindercountdownTime.toString("hh:mm:ss"));
+    d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
     rmd_wid->d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
     if(remindercountdownTime.toString("hh:mm:ss").compare("00:00:00") == 0){
         qDebug() << "timer is null ";
@@ -818,6 +879,7 @@ void ProjectCustomWidget::updateReminderTimer()
         });
 
         reminder_widget->setVisible(false);
+        qDebug() << "reminder_widget - set visible is false 3";
         d_setReminderbtn->setVisible(true);
     }
 }
@@ -831,5 +893,6 @@ void ProjectCustomWidget::updatetaskSpecificTimer(QTime myQTime)
 {
     QString timeString = myQTime.toString("hh:mm:ss");  // Convert QTime to QString in "hh:mm:ss" format
     d_taskActiveTimeLabel->setText(timeString);
+    rmd_wid->d_taskActiveTimeInReminder->setText(timeString);
 //    qDebug()<<"int time is "<<  myQTime <<" in updatetaskSpecificTimer";
 }

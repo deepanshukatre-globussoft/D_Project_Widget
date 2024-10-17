@@ -47,11 +47,11 @@ public:
     // // set reminder widget
     // QWidget * d_reminderWidget;
     // QVBoxLayout * m_reminderLayout;
-    QLabel * d_taskActiveTimeInReminder;
+    QLabel * d_taskRemainingTime;
     // QLabel * d_taskReminderTimeLabel;
 
     QLabel *d_taskNameLabel;
-    CreateTask * edit_task;
+    CreateTask * edit_task = nullptr;
 private:
     QLabel *d_projectStatuslabel;
     QPushButton *d_startTaskButton;
@@ -77,7 +77,7 @@ private:
 
 
 
-    QString token = "30765ca695d7dbb06b2e77101711097c:f1ab3a8a390bcacd69ad89df5d3130a77e5de779babc6102c9f616eac600cc460237644a69bde909f69ffa23de44c363d68c8d2ef3d7dbd4d7e3c2b639b687e70ae644f8007a40066669b1fd1f615aa786d3abbcafae05bdb0b536194216d0675d4499929b2f1a56578c23dc017e21408011cf3de8d672e2b5055aa4dfd87437146b3246cf2a2aedf4e7ff0db663ed33bfefcdb6878fd95cf225c70154cb07aab869cc51f585654b1004197f222723259cf660f765b2dc9fe0ba96b5486672f77af419d6bc87b3abba776827143c4e59b9e1a1aefdae758fe0cce534c67fdee39774a071aec4047e7619d449d71e86598335e4c3288b5b43701a6457491751523cc32eacac9d851b05d16a6eade16d3c34552b08b5a9d6531739aa66d47dce94";
+    QString token = "0800068e6089f9913a7b17213635e548:687a325872a50fae44b3a54d5bd91764eba5a4dafa9b75499749376bcc6b462fdfb62b98ad0590ec467c0706739db03fe69e4fa8bcceb0950eed3cd120c3cf37839c0d7eaa7b252f5ca29760f25220d91c051ac17de4ca387d3b82a035fd5d394693eb2e25553a6ec30394ac473fdd6c313019fa9cef84c4907e3388f71b724c3bd93f7bdec9bb0515e14c0b4be85db96be9b85dc07958faf15897c20908619c5e5e99fcb458740290765c20fb451ad0297294e1b364207cd36f22de53a98eee092af7eab3bfd12282d98c959e2f3f5194eb4176cb7f011b1c879fb6d1c914dfa7adf33da36868498b89cec79455feb6e45763cbea82cbe15f4770d6271554170bd4281c4e7b48aedfbceea4fd3e41249a21a3201c034022395b83e7e9f5eb65";
     MyNetworkManager * networkManager;
 
     QString task_id;
@@ -93,6 +93,7 @@ private:
     QTimer *taskSpecificTimer;
     QTime ActiveTaskQTime;
 
+    bool drawBorder = false; // Flag to track if the border should be drawn
     void initializeUIOfProjectsAndTasks();
 
 protected:
@@ -102,6 +103,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override ;
     void mouseReleaseEvent(QMouseEvent *event) override ;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
     void sendData(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskActiveTime);
@@ -110,6 +112,8 @@ signals:
 public:
     QString secondsToTimeFormat(int totalSeconds);
     int timeFormatToSeconds(const QString &time);
+    void toStartTask(int activeTime);
+    void toStopTask();
 
 public slots:
     void setTaskProjectsIdNameinProjectCustomWidget(const QString& projectStatus, const QString& projectName, const QString& taskName, const QString& taskid);

@@ -49,6 +49,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
     QLabel * d_taskRemindLabel = new QLabel("Remind me that I'm timing in:");
     d_taskReminderTimeLabel = new QLabel("00:00:00");
     d_taskReminderTimeLabel->setFixedSize(87,21);
+    d_taskReminderTimeLabel->setStyleSheet("padding-left:5px");
     d_taskReminderTimeLabel->setObjectName("TaskReminderLabel");
 //    d_taskReminderTimeLabel->setStyleSheet(
 //        "QLabel {"
@@ -359,6 +360,7 @@ ReminderWidget::ReminderWidget(QWidget *parent)
         qDebug() << "after button clear";
         int totalSeconds = QTime(0, 0, 0).secsTo(remindercountdownTime);
         netMgrObj->addRemainingTimeApi(token,taskIdForReminder,totalSeconds);
+        qDebug() << "current date time in set reminder " << QDateTime::currentDateTimeUtc();
         emit displayReminderTime(remindercountdownTime);
     });
 
