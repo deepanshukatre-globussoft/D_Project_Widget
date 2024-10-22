@@ -8,6 +8,8 @@
 #include <QJsonArray>
 #include <QPixmap>
 #include <QEvent>
+#include <QApplication>
+#include <QMouseEvent>
 #include "createtask.h"
 
 #include <QList>
@@ -40,7 +42,7 @@ public:
 
 
     QWidget *overlayWidget;
-    QString token = "0800068e6089f9913a7b17213635e548:687a325872a50fae44b3a54d5bd91764eba5a4dafa9b75499749376bcc6b462fdfb62b98ad0590ec467c0706739db03fe69e4fa8bcceb0950eed3cd120c3cf37839c0d7eaa7b252f5ca29760f25220d91c051ac17de4ca387d3b82a035fd5d394693eb2e25553a6ec30394ac473fdd6c313019fa9cef84c4907e3388f71b724c3bd93f7bdec9bb0515e14c0b4be85db96be9b85dc07958faf15897c20908619c5e5e99fcb458740290765c20fb451ad0297294e1b364207cd36f22de53a98eee092af7eab3bfd12282d98c959e2f3f5194eb4176cb7f011b1c879fb6d1c914dfa7adf33da36868498b89cec79455feb6e45763cbea82cbe15f4770d6271554170bd4281c4e7b48aedfbceea4fd3e41249a21a3201c034022395b83e7e9f5eb65";
+    QString token = "7d5ed83b64b04ffbeb8cab10c1db0bc8:962438eb10e9cfee075799c62bbb0e157bfb3ab145916e4ee46dde10c3dc514710d3ec60624c26d1d4936b53edeb4702ec6f05554bad3a2d9ed6f815622a200a52365abd3681b2cd911de27581c0f41549d77bce15477610770c6a9763b861460340031c09f0d9ef1be661ee48eb6efda0211f5bbe0d25105fc812e57d45ea2bacdb5ea5d2623dc608fa51153af3756835c1ac39f5cb309428593c18140a444d4beb632e94b5be9bdc10c7feca6915e7126a1fd94cdef0b1092e5c099902c8aa177543bf8aeb9aa258d4dcbb234344f96356a02354c4240b03ba735add580647f9898570cb7675f9507d75b4d7db8f5aeb0b4521d39eeb87ead8a0fe3bc863bdbcedb21f7648bf7c86d1826ccaa8cb45712ea15c03bdab78f750e05e3919eacf";
     QWidget *overlayCreatetaskWidget;
 
     void initialize_UI_Components();
@@ -50,16 +52,22 @@ protected:
            // void showEvent(QShowEvent  *event) override;
            // void hideEvent(QHideEvent *event) override;
            // void moveEvent(QMoveEvent * event) override;
-    bool eventFilter(QObject *watched, QEvent *event)
-    {
-        if (watched == searchbar_widget && event->type() == QEvent::Paint) {
-            QPainter painter(searchbar_widget);
-            painter.setPen(QPen(QColor(35, 31, 32, 2), 0.5));
-            painter.drawRect(searchbar_widget->rect().adjusted(1,1,-1,-1)); // Adjust for precise border
-            return true; // Handle the event
-        }
-        return QWidget::eventFilter(watched, event);
-    }
+    // bool eventFilter(QObject *watched, QEvent *event)
+    // {
+    //     if (watched == searchbar_widget && event->type() == QEvent::Paint) {
+    //         QPainter painter(searchbar_widget);
+    //         painter.setPen(QPen(QColor(35, 31, 32, 2), 1));
+    //         // painter.drawRect(searchbar_widget->rect().adjusted(1,1,-1,-1)); // Adjust for precise borderrgba(35, 31, 32, 0.2)
+    //         int radius = 8; // Set the border radius
+    //         painter.drawRoundedRect(rect().adjusted(1, 1, -1, -1), radius, radius);
+    //         return true; // Handle the event
+    //     }
+    //     return QWidget::eventFilter(watched, event);
+    // }
+
+
+    void mousePressEvent(QMouseEvent *event) override;
+
 
 private:
     QPushButton *refreshbtn;
@@ -70,6 +78,10 @@ private:
     QLabel *pro_name[20];
     QLabel * projects_label;
     QLabel * folders_label;
+    QLabel * filter_icon;
+    QLabel * filter_label;
+    QPixmap filter_pic;
+    QWidget * folders_widget;
     QLabel * dkfolders_label;
     QLabel * current_task_label;
     QLabel * dkcurrent_task_label;
@@ -79,6 +91,7 @@ private:
     QWidget * projects_widget;
 
     QComboBox *projectComboBox;
+
 
 
     void onProjectDataFetched(const QJsonArray &dataArray);

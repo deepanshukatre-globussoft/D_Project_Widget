@@ -5,6 +5,16 @@ background-color: #ffffff;
 background-color: #ffffff;
 }
 
+#reminderWidget{
+background-color: #ffffff;
+}
+
+#searchBarWidget{
+    background: rgba(248, 248, 248, 1);
+    border-radius :20px;
+    border: 0.5px solid rgba(35, 31, 32, 0.2);
+}
+
 QPushButton  {
 
  /*  background-color: #f0dfdf; */
@@ -23,20 +33,6 @@ QLabel, QPushButton {
 }
 
 /*=======   Fonts end ========*/
-
-/*
-#search_lineeditObject {
-    background-image: url(:/imgs/search.svg);
-    background-repeat: no-repeat;
-    background-position: left center;
-    padding-left: 35px;
-
-    height: 35px;
-    font-family: Arial;
-    font-size: 15px;
-    border-radius : 17px;
-}
-*/
 
 #TaskReminderLabel{
     border :1px solid #D2232A;
@@ -73,5 +69,6 @@ color: #414040;
 #d_taskActiveTimeLabel {
         color : #0F5EA9;
         font-size: 15px;
+        font-weight: bold;
 }
 

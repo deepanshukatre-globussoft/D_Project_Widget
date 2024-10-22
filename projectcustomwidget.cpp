@@ -185,11 +185,8 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
 
     editbtn_layout->setContentsMargins(9,0,13,0);
     editbtn_layout->addStretch();
-    editbtn_layout->addStretch();
     editbtn_layout->addWidget(edit_icon);
-    editbtn_layout->addStretch();
     editbtn_layout->addWidget(edit_label);
-    editbtn_layout->addStretch();
     editbtn_layout->addStretch();
 
     d_editTaskButton->setFixedSize(80,24);
@@ -202,6 +199,9 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         "}"
         );
 
+    taskFinishedTimeLabel = new QLabel("dd MMM yyyy",this);
+    taskFinishedTimeLabel->setFont(QFont("Ubuntu",-1,500));
+    taskFinishedTimeLabel->setStyleSheet("color: rgba(210, 35, 42, 1);");
 
     p_FirstLayout = new QHBoxLayout;
     p_FirstLayout->setContentsMargins(0,0,0,0);
@@ -215,9 +215,11 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
         p_FirstLayout->addWidget(completeBtn);
     }
     p_FirstLayout->addWidget(deleteBtn);
+    p_FirstLayout->addWidget(taskFinishedTimeLabel);
+
     completeBtn->hide();
     deleteBtn->hide();
-
+    taskFinishedTimeLabel->setVisible(false);
 
     p_SecondLayout = new QHBoxLayout;
     p_SecondLayout->setContentsMargins(0,0,0,0);
@@ -264,6 +266,8 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
 
     d_containerLayout->addLayout(p_FirstLayout);
     // d_containerLayout->addSpacerItem(spacer);
+    d_containerLayout->addStretch();
+    d_containerLayout->addStretch();
     d_containerLayout->addLayout(p_SecondLayout);
     //    d_containerLayout->addSpacerItem(spacer);
     d_containerLayout->addLayout(p_ThirdLayout);
@@ -286,25 +290,17 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
 
     setLayout(m_HMainLayout);
 
-    // Create a QGraphicsDropShadowEffect
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-    shadow->setBlurRadius(15);
-    shadow->setOffset(5, 5);
-    shadow->setColor(QColor(0,0,0,35));
-
-    // Apply the shadow effect to the label
-    this->setGraphicsEffect(shadow);
-
-    rmd_wid = new ReminderWidget(this);
-
     connect(d_editTaskButton,&QPushButton::clicked,this,[this](){
         if(!edit_task){
             edit_task = new CreateTask(this);
             edit_task->TaskId = task_id;
-            edit_task->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
-            edit_task->setAttribute(Qt::WA_DeleteOnClose);
             edit_task->nameLineEdit->setText(d_taskNameLabel->text());
-            edit_task->createBtn->setText("Update");
+            // int projectIndex = edit_task->projectComboBox->findText();
+            // edit_task->projectComboBox->setCurrentIndex(projectIndex);
+            // int folderIndex = edit_task->folderComboBox->findText(projectTaskStatus);
+            // edit_task->folderComboBox->setCurrentIndex(folderIndex);
+            // qDebug() << "project name " << d_projectNameLabel->text() << projectIndex << "folder name " << projectTaskStatus << folderIndex;
+            // edit_task->createBtn->setText("Update");
             edit_task->setWindowTitle("Edit Task");
             edit_task->show();
             connect(edit_task, &QWidget::destroyed, this, [this]() {
@@ -388,37 +384,110 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
     connect(d_setReminderbtn,&QPushButton::clicked,this,[=]{
         qDebug() << "d_setReminderbtn button clicked " << d_setReminderbtn;
         // rmd_wid->d_taskActiveTimeInReminder->setText(countdownTime.toString("hh:mm:ss"));
-        rmd_wid->show();
+
+        onSetReminderFuntionality();
+        // if(!rmd_wid){
+        //     rmd_wid = new ReminderWidget(this);
+        //     rmd_wid->project_label->setText(d_projectNameLabel->text());
+        //     rmd_wid->task_title_label->setText(d_taskNameLabel->text());
+        //     rmd_wid->setTaskIdForReminder(task_id);
+        //     if(remindercountdownTime != QTime(0,0,0)){
+        //         rmd_wid->set_reminder_button->setVisible(false);
+        //         rmd_wid->update_widget->setVisible(true);
+        //     }
+        //     rmd_wid->show();
+        //     connect(rmd_wid,&ReminderWidget::updateReminderTimeSignal,this,[=](QTime getremindertime){
+        //         qDebug() << "get reminder timer " << getremindertime << getremindertime.toString("hh:mm:ss");
+        //         remindercountdownTime =getremindertime;
+        //         if(remindercountdownTime != QTime(0,0,0)){
+        //             m_startReminderTimer->start();
+        //             reminder_widget->setVisible(true);
+        //             d_setReminderbtn->setVisible(false);
+        //         }
+        //         d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
+        //         qDebug() << "reminder countdown time in project widget " << remindercountdownTime;
+        //     });
+        //     connect(rmd_wid, &QWidget::destroyed, this, [this]() {
+        //         qDebug() << "rmd_wid Widget destroyed!";
+        //         rmd_wid = nullptr;
+        //     });
+        // }
     });
 
-    connect(rmd_wid,&ReminderWidget::displayReminderTime,this,[=](QTime getremindertime){
-        qDebug() << "in  displaying the reminder layout time slot";
-        remindercountdownTime =getremindertime;
-        reminder_widget->setVisible(true);
-        d_setReminderbtn->setVisible(false);
-        d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
-        m_startReminderTimer->start();
-    });
+    // if(rmd_wid == nullptr){
+    //     qDebug() << "rmd != null ";
+    //     rmd_wid = new ReminderWidget(this);
+    //     rmd_wid->project_label->setText(d_projectNameLabel->text());
+    //     rmd_wid->task_title_label->setText(d_taskNameLabel->text());
 
-    connect(this,&ProjectCustomWidget::sendUpdateReminder,rmd_wid,&ReminderWidget::SetUpdateReminder);
+    //     rmd_wid->setTaskIdForReminder(task_id);
+
+    //     rmd_wid->show();
+    //     connect(rmd_wid,&ReminderWidget::displayReminderTime,this,[=](QTime getremindertime){
+    //         qDebug() << "in  displaying the reminder layout time slot";
+    //         remindercountdownTime =getremindertime;
+    //         reminder_widget->setVisible(true);
+    //         d_setReminderbtn->setVisible(false);
+    //         d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
+    //         m_startReminderTimer->start();
+    //     });
+
+    //     connect(this,&ProjectCustomWidget::sendUpdateReminder,rmd_wid,&ReminderWidget::SetUpdateReminder);
 
     connect(reminder_layout_button,&QPushButton::clicked,this,[=]{
-        qDebug() << "reminder_layout_button clicked ";
-        rmd_wid->update_widget->setVisible(true);
-        rmd_wid->show();
-        emit sendUpdateReminder();
+        // qDebug() << "reminder_layout_button clicked ";
+        // rmd_wid->update_widget->setVisible(true);
+        // rmd_wid->show();
+        // emit sendUpdateReminder();
+        onSetReminderFuntionality();
     });
 
-    connect(rmd_wid,&ReminderWidget::resetReminderSignal,this,[=]{
-        qDebug() << "in  displaying the reset reminder time slot";
-        m_startReminderTimer->stop();
-        remindercountdownTime = QTime(0,0,0);
-        d_taskRemainingTime->setText("00:00:00");
-        rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
-        reminder_widget->setVisible(false);
-        qDebug() << "reminder_widget - set visible is false 2";
-        d_setReminderbtn->setVisible(true);
-    });
+    //     connect(rmd_wid,&ReminderWidget::resetReminderSignal,this,[=]{
+    //         qDebug() << "in  displaying the reset reminder time slot";
+    //         m_startReminderTimer->stop();
+    //         remindercountdownTime = QTime(0,0,0);
+    //         d_taskRemainingTime->setText("00:00:00");
+    //         rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
+    //         reminder_widget->setVisible(false);
+    //         qDebug() << "reminder_widget - set visible is false 2";
+    //         d_setReminderbtn->setVisible(true);
+    //     });
+        // connect(rmd_wid, &QWidget::destroyed, this, [this]() {
+        //     qDebug() << "rmd_wid Widget destroyed!";
+        //     rmd_wid = nullptr;
+        // });
+
+    // }
+
+
+    // connect(rmd_wid,&ReminderWidget::displayReminderTime,this,[=](QTime getremindertime){
+    //     qDebug() << "in  displaying the reminder layout time slot";
+    //     remindercountdownTime =getremindertime;
+    //     reminder_widget->setVisible(true);
+    //     d_setReminderbtn->setVisible(false);
+    //     d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
+    //     m_startReminderTimer->start();
+    // });
+
+    // connect(this,&ProjectCustomWidget::sendUpdateReminder,rmd_wid,&ReminderWidget::SetUpdateReminder);
+
+    // connect(reminder_layout_button,&QPushButton::clicked,this,[=]{
+    //     qDebug() << "reminder_layout_button clicked ";
+    //     rmd_wid->update_widget->setVisible(true);
+    //     rmd_wid->show();
+    //     emit sendUpdateReminder();
+    // });
+
+    // connect(rmd_wid,&ReminderWidget::resetReminderSignal,this,[=]{
+    //     qDebug() << "in  displaying the reset reminder time slot";
+    //     m_startReminderTimer->stop();
+    //     remindercountdownTime = QTime(0,0,0);
+    //     d_taskRemainingTime->setText("00:00:00");
+    //     rmd_wid->d_taskReminderTimeLabel->setText("00:00:00");
+    //     reminder_widget->setVisible(false);
+    //     qDebug() << "reminder_widget - set visible is false 2";
+    //     d_setReminderbtn->setVisible(true);
+    // });
 
     connect(completeBtn,&QPushButton::clicked,this,[=]{
         qDebug() << "complete btn clicked ";
@@ -439,7 +508,7 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
             networkManager->completedTaskApi(token,task_id);
         } else {
             qDebug() << "Task not completed."; // No clicked: Do nothing
-            networkManager->fetchTasksForMobileList(token,10); // this will reload all tasks when delete failed
+            // networkManager->fetchTasksForMobileList(token,10); // this will reload all tasks when delete failed
         }
 
     });
@@ -460,9 +529,53 @@ void ProjectCustomWidget::initializeUIOfProjectsAndTasks()
             networkManager->deleteTaskApi(token,task_id);
         } else {
             qDebug() << "Task not deleted."; // No clicked: Do nothing
-            networkManager->fetchTasksForMobileList(token,10); // this will reload all tasks when delete failed
+            // networkManager->fetchTasksForMobileList(token,10); // this will reload all tasks when delete failed
         }
     });
+}
+
+void ProjectCustomWidget::onSetReminderFuntionality()
+{
+    if(!rmd_wid){
+        rmd_wid = new ReminderWidget();
+        rmd_wid->project_label->setText(d_projectNameLabel->text());
+        rmd_wid->task_title_label->setText(d_taskNameLabel->text());
+        rmd_wid->setTaskIdForReminder(task_id);
+        if(reminder_widget->isVisible())
+            rmd_wid->done_button->setText("Change Custom Time");
+
+        if(remindercountdownTime != QTime(0,0,0)){
+            rmd_wid->setWindowTitle("Update Reminder");
+            rmd_wid->set_reminder_button->setVisible(false);
+            rmd_wid->update_widget->setVisible(true);
+        }
+        rmd_wid->show();
+        connect(rmd_wid,&ReminderWidget::updateReminderTimeSignal,this,[=](QTime getremindertime){
+            qDebug() << "get reminder timer " << getremindertime << getremindertime.toString("hh:mm:ss");
+            remindercountdownTime =getremindertime;
+            int totalSeconds;
+            if(remindercountdownTime != QTime(0,0,0)){
+                m_startReminderTimer->start();
+                reminder_widget->setVisible(true);
+                d_setReminderbtn->setVisible(false);
+                totalSeconds = QTime(0, 0, 0).secsTo(remindercountdownTime);
+                qDebug() << "time not equal to 0";
+            }
+            else{
+                m_startReminderTimer->stop();
+                reminder_widget->setVisible(false);
+                d_setReminderbtn->setVisible(true);
+                totalSeconds = 0;
+            }
+            networkManager->addRemainingTimeApi(token,task_id,totalSeconds);
+            d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
+            qDebug() << "reminder countdown time in project widget " << remindercountdownTime;
+        });
+        connect(rmd_wid, &QWidget::destroyed, this, [this]() {
+            qDebug() << "rmd_wid Widget destroyed!";
+            rmd_wid = nullptr;
+        });
+    }
 }
 
 ProjectCustomWidget::ProjectCustomWidget(const QString &projectStatus, const QString &projectName, const QString &taskName, const QString &taskActiveTime)
@@ -510,6 +623,9 @@ void ProjectCustomWidget::mousePressEvent(QMouseEvent *event)
 {
     startPos = event->pos();
     isSwipeDetected = false;
+
+    // if(!overlayWidget->isHidden())
+    //     overlayWidget->setVisible(false);
 }
 
 void ProjectCustomWidget::mouseMoveEvent(QMouseEvent *event)
@@ -541,12 +657,21 @@ void ProjectCustomWidget::mouseReleaseEvent(QMouseEvent *event)
 void ProjectCustomWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing); // Enable antialiasing for smoother edges
+    // Create a QGraphicsDropShadowEffect
+    // QGraphicsDropShadowEffect shadow(this);
+    // shadow.setBlurRadius(15);
+    // shadow.setOffset(5, 5);
+    // shadow.setColor(QColor(0,0,0,35));
+
     if (drawBorder) { // Only draw border if the widget is clicked or focused
         painter.setPen(QPen(QColor(76, 156, 229, 255),1)); // Set pen color and border thickness   border: 1px solid rgba(76, 156, 229, 1)
         // painter.drawRect(rect().adjusted(1, 1, -1, -1)); // Draw border inside widget's boundaries
+        // this->setGraphicsEffect(&shadow);
     } else {
         // border: 1px solid rgba(35, 31, 32, 0.1)
         painter.setPen(QPen(QColor(35, 31, 32, 255),0.2));
+        // this->setGraphicsEffect(nullptr);
+        // delete &shadow;
     }
     int radius = 8; // Set the border radius
     painter.drawRoundedRect(rect().adjusted(1, 1, -1, -1), radius, radius); // Draw a rounded rectangle
@@ -599,9 +724,9 @@ void ProjectCustomWidget::toStartTask(int activeTime)
             remindercountdownTime = QTime(0, 0).addSecs(remintimesecs);
             d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
             qDebug() << "Reminder countdown time set:" << remindercountdownTime.toString("hh:mm:ss");
-            m_startReminderTimer->start(1000);
-            d_setReminderbtn->setVisible(false);
+            m_startReminderTimer->start();
             reminder_widget->setVisible(true);
+            d_setReminderbtn->setVisible(false);
         } else {
             qDebug() << "datetime is in the past compared to currentDateTime";
         }
@@ -658,7 +783,7 @@ void ProjectCustomWidget::setTaskProjectsIdNameinProjectCustomWidget(const QStri
 void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &taskid, int taskStatus, const QString &taskName, const QString &m_taskActiveTime, const QString &m_taskRemainingTime,
                                                               const QString &projectStatus, const QString &taskProjectId, const QString &m_taskFinishedTime, const QString &projectName)
 {
-    //    qDebug()<<"received data now setting in projectcustom widget for task: "<<taskName <<projectStatus;
+       qDebug()<<"received data now setting in projectcustom widget for task: "<<taskName <<projectStatus;
     QLabel *textLabel = new QLabel("");
     textLabel->setStyleSheet("font-size : 13px; color: #414040;");
     QLabel *iconLabel = new QLabel;
@@ -696,14 +821,15 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
     d_projectNameLabel->setText(projectName);
     d_taskNameLabel->setText(taskName);
     task_id = taskid;
+    projectTaskStatus = projectStatus;
     m_taskStatus = taskStatus;
     remainingTime = m_taskRemainingTime;
     activeTime = m_taskActiveTime;
     FinishedTime = m_taskFinishedTime;
 
-    qDebug() << "task name " << taskName << "task id " << task_id;
+    qDebug() << "task name " << taskName << "task id " << task_id << "task status " << m_taskStatus;
 
-    rmd_wid->setTaskIdForReminder(task_id);
+    // rmd_wid->setTaskIdForReminder(task_id);
     ActiveTaskQTime = QTime(0, 0, 0).addSecs(m_taskActiveTime.toInt());
 
     d_taskActiveTimeLabel->setText(secondsToTimeFormat(activeTime.toInt()));
@@ -736,7 +862,7 @@ void ProjectCustomWidget::setTaskAllDataInProjectCustomWidget(const QString &tas
         //         remindercountdownTime = QTime(0, 0).addSecs(remintimesecs);
         //         d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
         //         qDebug() << "Reminder countdown time set:" << remindercountdownTime.toString("hh:mm:ss");
-        //         m_startReminderTimer->start(1000);
+        //         m_startReminderTimer->start();
         //         d_setReminderbtn->setVisible(false);
         //         reminder_widget->setVisible(true);
         //     } else {
@@ -818,14 +944,14 @@ void ProjectCustomWidget::updateStartTimer()
 {
     countdownTime = countdownTime.addSecs(1); // increment by one second
     d_taskActiveTimeLabel->setText(countdownTime.toString("hh:mm:ss"));
-    // if(rmd_wid != nullptr){
-    rmd_wid->d_taskActiveTimeInReminder->setText("countdownTime");
-    // }
+    if(rmd_wid != nullptr){
+        rmd_wid->d_taskActiveTimeInReminder->setText("hh::mm::ss");
+    }
 }
 
 void ProjectCustomWidget::taskStartDataSlot(const QString &taskid, bool success, const QString &time)
 {
-//    qDebug()<<"it will manage the data from the slot when start is done" << time;
+   qDebug()<<"it will manage the data from the slot when start is done" << time;
     switch (m_taskStatus) {
     case 0:
         qDebug()<<"project is not started switch case";
@@ -858,7 +984,9 @@ void ProjectCustomWidget::updateReminderTimer()
 {
     remindercountdownTime = remindercountdownTime.addSecs(-1); // Decrement by one second
     d_taskRemainingTime->setText(remindercountdownTime.toString("hh:mm:ss"));
-    rmd_wid->d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
+    if(rmd_wid != nullptr)
+        rmd_wid->d_taskReminderTimeLabel->setText(remindercountdownTime.toString("hh:mm:ss"));
+
     if(remindercountdownTime.toString("hh:mm:ss").compare("00:00:00") == 0){
         qDebug() << "timer is null ";
         QMessageBox notify;
@@ -881,6 +1009,8 @@ void ProjectCustomWidget::updateReminderTimer()
         reminder_widget->setVisible(false);
         qDebug() << "reminder_widget - set visible is false 3";
         d_setReminderbtn->setVisible(true);
+        if(rmd_wid != nullptr)
+            rmd_wid->set_reminder_button->setVisible(true);
     }
 }
 
@@ -893,6 +1023,7 @@ void ProjectCustomWidget::updatetaskSpecificTimer(QTime myQTime)
 {
     QString timeString = myQTime.toString("hh:mm:ss");  // Convert QTime to QString in "hh:mm:ss" format
     d_taskActiveTimeLabel->setText(timeString);
-    rmd_wid->d_taskActiveTimeInReminder->setText(timeString);
+    if(rmd_wid != nullptr)
+        rmd_wid->d_taskActiveTimeInReminder->setText(timeString);
 //    qDebug()<<"int time is "<<  myQTime <<" in updatetaskSpecificTimer";
 }

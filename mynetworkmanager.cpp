@@ -4,6 +4,8 @@
 
 MyNetworkManager* MyNetworkManager::m_instance = nullptr;
 
+QString MyNetworkManager::currentFolderSelected = "";
+
 MyNetworkManager::MyNetworkManager(QObject *parent)
     : QObject{parent}
 {
@@ -127,29 +129,35 @@ void MyNetworkManager::createTasks(const QString &authToken, const QString &titl
     QByteArray jsonData = jsonDoc.toJson();
 
     QNetworkReply *reply = networkManager->post(request,jsonData);
+    qDebug() << "reply read all " << reply->readAll();
     connect(reply, &QNetworkReply::finished, this, [reply, this](){
         //        qDebug()<<"getAllProjects finished the request "<<reply->readAll(); // never try to read data twice
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        qDebug() << "HTTP Status Code:" << statusCode;
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray response = reply->readAll();
-            qDebug() << "bytearray " << response;
+            // qDebug() << "bytearray " << response;
             QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
             QJsonObject jsonObj = jsonDoc.object();
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
-
+                qDebug() << "create Message from API response:" << message;
+                if(message == "Project task created successfully"){
+                    this->fetchTasksForMobileList(token,10);
+                }
                 QMessageBox::information(nullptr, "Silah TTS", message);
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
             }
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start
         }else{
             qDebug() << reply->readAll();
             qDebug() << "Error for create task: " << reply->errorString();
-            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            // QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            onErrorStatusPopop(statusCode);
         }
     });
+    reply->deleteLater();
 }
 
 void MyNetworkManager::updateTasks(const QString &authToken, const QString &title, const QString &task_id, const QString &folder_name, const QString &project_id, const bool &is_started)
@@ -178,19 +186,24 @@ void MyNetworkManager::updateTasks(const QString &authToken, const QString &titl
             QJsonObject jsonObj = jsonDoc.object();
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
-
+                qDebug() << "update Message from API response:" << message;
+                if(message == "Project task updated successfully"){
+                    this->fetchTasksForMobileList(token,10);
+                }
                 QMessageBox::information(nullptr, "Silah TTS", message);
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
             }
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start
         }else{
             qDebug() << "Error for update task: " << reply->errorString();
-            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            // QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            qDebug() << "HTTP Status Code:" << statusCode;
+            onErrorStatusPopop(statusCode);
         }
     });
+    reply->deleteLater();
 }
 
 void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &taskid)
@@ -213,24 +226,25 @@ void MyNetworkManager::deleteTaskApi(const QString &authToken, const QString &ta
             QJsonObject jsonObj = jsonDoc.object();
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
-
-                // Now you can use the message value, for example in a QMessageBox:
+                qDebug() << "delete Message from API response:" << message;
+                if(message == "Task finished successfully"){
+                    this->fetchTasksForMobileList(token,10); // this will reload all tasks after complete successfull
+                }
                 QMessageBox::information(nullptr, "Silah TTS", message);
-
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
             }
-
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete successfull
         }else{
             qDebug() << "Error for delete task: " << reply->errorString();
-            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after delete unsuccessfull
+            // QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            qDebug() << "HTTP Status Code:" << statusCode;
+            onErrorStatusPopop(statusCode);
         }
 
     });
+    reply->deleteLater();
 }
 
 void MyNetworkManager::completedTaskApi(const QString &authToken, const QString &taskid)
@@ -245,29 +259,35 @@ void MyNetworkManager::completedTaskApi(const QString &authToken, const QString 
 
     QNetworkReply *reply = networkManager->get(request);
     connect(reply, &QNetworkReply::finished, this, [reply, this](){
-        //        qDebug()<<"deleteTaskApi finished the request "<<reply->readAll();
+        // qDebug()<<"completedTaskApi finished the request "<<reply->readAll();
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        qDebug() << "HTTP Status Code:" << statusCode;
+
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray response = reply->readAll();
             QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
             QJsonObject jsonObj = jsonDoc.object();
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
+                qDebug() << " finish Message from API response:" << message;
+                if(message == "Task finished successfully"){
+                    this->fetchTasksForMobileList(token,10); // this will reload all tasks after complete successfull
+                }
                 QMessageBox::information(nullptr, "Silah TTS", message);
-
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
             }
 
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after complete successfull
         }else{
             qDebug() << "Error for finish task: " << reply->errorString();
-            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after complete unsuccessfull
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            qDebug() << "HTTP Status Code:" << statusCode;
+            onErrorStatusPopop(statusCode);
         }
 
     });
+    reply->deleteLater();
 
 }
 
@@ -291,31 +311,23 @@ void MyNetworkManager::startTaskApi(const QString &authToken, const QString &tas
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
                 qDebug() << "Message from API response:" << message;
-                emit taskStartDataSignal("taskid",true,"00:00:00");
+                if(message == "Task started successfully"){
+                    this->fetchTasksForMobileList(token,10); // this will reload all tasks
+                }
                 QMessageBox::information(nullptr, "Silah TTS", message);
-
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
-                emit taskStartDataSignal("taskid",false,"00:00:00");
             }
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start
         }else{
             qDebug() << "Error for start task: " << reply->errorString();
-            QByteArray response = reply->readAll();
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
-            QJsonObject jsonObj = jsonDoc.object();
-            if (jsonObj.contains("message")) {
-                QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
-                QMessageBox::information(nullptr, "Silah TTS", message);
-            }else{
-                QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString()+ "++ "+ reply->error());
-            }
-            //            this->fetchTasksForMobileList(token,10); // this will reload all tasks after start failed
-            emit taskStartDataSignal("taskid",false,"00:00:00");
+
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            qDebug() << "HTTP Status Code:" << statusCode;
+            onErrorStatusPopop(statusCode);
         }
     });
+    reply->deleteLater();
 }
 
 void MyNetworkManager::stopTaskApi(const QString &authToken, const QString &taskid)
@@ -337,22 +349,26 @@ void MyNetworkManager::stopTaskApi(const QString &authToken, const QString &task
             QJsonObject jsonObj = jsonDoc.object();
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
-                QMessageBox::information(nullptr, "Silah TTS", message);
-
+                qDebug() << "stop Message from API response:" << message;
+                if(message == "Task stop successfully"){
+                    this->fetchTasksForMobileList(token,10); // this will reload all tasks
+                }
+                QMessageBox::information(nullptr, "Silah TTS", "Task stop successfully");
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
             }
 
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after stop api
         }else{
             qDebug() << "Error for stop task: " << reply->errorString();
-            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
-            this->fetchTasksForMobileList(token,10); // this will reload all tasks after stop api unuccessfull
-        }
+            // QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
 
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            qDebug() << "HTTP Status Code:" << statusCode;
+            onErrorStatusPopop(statusCode);
+        }
     });
+    reply->deleteLater();
 }
 
 void MyNetworkManager::addRemainingTimeApi(const QString &authToken, const QString &taskid, int remainingTime)
@@ -378,23 +394,27 @@ void MyNetworkManager::addRemainingTimeApi(const QString &authToken, const QStri
             QJsonObject jsonObj = jsonDoc.object();
             if (jsonObj.contains("message")) {
                 QString message = jsonObj["message"].toString();
-                qDebug() << "Message from API response:" << message;
-
+                qDebug() << "add-remaining-time Message from API response:" << message;
                 QMessageBox::information(nullptr, "Silah TTS", message);
             }else{
                 qDebug()<<"data is not in array of not contains array";
                 QMessageBox::information(nullptr, "Silah TTS", "Something went wrong");
             }
-            // this->fetchTasksForMobileList(token,10); // this will reload all tasks after start
         }else{
             qDebug() << "Error for add-remaining task: " << reply->errorString();
-            QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+            // QMessageBox::information(nullptr, "Silah TTS", "Something went wrong "+ reply->errorString());
+
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            qDebug() << "HTTP Status Code:" << statusCode;
+            onErrorStatusPopop(statusCode);
         }
     });
+    reply->deleteLater();
 }
 
 void MyNetworkManager::allTasksInSeletedFolder(const QString &authToken, const QString &folder_name, int skip, int limit)
 {
+    currentFolderSelected  = folder_name;
     QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;
@@ -450,6 +470,7 @@ void MyNetworkManager::allTasksInSeletedSearchKeyword(const QString &authToken, 
 
 void MyNetworkManager::allTasksInSeletedProjectAndFolder(const QString &authToken, const QString &project_id, const QString &folder_name, int skip, int limit)
 {
+    currentFolderSelected  = folder_name;
     QUrl url("https://track.dev.empmonitor.com/api/v3/project/get-project-task-silah");
 
     QUrlQuery query;
@@ -517,10 +538,10 @@ void MyNetworkManager::onProjectDataFetched(QNetworkReply *reply)
 
 void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
 {
-    emit deleteConfigurationsignal();
-
     if (reply->error() == QNetworkReply::NoError) {
+        emit deleteConfigurationsignal();
         QByteArray response = reply->readAll();
+        // qDebug() << "response " << response;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
         QJsonObject jsonObj = jsonDoc.object();
 
@@ -549,10 +570,13 @@ void MyNetworkManager::onTasksDataFetched(QNetworkReply *reply)
             //                }
             //            }
         } else {
-
+            qDebug() << "No Valid Data";
         }
     } else {
         qDebug() << "Error: " << reply->errorString();
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        qDebug() << "HTTP Status Code:" << statusCode;
+        onErrorStatusPopop(statusCode);
     }
     reply->deleteLater();
 
@@ -575,8 +599,39 @@ void MyNetworkManager::onProjectIdAndNameDataFetched(QNetworkReply *reply) //wor
         }
     }else {
         qDebug() << "Error: " << reply->errorString();
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        qDebug() << "HTTP Status Code:" << statusCode;
+        onErrorStatusPopop(statusCode);
     }
     reply->deleteLater();
+}
+
+void MyNetworkManager::onErrorStatusPopop(const int statusCode)
+{
+    QString errorMessage;
+    switch (statusCode) {
+    case 202:
+        errorMessage = "Accepted"; // Append server message if available
+        break;
+    case 400:
+        errorMessage = "Bad request with error data"; // Append server message if available
+        break;
+    case 401:
+        errorMessage = "Unauthorized access "; // Append server message if available
+        break;
+    case 404:
+        errorMessage = "Not found with error data"; // Append server message if available
+        break;
+    case 500:
+        errorMessage = "Internal server error "; // Append server message if available
+        break;
+    default:
+        errorMessage = "Unexpected status code: " + QString::number(statusCode);
+        break;
+    }
+
+    qDebug() << "Error for finish task: " << errorMessage;
+    QMessageBox::warning(nullptr, "Error", errorMessage);
 }
 
 void MyNetworkManager::testslot()

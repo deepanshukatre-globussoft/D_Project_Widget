@@ -32,18 +32,22 @@ void CreateTask::setupUI()
     setFixedSize(338,310);
     this->setWindowTitle(tr("Create Task"));
     this->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
+    this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setObjectName("createTaskWidget");
+    this->setStyleSheet("background-color: #ffffff;");
 
     createTaskMainLayout = new QVBoxLayout(this);
-    createTaskMainLayout->setContentsMargins(22,22,22,22);
-
+    createTaskMainLayout->setContentsMargins(22,15,22,22);
 
     //    createTaskLabel = new QLabel(tr("Create Task"), this);
     //    createTaskMainLayout->addWidget(createTaskLabel);
     QString styleSheet = QString(
         "QComboBox {"
+        "background: rgba(248, 248, 248, 1);"
         "border-radius: 5px;"
         "border: 0.5px solid #231F2033;"
         "padding-left :10px;"
+        "padding :10px;"
         "}"
         "QComboBox::drop-down {"
         "border: none;"
@@ -52,6 +56,23 @@ void CreateTask::setupUI()
         "QComboBox::down-arrow {"
         "image: url(://imgs/ep_arrow.svg);"
         "padding-right : 55px;"
+        "}"
+        "QComboBox:focus {"
+        "   border: 1px solid rgba(210, 35, 42, 1);"
+        // "QComboBox:editable {"
+        // "   border: 1px solid rgba(210, 35, 42, 1);"
+        // "}"
+        // "QComboBox::drop-down:hover {"
+        // "   border: 1px solid rgba(210, 35, 42, 1);"
+        // "}" //
+        // "QComboBox::popup {"
+        // "   border: 1px solid rgba(210, 35, 42, 1);"
+        // // "   selection-background-color: rgba(210, 35, 42, 0.3);"
+        "}" //
+        "QComboBox QAbstractItemView {"
+        "   border: 1px solid rgba(210, 35, 42, 1);"
+        // "   border-top: 0px solid transparent;"
+        "   spacing: 10px;"
         "}");
 
     QFont font("Ubuntu",11);
@@ -65,7 +86,7 @@ void CreateTask::setupUI()
     nameLineEdit->setPlaceholderText("Enter Title");
     nameLineEdit->setFixedSize(290,37);
     nameLineEdit->setFont(QFont("Ubuntu",11));
-    nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px;");
+    nameLineEdit->setStyleSheet("padding: 10px;  border: 0.5px solid #231F2033; border-radius:5px; background: rgba(248, 248, 248, 1);");
 
     nameLayout->setContentsMargins(0,0,0,0);
     nameLayout->addWidget(nameLabel);
@@ -94,17 +115,17 @@ void CreateTask::setupUI()
     taskWidget = new QWidget(this);
     taskLayout = new QVBoxLayout(taskWidget);
     taskLabel = new QLabel(tr("Folder"), taskWidget);
-    taskComboBox = new QComboBox(taskWidget);
+    folderComboBox = new QComboBox(taskWidget);
 
     //    taskLabel->setFont(font);
 
-    taskComboBox->setFixedSize(290,37);
-    //    taskComboBox->setFont(font);
-    taskComboBox->setStyleSheet(styleSheet);
+    folderComboBox->setFixedSize(290,37);
+    //    folderComboBox->setFont(font);
+    folderComboBox->setStyleSheet(styleSheet);
 
     taskLayout->setContentsMargins(0,0,0,0);
     taskLayout->addWidget(taskLabel);
-    taskLayout->addWidget(taskComboBox);
+    taskLayout->addWidget(folderComboBox);
     createTaskMainLayout->addStretch();
     createTaskMainLayout->addWidget(taskWidget);
 
@@ -174,10 +195,10 @@ void CreateTask::setupUI()
 
 void CreateTask::populateComboBoxes()
 {
-    taskComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current Task", static_cast<int>(FolderStatus::Current));
-    taskComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future Task", static_cast<int>(FolderStatus::Future));
-    taskComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next Task", static_cast<int>(FolderStatus::Next));
-//    taskComboBox->addItem(QIcon("://imgs/green_circle.png"),"Finished Task", static_cast<int>(FolderStatus::completed)); // user should not create already completed task
+    folderComboBox->addItem(QIcon("://imgs/blue_icon.png"),"Current Task", static_cast<int>(FolderStatus::Current));
+    folderComboBox->addItem(QIcon("://imgs/red_circle.png"),"Future Task", static_cast<int>(FolderStatus::Future));
+    folderComboBox->addItem(QIcon("://imgs/yellow_circle.png"),"Next Task", static_cast<int>(FolderStatus::Next));
+//    folderComboBox->addItem(QIcon("://imgs/green_circle.png"),"Finished Task", static_cast<int>(FolderStatus::completed)); // user should not create already completed task
 }
 
 void CreateTask::onCancelClicked()
@@ -206,7 +227,7 @@ void CreateTask::onCreateTaskClicked()
         nameLineEdit->setStyleSheet("");  // Reset to default style if valid
     }
 
-    QString comboBox1Text = taskComboBox->currentText();
+    QString comboBox1Text = folderComboBox->currentText();
     //    QString comboBox2Text = projectComboBox->currentText();
 
     QVariant hiddenFieldData = projectComboBox->currentData();

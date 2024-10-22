@@ -46,10 +46,6 @@ int main(int argc, char *argv[])
 //        QApplication::setFont(font); // Apply font globally
 //    }
 
-
-
-
-
      Widget w;
      w.show();
 
